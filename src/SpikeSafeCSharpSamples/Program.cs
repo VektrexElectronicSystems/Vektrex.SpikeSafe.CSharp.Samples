@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpikeSafeCSharpExamples
+namespace SpikeSafeCSharpSamples
 {
     class Program
     {
