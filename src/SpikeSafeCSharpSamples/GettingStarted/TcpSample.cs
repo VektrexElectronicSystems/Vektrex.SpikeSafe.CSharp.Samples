@@ -1,4 +1,5 @@
 using System;
+using SpikeSafeCSharpLib;
 
 namespace SpikeSafeCSharpSamples.GettingStarted
 {
@@ -8,6 +9,7 @@ namespace SpikeSafeCSharpSamples.GettingStarted
 
         public void Run()
         {
+            new TcpSocket().Connect();
             Console.WriteLine("TcpSample run()");
             _log.Info("TcpSample run()");
         }
