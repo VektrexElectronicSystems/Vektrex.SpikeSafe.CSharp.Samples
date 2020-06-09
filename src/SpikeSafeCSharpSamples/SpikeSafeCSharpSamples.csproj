@@ -5,4 +5,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.6.4" />
+    <None Include="nlog.config" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
 </Project>
