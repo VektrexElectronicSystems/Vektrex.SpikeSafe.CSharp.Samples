@@ -1,1 +1,1 @@
-# SpikeSafeCSharpSamples solution README
+# Vektrex.SpikeSafe.CSharp. Samples solution README
