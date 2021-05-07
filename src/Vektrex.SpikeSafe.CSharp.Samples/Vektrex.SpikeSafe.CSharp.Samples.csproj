@@ -10,4 +10,8 @@
     <None Include="nlog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Vektrex.SpikeSafe.CSharp.Lib\src\Vektrex.SpikeSafe.CSharp.Lib\Vektrex.SpikeSafe.CSharp.Lib.csproj" />
+  </ItemGroup>
+
 </Project>
