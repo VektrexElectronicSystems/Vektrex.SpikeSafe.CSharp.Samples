@@ -7,7 +7,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
     {
         static void Main(string[] args)
         {
-            
+            // test commit same workspace
         }
     }
 }
