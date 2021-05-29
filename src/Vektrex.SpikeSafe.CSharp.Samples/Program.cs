@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.TcpSocketSample;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {
@@ -7,7 +8,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
     {
         static void Main(string[] args)
         {
-            // test commit same workspace
+            string spikeSafeIpAddress = "10.0.0.220";
+            int spikeSafePortNumber = 8282;
+
+            // Uncomment line below to run TcpSocketSample
+            new TcpSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
         }
     }
 }
