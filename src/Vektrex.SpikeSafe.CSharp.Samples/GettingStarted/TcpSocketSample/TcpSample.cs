@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -21,6 +22,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.TcpSocketSample
 
             // create socket object
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            NetworkStream networkStream;
+            StreamReader streamReader;
+            StreamWriter streamWriter;
 
             // set default socket parameters
             socket.Blocking = true;
@@ -29,24 +33,24 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.TcpSocketSample
 
             try
             {
-                _log.Info("TcpSample.py started.");
+                _log.Info("TcpSample.Run() started.");
                 
                 // connect to SpikeSafe
                 socket.Connect(remoteEP);
+                networkStream = new NetworkStream(socket);
+                streamReader = new StreamReader(networkStream);
+                streamWriter = new StreamWriter(networkStream);
+                streamWriter.NewLine = "\n";
+                streamWriter.AutoFlush = true;
 
                 // define SpikeSafe SCPI command with line feed \n as an argument to send from socket   
-                string argStr = "*IDN?\n";
-
-                // convert argument to type byte, which is the format required by the socket                             
-                byte[] msg = Encoding.ASCII.GetBytes(argStr);
+                string argStr = "*IDN?";
 
                 // send SpikeSafe SCPI command                     
-                socket.Send(msg);
+                streamWriter.WriteLine(argStr);
 
                 // read SpikeSafe response and print it to the log file
-                byte[] bytes = new byte[2048];                 
-                int bytesRec = socket.Receive(bytes);
-                string response = Encoding.ASCII.GetString(bytes, 0, bytesRec);        
+                string response = streamReader.ReadLine();
                 _log.Info(response);
             }
             catch(SocketException e)
@@ -66,7 +70,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.TcpSocketSample
                 // disconnect from SpikeSafe
                 socket.Close();
 
-                _log.Info("TcpSample.py completed.\n");
+                _log.Info("TcpSample.Run() completed.\n");
             }
         }
     }
