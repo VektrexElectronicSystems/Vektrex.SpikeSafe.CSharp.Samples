@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEvents;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadIdn;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.TcpSocketSample;
 
@@ -17,6 +18,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             
             // Uncomment line below to run ReadIdn
             new ReadIdnExpanded().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run ReadAllEvents
+            new ReadAllEvents().Run(spikeSafeIpAddress, spikeSafePortNumber);
         }
     }
 }
