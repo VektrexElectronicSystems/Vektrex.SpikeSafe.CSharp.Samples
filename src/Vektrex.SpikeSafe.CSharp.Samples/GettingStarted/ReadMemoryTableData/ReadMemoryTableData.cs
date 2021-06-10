@@ -31,7 +31,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadMemoryTableData
                 _log.Info(data);
 
                 // parse SpikeSafe memory table
-                MemoryTableReadData memory_table_read = MemoryTableReadData.Parse(data);
+                MemoryTableReadData memoryTableRead = MemoryTableReadData.Parse(data);
                 
                 // disconnect from SpikeSafe
                 tcpSocket.Disconnect();   

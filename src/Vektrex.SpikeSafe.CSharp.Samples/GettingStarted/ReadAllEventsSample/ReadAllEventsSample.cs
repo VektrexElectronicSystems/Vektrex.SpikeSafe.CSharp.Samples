@@ -5,12 +5,12 @@ using System.Net.Sockets;
 using System.Text;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
-namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEvents
+namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEventsSample
 {
-    public class ReadAllEvents
+    public class ReadAllEventsSample
     {
         private static NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
-
+        
         public void Run(string ipAddress, int portNumber)
         {
             //// start of main program                   
@@ -26,8 +26,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEvents
                 tcpSocket.Connect(ipAddress, portNumber);
                 
                 // read all events in SpikeSafe event queue, store in list, and print them to the log file
-                List<EventData> event_data = Vektrex.SpikeSafe.CSharp.Lib.ReadAllEvents.ReadAllEventData(tcpSocket);
-                foreach (EventData eventData in event_data)                        
+                List<EventData> eventDataList = ReadAllEvents.ReadAllEventData(tcpSocket);
+                foreach (EventData eventData in eventDataList)                        
                     _log.Info(eventData.Event);
 
                 // disconnect from SpikeSafe
