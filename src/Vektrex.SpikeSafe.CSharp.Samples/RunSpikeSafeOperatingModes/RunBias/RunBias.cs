@@ -31,7 +31,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBias
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
-                // set Channel 1's pulse mode to DC and check for all events
+                // set Channel 1's pulse mode to Bias and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP BIAS");    
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
