@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages;
+using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEventsSample;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadIdn;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadMemoryTableData;

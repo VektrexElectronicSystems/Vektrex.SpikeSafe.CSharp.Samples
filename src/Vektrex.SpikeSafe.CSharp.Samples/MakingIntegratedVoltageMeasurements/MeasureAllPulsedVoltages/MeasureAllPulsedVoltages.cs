@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
-namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages
+namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages
 {
     public class MeasureAllPulsedVoltages
     {
