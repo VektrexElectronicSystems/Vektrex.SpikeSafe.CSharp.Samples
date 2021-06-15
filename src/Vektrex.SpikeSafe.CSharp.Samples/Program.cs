@@ -7,6 +7,7 @@ using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadMemoryTableData;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.TcpSocketSample;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBias;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBiasPulsed;
+using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {
@@ -32,11 +33,17 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunBias
             //new RunBias().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
-            // Uncomment line below to run RunSpikeSafeOperatingModes/RunBiasPulsed
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunBiasPulsed/RunBiasPulsedDynamicMode
             //new RunBiasPulsedDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
-            // Uncomment line below to run RunSpikeSafeOperatingModes/RunBiasPulsed
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunBiasPulsed/RunBiasPulsedMode
             //new RunBiasPulsedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunDc/RunDcDynamicMode
+            //new RunDcDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunDc/RunDcMode
+            //new RunDcMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureAllPulsedVoltages
             //new MeasureAllPulsedVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
