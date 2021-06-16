@@ -7,6 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages
@@ -99,10 +102,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
 
                 // plot the pulse shape using the fetched voltage readings
                 plt.YAxis.Label("Voltage (V)");
-                plt.XAxis.Label("Sample Number (//)");
+                plt.XAxis.Label("Sample Number");
                 plt.Title("Digitizer Voltage Readings - 525 pulses (1ms & 100mA)");
-                // TODO. set axis plt.Axis([-25, 550, min(voltageReadings) - 0.1, max(voltageReadings) + 0.1]);
+                plt.SetAxisLimits(-25, 550, voltageReadings.Min() - 0.1, voltageReadings.Max() + 0.1);
                 plt.AddScatterLines(samples.ToArray(), voltageReadings.ToArray(), Color.Blue, 1);
+                plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"pulsed_voltage_readings.png"));
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();
