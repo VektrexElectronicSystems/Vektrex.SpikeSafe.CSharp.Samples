@@ -9,6 +9,7 @@ using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBias;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBiasPulsed;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulatedDc;
+using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPulse;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {

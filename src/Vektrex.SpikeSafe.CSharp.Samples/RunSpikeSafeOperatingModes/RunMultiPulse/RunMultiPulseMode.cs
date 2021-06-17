@@ -9,7 +9,7 @@
 using System;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
-namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulatedDc
+namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPulse
 {
     public class RunMultiPulseMode
     {
