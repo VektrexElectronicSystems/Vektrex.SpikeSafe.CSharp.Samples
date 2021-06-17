@@ -11,6 +11,7 @@ using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulatedDc;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPulse;
 using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed;
+using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedSweep;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {
@@ -59,6 +60,12 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunPulsed/RunPulsedMode
             //new RunPulsedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunPulsedSweep/RunBiasPulsedSweepMode
+            //new RunBiasPulsedSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunPulsedSweep/RunPulsedSweepMode
+            //new RunPulsedSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureAllPulsedVoltages
             //new MeasureAllPulsedVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
