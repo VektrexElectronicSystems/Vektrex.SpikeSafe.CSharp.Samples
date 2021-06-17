@@ -48,6 +48,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunModulatedDc
             //new RunModulatedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunMultiPulse
+            //new RunMultiPulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureAllPulsedVoltages
             //new MeasureAllPulsedVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
