@@ -18,7 +18,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
             // start of main program
             try
             {
-                _log.Info("RunModulatedMode.cs started.");
+                _log.Info("RunModulatedMode.Run() started.");
                 
                 // instantiate new TcpSocket to connect to SpikeSafe
                 TcpSocket tcpSocket = new TcpSocket();
@@ -91,7 +91,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();   
 
-                _log.Info("RunModulatedMode.cs completed.\n");
+                _log.Info("RunModulatedMode.Run() completed.\n");
             }
             catch(SpikeSafeException e)
             {

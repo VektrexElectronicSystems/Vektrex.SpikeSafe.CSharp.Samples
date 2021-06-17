@@ -20,7 +20,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPu
             // start of main program
             try
             {
-                _log.Info("RunMultiPulseMode.cs started.");
+                _log.Info("RunMultiPulseMode.Run() started.");
                     
                 // instantiate new TcpSocket to connect to SpikeSafe
                 TcpSocket tcpSocket = new TcpSocket();
@@ -114,7 +114,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPu
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();    
 
-                _log.Info("RunMultiPulseMode.cs completed.\n");
+                _log.Info("RunMultiPulseMode.Run() completed.\n");
             }
             catch(SpikeSafeException e)
             {

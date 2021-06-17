@@ -19,7 +19,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc
             // start of main program
             try
             {
-                _log.Info("RunDcDynamicMode.cs started.");
+                _log.Info("RunDcDynamicMode.Run() started.");
                 
                 // instantiate new TcpSocket to connect to SpikeSafe
                 TcpSocket tcpSocket = new TcpSocket();
@@ -97,7 +97,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();     
 
-                _log.Info("RunDcDynamicMode.cs completed.\n");
+                _log.Info("RunDcDynamicMode.Run() completed.\n");
             }
             catch(SpikeSafeException e)
             {
