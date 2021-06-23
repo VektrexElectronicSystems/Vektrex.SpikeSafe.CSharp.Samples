@@ -102,7 +102,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
 
                 // plot the pulse shape using the fetched voltage readings
                 plt.YAxis.Label("Voltage (V)");
-                plt.XAxis.Label("Sample Number");
+                plt.XAxis.Label("Sample Number (#)");
                 plt.Title("Digitizer Voltage Readings - 525 pulses (1ms & 100mA)");
                 plt.SetAxisLimits(-25, 550, voltageReadings.Min() - 0.1, voltageReadings.Max() + 0.1);
                 plt.AddScatterLines(samples.ToArray(), voltageReadings.ToArray(), Color.Blue, 1);
