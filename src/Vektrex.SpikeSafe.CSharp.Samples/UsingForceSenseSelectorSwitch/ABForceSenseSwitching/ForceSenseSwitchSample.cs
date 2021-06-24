@@ -75,8 +75,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 // set the Force Sense Selector Switch state to Auxiliary (B) so that the Auxiliary Source will be routed to the DUT and the SpikeSafe will be disconnected
                 tcpSocket.SendScpiCommand("OUTP1:CONN AUX");
 
-                // Show a messageso any tasks using the Auxiliary source may be performed before adjusting the switch back to Primary
-                // The SpikeSafe is not electrically connected to the DUT at this time
+                // show a message so any tasks using the Auxiliary source may be performed before adjusting the switch back to Primary
+                // the SpikeSafe is not electrically connected to the DUT at this time
                 Console.WriteLine("Force Sense Selector Switch is in Auxiliary (B) mode. Perform any tests using the auxiliary source, then press Enter adjust the switch back to Primary (A) mode.");
                 Console.ReadLine();
 
