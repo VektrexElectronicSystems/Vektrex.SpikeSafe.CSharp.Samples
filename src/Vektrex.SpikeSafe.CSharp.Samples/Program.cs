@@ -16,6 +16,7 @@ using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunSinglePulse
 using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasurePulsedSweepVoltage;
 using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureVoltageAcrossPulse;
 using Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForceSenseSwitching;
+using Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ConnectDisconnectSwitching;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {
@@ -88,6 +89,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
 
             // Uncomment line below to run UsingForceSenseSelectorSwitch/ABForceSenseSwitching
             //new ForceSenseSwitchSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run UsingForceSenseSelectorSwitch/ConnectDisconnectSwitching
+            //new ConnectDisconnectSwitchSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
         }
     }
 }
