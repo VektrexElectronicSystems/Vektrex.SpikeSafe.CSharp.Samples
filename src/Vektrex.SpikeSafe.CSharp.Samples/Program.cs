@@ -21,6 +21,7 @@ using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPulseCou
 using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringDcStaircaseVoltages;
 using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuning;
 using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigitizerOutputTrigger;
+using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPulseHolds;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {
@@ -108,6 +109,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
 
             // Uncomment line below to run ApplicationSpecificExamples/PulseTuning            
             //new DigitizerOutputTriggerSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run ApplicationSpecificExamples/UsingPulseHolds            
+            //new UsingPulseHolds().Run(spikeSafeIpAddress, spikeSafePortNumber);
         }
     }
 }
