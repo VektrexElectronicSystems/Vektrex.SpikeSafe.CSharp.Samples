@@ -22,14 +22,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
             // start of main program
             try
             {
-                _log.Info("MeasuringDcStaircaseVoltages.py started.");
+                _log.Info("MeasuringDcStaircaseVoltages.Run() started.");
 
                 // stair case parameters
-                int step_count = 10;
-                double start_current_A = 0.010;
-                double stop_current_A = 0.100;
-                double step_size_A = (stop_current_A - start_current_A) / (step_count - 1);
-                double load_ohm_value = 1;
+                int stepCount = 10;
+                double startCurrentAmps = 0.010;
+                double stopCurrentAmps = 0.100;
+                double stepSizeAmps = (stopCurrentAmps - startCurrentAmps) / (stepCount - 1);
+                double loadOhmValue = 1;
                     
                 // instantiate new TcpSocket to connect to PSMU
                 TcpSocket tcpSocket = new TcpSocket();
@@ -53,7 +53,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's current to start current and check for all events
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR {0}", start_current_A));
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR {0}", startCurrentAmps));
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's Ramp mode to Fast and check for all events
@@ -75,7 +75,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Digitizer Trigger Count to step count and check for all events
-                tcpSocket.SendScpiCommand(string.Format("VOLT:TRIG:COUN {0}", step_count));
+                tcpSocket.SendScpiCommand(string.Format("VOLT:TRIG:COUN {0}", stepCount));
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Digitizer Read Count to 1 and check for all events
@@ -95,16 +95,16 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // start DC staircase current supply and voltage measurement per step
-                double set_current = start_current_A;
+                double setCurrent = startCurrentAmps;
                 double currentIncrementDouble = 0.0;
-                for(int step = 0; step < step_count; step++)
+                for(int step = 0; step < stepCount; step++)
                 {
                     // step up Channel 1 current to next step
-                    set_current = Math.Round(set_current + currentIncrementDouble, 3);
-                    string cmdStr = "SOUR1:TRIG " + set_current.ToString();
+                    setCurrent = Math.Round(setCurrent + currentIncrementDouble, 3);
+                    string cmdStr = "SOUR1:TRIG " + setCurrent.ToString();
                     // send Set Current command for next step
                     tcpSocket.SendScpiCommand(cmdStr);
-                    currentIncrementDouble = step_size_A;
+                    currentIncrementDouble = stepSizeAmps;
                 }
                     
                 // check for all events
@@ -114,7 +114,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);
 
                 // Fetch Data and check for all events
-                List<DigitizerData> digitizer_data = DigitizerDataFetch.FetchVoltageData(tcpSocket);
+                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // disconnect from PSMU    
@@ -122,44 +122,37 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
 
                 // put the fetched data in a plottable data format
                 var plt = new ScottPlot.Plot();
-                List<double> voltage_readings = new List<double>();
-                List<double> current_steps = new List<double>();
-                List<double> voltage_calculated_readings = new List<double>();
-                List<double> voltage_data_log_array = new List<double>();
+                List<double> voltageReadings = new List<double>();
+                List<double> currentSteps = new List<double>();
+                List<double> voltageCalculatedReadings = new List<double>();
                 _log.Info("Sample Number  |   Current     |       Vf   |    Vf Calculated");
                 _log.Info("-------------  | ------------- | ---------- | ----------------");
-                foreach (DigitizerData dd in digitizer_data)
+                foreach (DigitizerData dd in digitizerData)
                 {
-                    voltage_readings.Add(dd.VoltageReading);
-                    current_steps.Add(start_current_A + step_size_A * (dd.SampleNumber - 1));
-                    voltage_data_log_array.Add(dd.VoltageReading);
-                    voltage_calculated_readings.Add((start_current_A + step_size_A * (dd.SampleNumber - 1))*load_ohm_value);
-                    double current = start_current_A + step_size_A * (dd.SampleNumber - 1);
-                    double voltage_calculated = (start_current_A + step_size_A * (dd.SampleNumber - 1))*load_ohm_value;
-                    _log.Info("      %s      |      %.3f    |    %.10f   |   %.3f", dd.SampleNumber, current, dd.VoltageReading, voltage_calculated);
+                    voltageReadings.Add(dd.VoltageReading);
+                    currentSteps.Add(startCurrentAmps + stepSizeAmps * (dd.SampleNumber - 1));
+                    voltageCalculatedReadings.Add((startCurrentAmps + stepSizeAmps * (dd.SampleNumber - 1))*loadOhmValue);
+                    double current = startCurrentAmps + stepSizeAmps * (dd.SampleNumber - 1);
+                    double voltageCalculated = (startCurrentAmps + stepSizeAmps * (dd.SampleNumber - 1))*loadOhmValue;
+                    _log.Info("      {0}      |      {1}    |    {2}   |   {3}", dd.SampleNumber, current.ToString("0.000"), dd.VoltageReading.ToString("0.0000000000"), String.Format("{0:0.000}", voltageCalculated));
                 }
 
-                // plot the pulse shape using the fetched voltage readings and the light measurement readings overlaid
-                // graph, voltage_axis = plt.subplots();
-
                 // configure the voltage data
-                var voltage_readings_line = plt.AddScatterLines(current_steps.ToArray(), voltage_readings.ToArray(), Color.Red, 1);
-                voltage_readings_line.YAxisIndex = 0;
+                var voltageReadingsLine = plt.AddScatterLines(currentSteps.ToArray(), voltageReadings.ToArray(), Color.Red, 1);
+                voltageReadingsLine.YAxisIndex = 0;
                 plt.YAxis.Label("Voltage (V)", Color.Red);
-                plt.YAxis.Color(voltage_readings_line.Color); 
                 plt.XAxis.Label("Set Current (A)");               
                 
                 // configure the calculated voltage data
-                var voltage_calculated_readings_line = plt.AddScatterLines(current_steps.ToArray(), voltage_calculated_readings.ToArray(), Color.Blue, 1);
-                voltage_calculated_readings_line.YAxisIndex = 1;
+                var voltageCalculatedReadingsLine = plt.AddScatterLines(currentSteps.ToArray(), voltageCalculatedReadings.ToArray(), Color.Blue, 1);
+                voltageCalculatedReadingsLine.YAxisIndex = 1;
                 plt.YAxis2.Label("Calculated Voltage (V)", Color.Blue);
-                plt.YAxis2.Color(voltage_calculated_readings_line.Color);
                 plt.YAxis2.Ticks(true);
 
-                plt.Title(string.Format("Sweep ({0}A to {1}A)", start_current_A, stop_current_A));
+                plt.Title(string.Format("Sweep ({0}A to {1}A)", startCurrentAmps, stopCurrentAmps));
                 plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"dc_staircase_graph.png"));
 
-                _log.Info("MeasuringDcStaircaseVoltages.py completed.\n");
+                _log.Info("MeasuringDcStaircaseVoltages.Run() completed.\n");
             }
             catch(SpikeSafeException e)
             {
