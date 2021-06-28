@@ -20,6 +20,7 @@ using Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ConnectDisc
 using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPulseCountUsingSoftwareTiming;
 using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringDcStaircaseVoltages;
 using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuning;
+using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigitizerOutputTrigger;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {
@@ -104,6 +105,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
 
             // Uncomment line below to run ApplicationSpecificExamples/PulseTuning            
             //new PulseTuningExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run ApplicationSpecificExamples/PulseTuning            
+            //new DigitizerOutputTriggerSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
         }
     }
 }
