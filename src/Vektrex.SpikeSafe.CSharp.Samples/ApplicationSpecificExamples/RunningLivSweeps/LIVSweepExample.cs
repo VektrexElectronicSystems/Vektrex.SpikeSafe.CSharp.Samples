@@ -78,13 +78,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 string iniFileString = Console.ReadLine();
                 if (iniFileString.EndsWith(".ini") == false)
                     iniFileString += ".ini";
-                string iniFilePath = Path.Join(Directory.GetCurrentDirectory(), livSweepsFolder, iniFileString);
+                string iniFilePath = Path.Combine(Directory.GetCurrentDirectory(), livSweepsFolder, iniFileString);
 
                 Console.WriteLine("Enter .ISC calibration file (must be located in src\\ApplicationSpecificExamples\\RunningLivSweeps) to be used for CAS operation:");
                 string iscFileString = Console.ReadLine();
                 if (iscFileString.EndsWith(".isc") == false)
                     iscFileString += ".isc";
-                string iscFilePath = Path.Join(Directory.GetCurrentDirectory(), livSweepsFolder, iscFileString);
+                string iscFilePath = Path.Combine(Directory.GetCurrentDirectory(), livSweepsFolder, iscFileString);
 
                 CAS4DLL.casSetDeviceParameterString(deviceId, CAS4DLL.dpidConfigFileName, iniFilePath);
                 CAS4DLL.casSetDeviceParameterString(deviceId, CAS4DLL.dpidCalibFileName, iscFilePath);
