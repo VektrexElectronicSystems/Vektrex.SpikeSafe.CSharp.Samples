@@ -101,6 +101,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             // Uncomment line below to run UsingForceSenseSelectorSwitch/ConnectDisconnectSwitching
             //new ConnectDisconnectSwitchSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
+            // Uncomment line below to run ApplicationSpecificExamples/ControllingThermalPlatformTemperature            
+            //new ControllingThermalPlatformTemperature().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
             // Uncomment line below to run ApplicationSpecificExamples/FixedPulseCountUsingSoftwareTiming            
             //new FixedPulseCountUsingSoftwareTimingExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
