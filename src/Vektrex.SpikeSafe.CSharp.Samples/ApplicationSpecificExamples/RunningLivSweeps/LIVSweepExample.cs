@@ -47,7 +47,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
 
                 // CAS4 interface mode
                 int cas4InterfaceMode = 3;
-                // CAS4_interface_mode: int
+                // cas4InterfaceMode: int
                 // - 1: PCI
                 // - 3: Demo (No hardware)
                 // - 5: USB

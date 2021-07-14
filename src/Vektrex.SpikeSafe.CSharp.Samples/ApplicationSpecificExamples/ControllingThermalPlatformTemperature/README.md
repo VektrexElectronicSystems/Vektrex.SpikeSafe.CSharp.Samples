@@ -17,9 +17,6 @@ The following settings are configured by default. At the top of the sequence, th
 - **Set Temperature Two:** 25°C
 - **Set Temperature Two Stability Time:** 10 minutes
 
-## Considerations TODO
-- This sequence involves connecting to a serial thermal controller using RS-232 interface and requires the [pyserial](https://pypi.org/project/pyserial/) library. See instructions on installing this library under the "Usage" section in the [SpikeSafePythonSamples markdown file](/README.md#installing-pyserial-package).
-
 ## Expected Results
 After initializing the thermal controller, the thermal controller will ramp up to Set Temperature One at 50°C and stabilize for 10 minutes. Afterwards the thermal controller will ramp down to Set Temperature Two at 25°C and stabilize for 10 minutes.
 

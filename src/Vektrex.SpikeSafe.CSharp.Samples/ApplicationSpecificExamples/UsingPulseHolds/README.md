@@ -32,7 +32,7 @@ In this example, the Pulse Width, Duty Cycle, Period, and Pulse Hold will be mod
 - Since using this command set results in recalculation of settings, it is recommended to re-query Pulse Width, Duty Cycle, and Pulse Period any time one of the three settings is configured.
 
 ## Expected Results
-The On Time and Off Time will be dynamically modified while the channel is running. The actions taken within the sequence will be logged in the SpikeSafePythonSamples.log file as well as the terminal. This output should match the text below:
+The On Time and Off Time will be dynamically modified while the channel is running. The actions taken within the sequence will be logged in the Vektrex.SpikeSafe.CSharp.Samples.log file as well as the terminal. This output should match the text below:
 
 >Held Pulse Period
 

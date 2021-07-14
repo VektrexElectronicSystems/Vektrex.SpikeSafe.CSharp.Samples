@@ -37,7 +37,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
-                // set up Channel 1 for Multi Pulse output. To find more explanation, see run_spikesafe_operation_modes/run_multi_pulse
+                // set up Channel 1 for Multi Pulse output. To find more explanation, see RunSpikeSafeOperationModes/RunMultiPulse
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MULTIPULSE");
                 tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");   
                 tcpSocket.SendScpiCommand("SOUR1:VOLT 20");
@@ -58,7 +58,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 // set Channel 1's Input Trigger Polarity to rising. This should match the expected polarity of the trigger signal
                 tcpSocket.SendScpiCommand("OUTP1:TRIG:POL RISING");   
 
-                // set typical Digitizer settings to match SpikeSafe settings. For more explanation, see making_integrated_voltage_measurements
+                // set typical Digitizer settings to match SpikeSafe settings. For more explanation, see MakingIntegratedVoltageMeasurements
                 tcpSocket.SendScpiCommand("VOLT:RANG 10");
                 tcpSocket.SendScpiCommand("VOLT:APER 400000");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:DEL 200000");
@@ -86,11 +86,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 tcpSocket.SendScpiCommand("VOLT:OUTP:TRIG");
 
                 // check that the Multi Pulse output has ended
-                string has_multi_pulse_ended = string.Empty;
-                while (has_multi_pulse_ended != "TRUE")
+                string hasMultiPulseEnded = string.Empty;
+                while (hasMultiPulseEnded != "TRUE")
                 {
                     tcpSocket.SendScpiCommand("SOUR1:PULS:END?");
-                    has_multi_pulse_ended =  tcpSocket.ReadData();
+                    hasMultiPulseEnded =  tcpSocket.ReadData();
                     Threading.Wait(0.5);
                 }
 
@@ -98,11 +98,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 tcpSocket.SendScpiCommand("VOLT:OUTP:TRIG");
 
                 // check that the Multi Pulse output has ended
-                has_multi_pulse_ended = string.Empty;
-                while (has_multi_pulse_ended != "TRUE")
+                hasMultiPulseEnded = string.Empty;
+                while (hasMultiPulseEnded != "TRUE")
                 {
                     tcpSocket.SendScpiCommand("SOUR1:PULS:END?");
-                    has_multi_pulse_ended =  tcpSocket.ReadData();
+                    hasMultiPulseEnded =  tcpSocket.ReadData();
                     Threading.Wait(0.5);
                 }
 

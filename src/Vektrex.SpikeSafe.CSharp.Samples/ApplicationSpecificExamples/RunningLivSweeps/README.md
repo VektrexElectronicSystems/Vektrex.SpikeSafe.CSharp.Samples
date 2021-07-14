@@ -43,14 +43,13 @@ The following settings are configured by default. At the top of the sequence, th
 - **Trigger Mode:** Hardware (i.e. Flip-Flop)
 - **Trigger Delay:** 5ms
 
-## Considerations TODO
-- This sequence involves graphing measurement results, and requires the [matplotlib](https://matplotlib.org/) library. See instructions on installing this library under the "Usage" section in the [SpikeSafePythonSamples markdown file](/README.md#installing-matplotlib-package).
-- This sequence employs external C resources, and requires the [PyCLibrary](https://pyclibrary.readthedocs.io/en/latest/) library. See instructions on installing this library under the "Usage" section in the [SpikeSafePythonSamples markdown file](/README.md#installing-pyclibrary-package).
+## Considerations
+- This sequence involves graphing measurement results, and requires the [ScottPlot](https://swharden.com/scottplot/) library. See instructions on installing this library under the "Usage" section in the [Vektrex.SpikeSafe.CSharp.Samples markdown file](/README.md#installing-scottplot).
 - External resources are needed to operate the CAS4 spectrometer. These can be obtained by Instrument Systems, and should install the following files:
     - C headers file: C:\Program Files\Instrument Systems\CAS4x64-SDK\VC2013\CAS4.h
     - CAS DLL: C:\Windows\System32\CAS4x64.dll
-- The CAS4 spectrometer requires a configuration (.INI) file and calibration (.ISC) file to operate. Both of these files should be copied and pasted to the SpikeSafePythonSamples\application_specific_examples\running_liv_sweeps folder before starting this sequence.
-- In LIVSweepExample.py, modify the line `CAS4_interface_mode = 3` in order to specify the communication interface for the CAS4. The following communication interfaces are supported:
+- The CAS4 spectrometer requires a configuration (.INI) file and calibration (.ISC) file to operate. Both of these files should be copied and pasted to the Vektrex.SpikeSafe.CSharp.Samples\ApplicationSpecificExamples\RunningLivSweeps folder before starting this sequence.
+- In LIVSweepExample.py, modify the line `cas4InterfaceMode = 3` in order to specify the communication interface for the CAS4. The following communication interfaces are supported:
     - **1:** PCI
     - **3:** Demo (No hardware (Default))
     - **5:** USB
@@ -58,7 +57,7 @@ The following settings are configured by default. At the top of the sequence, th
     - **11:** Ethernet
 
 ## Expected Results
-Upon starting the sequence, the user will be prompted to enter the names of the Instrument Systems configuration (.INI) file and calibration (.ISC) file that correspond to the test spectrometer. After initializing the spectrometer with the specified files, a Pulsed Sweep will be outputted and light measurements will be automatically taken. Upon completion of the sequence, a graph of the LIV sweep will appear onscreen. This graph will have a Voltage vs. Current plot overlaid with a Luminous Flux vs. Current plot generated using matplotlib. See the example below.
+Upon starting the sequence, the user will be prompted to enter the names of the Instrument Systems configuration (.INI) file and calibration (.ISC) file that correspond to the test spectrometer. After initializing the spectrometer with the specified files, a Pulsed Sweep will be outputted and light measurements will be automatically taken. Upon completion of the sequence, a graph of the LIV sweep will appear onscreen. This graph will have a Voltage vs. Current plot overlaid with a Luminous Flux vs. Current plot generated using ScottPlot. See the example below.
 
 ![](liv_sweep_graph_screenshot.png)
 

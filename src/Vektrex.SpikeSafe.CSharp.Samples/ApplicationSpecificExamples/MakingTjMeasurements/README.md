@@ -82,7 +82,7 @@ Once Vf(0) is obtained, we have all of the values necessary to calculate Tj. Jun
 - This sequence provides the layout to run Tj measurement for a specific DUT. For your testing, you may have to modify the Set Current, Bias Current, and Compliance Voltage to obtain an accurate Tj measurement. For this test, a Bridgelux LED with the following characteristics was used:
     - Forward current: 3.5A
     - Forward voltage: ~23V
-- At the start of this sequence, there is a line `graph_zoom_offset = 0.01`. If this test is run and the outputted graph in step 3 has a zoomed y-axis such that Vf(0) cannot be clearly determined, modify this number. A larger graph zoom offset will correspond to a more zoomed out y-axis, and a smaller graph zoom offset (minimum = 0) will correspond to a more zoomed in y-axis.
+- At the start of this sequence, there is a line `graphZoomOffset = 0.01`. If this test is run and the outputted graph in step 3 has a zoomed y-axis such that Vf(0) cannot be clearly determined, modify this number. A larger graph zoom offset will correspond to a more zoomed out y-axis, and a smaller graph zoom offset (minimum = 0) will correspond to a more zoomed in y-axis.
 
 ### Best Practices
 - If possible, use aged or burned-in LEDs for measurement

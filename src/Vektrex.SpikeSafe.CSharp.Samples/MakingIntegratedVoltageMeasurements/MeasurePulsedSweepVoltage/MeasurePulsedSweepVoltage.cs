@@ -37,7 +37,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
-                // set up Channel 1 for pulsed sweep output. To find more explanation, see instrument_examples/run_spikesafe_operating_modes/run_pulsed
+                // set up Channel 1 for pulsed sweep output. To find more explanation, see InstrumentExamples/RunSpikeSafeOperatingModes/RunPulsed
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:STAR 0.02");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:STOP 0.2");   

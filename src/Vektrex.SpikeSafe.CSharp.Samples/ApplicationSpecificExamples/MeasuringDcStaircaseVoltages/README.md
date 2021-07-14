@@ -41,7 +41,7 @@ Once all 10 steps are measured, a graph will appear like below:
 
 **Data Table**
 
-The SpikeSafePythonSamples.log file under your local SpikeSafePythonSamples\ directory will provide a table showing the actual forward voltage and the calculated forward forward voltage.
+The Vektrex.SpikeSafe.CSharp.Samples.log file under your local Vektrex.SpikeSafe.CSharp.Samples\bin\Debug\net48 directory will provide a table showing the actual forward voltage and the calculated forward forward voltage.
 
 Sample Number  |   Current (A)     |       Vf (V)   |    Vf Calculated (V)
 -------------  | ------------- | ------------- | -------------

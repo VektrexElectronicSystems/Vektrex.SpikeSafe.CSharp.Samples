@@ -117,11 +117,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
             // Output 1ms pulse for all channels
             tcpSocket.SendScpiCommand("OUTP1:TRIG");
 
-            string is_pulse_complete = string.Empty;                
-            while (is_pulse_complete != "TRUE")
+            string isPulseComplete = string.Empty;                
+            while (isPulseComplete != "TRUE")
             {                       
                 tcpSocket.SendScpiCommand("SOUR1:PULS:END?");
-                is_pulse_complete = tcpSocket.ReadData();
+                isPulseComplete = tcpSocket.ReadData();
                 ReadAllEvents.LogAllEvents(tcpSocket);
             }
 

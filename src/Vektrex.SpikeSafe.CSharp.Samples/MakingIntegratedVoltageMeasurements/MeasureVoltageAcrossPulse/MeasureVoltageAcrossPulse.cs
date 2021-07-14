@@ -38,7 +38,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
-                // set up Channel 1 for single pulse output. To find more explanation, see run_spikesafe_operating_modes/run_single_pulse
+                // set up Channel 1 for single pulse output. To find more explanation, see RunSpikeSafeOperatingModes/RunSinglePulse
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP SINGLEPULSE");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.001");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    

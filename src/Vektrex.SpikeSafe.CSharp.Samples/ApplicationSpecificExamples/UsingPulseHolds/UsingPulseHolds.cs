@@ -65,102 +65,102 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // set Channel 1's Pulse Hold to Period. Setting any pulse-related setting will not re-calculate Pulse Period
                 tcpSocket.SendScpiCommand("SOUR1:PULS:HOLD PER");
-                log_and_print("Held Pulse Period");
+                logAndPrint("Held Pulse Period");
 
                 // set Channel 1's Pulse Width to 8ms. Since Period is being held, the Period will remain at 10ms
-                double pulse_width_seconds = 0.008;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:WIDT {0}", pulse_width_seconds));
-                log_and_print(string.Format("Set Pulse Width to {0}s", pulse_width_seconds));
+                double pulseWidthSeconds = 0.008;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:WIDT {0}", pulseWidthSeconds));
+                logAndPrint(string.Format("Set Pulse Width to {0}s", pulseWidthSeconds));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
 
                 // set Channel 1's Duty Cycle to 50%. Since Period is being held, the Period will remain at 10ms
-                double duty_cycle = 50;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", duty_cycle));
-                log_and_print(string.Format("Set Duty Cycle to {0}%", duty_cycle));
+                double dutyCycle = 50;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
 
                 // set Channel 1's Duty Cycle to 0%. Using this alternate command set, the Duty Cycle is able to be set to 0% and 100%
                 // Duty Cycle of 0% corresponds to an always-off output, similar to a disabled channel
-                duty_cycle = 0;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", duty_cycle));
-                log_and_print(string.Format("Set Duty Cycle to {0}%", duty_cycle));
+                dutyCycle = 0;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
 
                 // set Channel 1's Duty Cycle to 100%. Using this alternate command set, the Duty Cycle is able to be set to 0% and 100%
                 // Duty Cycle of 100% corresponds to an always-on output, similar to a DC mode
-                duty_cycle = 100;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", duty_cycle));
-                log_and_print(string.Format("Set Duty Cycle to {0}%", duty_cycle));
+                dutyCycle = 100;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
 
                 // set Channel 1's Pulse Hold to Pulse Width. Setting any pulse-related setting will not re-calculate Pulse Width
                 tcpSocket.SendScpiCommand("SOUR1:PULS:HOLD WIDT");
-                log_and_print("Held Pulse Width");
+                logAndPrint("Held Pulse Width");
 
                 // set Channel 1's Pulse Period to 20ms. Since Pulse Width is being held, the Pulse Width will remain at 10ms
-                double pulse_period_seconds = 0.02;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:PER {0}", pulse_period_seconds));
-                log_and_print(string.Format("Set Pulse Period to {0}s", pulse_period_seconds));
+                double pulsePeriodSeconds = 0.02;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:PER {0}", pulsePeriodSeconds));
+                logAndPrint(string.Format("Set Pulse Period to {0}s", pulsePeriodSeconds));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
 
                 // set Channel 1's Duty Cycle to 25%. Since Pulse Width is being held, the Pulse Width will remain at 10ms
-                duty_cycle = 25;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", duty_cycle));
-                log_and_print(string.Format("Set Duty Cycle to {0}%", duty_cycle));
+                dutyCycle = 25;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
 
                 // set Channel 1's Pulse Hold to Duty Cycle. Setting any pulse-related setting will not re-calculate Duty Cycle
                 tcpSocket.SendScpiCommand("SOUR1:PULS:HOLD DCYC");
-                log_and_print("Held Duty Cycle");
+                logAndPrint("Held Duty Cycle");
 
                 // set Channel 1's Pulse Period to 200ms. Since Duty Cycle is being held, the Duty Cycle will remain at 25%
-                pulse_period_seconds = 0.2;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:PER {0}", pulse_period_seconds));
-                log_and_print(string.Format("Set Pulse Period to {0}s", pulse_period_seconds));
+                pulsePeriodSeconds = 0.2;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:PER {0}", pulsePeriodSeconds));
+                logAndPrint(string.Format("Set Pulse Period to {0}s", pulsePeriodSeconds));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
 
                 // set Channel 1's Pulse Width to 1ms. Since Duty Cycle is being held, the Duty Cycle will remain at 25%
-                pulse_width_seconds = 0.001;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:WIDT {0}", pulse_width_seconds));
-                log_and_print(string.Format("Set Pulse Width to {0}s", pulse_width_seconds));
+                pulseWidthSeconds = 0.001;
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:WIDT {0}", pulseWidthSeconds));
+                logAndPrint(string.Format("Set Pulse Width to {0}s", pulseWidthSeconds));
 
                 // verify that the expected updates are made to the pulse settings
-                verify_current_pulse_settings(tcpSocket);
+                verifyCurrentPulseSettings(tcpSocket);
                 
                 // wait two seconds while running with the newly updated settings
                 Threading.Wait(2);
@@ -189,30 +189,30 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
             }
         }
 
-        private void log_and_print(string message_string)
+        private void logAndPrint(string messageString)
         {
-            _log.Info(message_string);
-            Console.WriteLine(message_string);
+            _log.Info(messageString);
+            Console.WriteLine(messageString);
         }
 
-        private void verify_current_pulse_settings(TcpSocket spike_safe_socket)
+        private void verifyCurrentPulseSettings(TcpSocket spikeSafeSocket)
         {
-            spike_safe_socket.SendScpiCommand("SOUR1:PULS:WIDT?");
-            string pulse_width = spike_safe_socket.ReadData();
-            log_and_print(string.Format("Updated Pulse Width: {0}s", pulse_width));
+            spikeSafeSocket.SendScpiCommand("SOUR1:PULS:WIDT?");
+            string pulseWidth = spikeSafeSocket.ReadData();
+            logAndPrint(string.Format("Updated Pulse Width: {0}s", pulseWidth));
 
-            spike_safe_socket.SendScpiCommand("SOUR1:PULS:DCYC?");
-            string duty_cycle = spike_safe_socket.ReadData();
-            log_and_print(string.Format("Updated Duty Cycle: {0}%", duty_cycle));
+            spikeSafeSocket.SendScpiCommand("SOUR1:PULS:DCYC?");
+            string dutyCycle = spikeSafeSocket.ReadData();
+            logAndPrint(string.Format("Updated Duty Cycle: {0}%", dutyCycle));
 
-            spike_safe_socket.SendScpiCommand("SOUR1:PULS:PER?");
-            string pulse_period = spike_safe_socket.ReadData();
-            log_and_print(string.Format("Updated Pulse Period: {0}s", pulse_period));
+            spikeSafeSocket.SendScpiCommand("SOUR1:PULS:PER?");
+            string pulsePeriod = spikeSafeSocket.ReadData();
+            logAndPrint(string.Format("Updated Pulse Period: {0}s", pulsePeriod));
 
-            ReadAllEvents.LogAllEvents(spike_safe_socket);
+            ReadAllEvents.LogAllEvents(spikeSafeSocket);
 
             // space out the log and terminal output for clarity
-            log_and_print(string.Empty);
+            logAndPrint(string.Empty);
         }
     }
 }
