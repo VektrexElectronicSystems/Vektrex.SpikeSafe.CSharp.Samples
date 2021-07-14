@@ -4,8 +4,8 @@
     <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.3"/>
     <PackageReference Include="ScottPlot" Version="4.1.16"/>
+    <PackageReference Include="NLog" Version="4.7.10"/>
     <None Include="nlog.config" CopyToOutputDirectory="Always"/>
   </ItemGroup>
   <ItemGroup>
