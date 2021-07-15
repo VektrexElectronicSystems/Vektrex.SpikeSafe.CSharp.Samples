@@ -12,7 +12,7 @@ Operates SpikeSafe as a current source that outputs a single pulse. An Instrumen
 
 The SpikeSafe PSMU operates similarly to the [Run Single Pulse](../../RunSpikeSafeOperatingModes/RunSinglePulse) sequence. 
 
-The CAS4 spectrometer is operated using external resources provided by Instrument Systems. To obtain the necessary resources to run this sequence, please visit [the Instrument Systems website](https://www.instrumentsystems.com/en/products/software/sdk-spectrometer/). After installing these resources on your computer, install the libraries listed in the **Considerations** section of this document. More information on CAS spectrometers can be found [here](https://www.instrumentsystems.com/en/products/spectrometers/).
+The CAS4 spectrometer is operated using external resources provided by Instrument Systems. To obtain the necessary resources to run this sequence, please visit [the Instrument Systems website](https://www.instrumentsystems.com/en/products/software/sdk-spectrometer/). After installing these resources on your computer, install the libraries listed in the Considerations(#considerations) section of this document. More information on CAS spectrometers can be found [here](https://www.instrumentsystems.com/en/products/spectrometers/).
 
 
 ## Key Settings 
@@ -30,12 +30,12 @@ The following settings are configured by default. At the top of the sequence, th
 - **Trigger Delay:** 5ms
 
 ## Considerations
-- This sequence involves graphing measurement results, and requires the [ScottPlot](https://swharden.com/scottplot/) library. See instructions on installing this library under the "Usage" section in the [Vektrex.SpikeSafe.CSharp.Samples markdown file](/README.md#installing-scottplot).
+- This sequence involves graphing measurement results, and requires the [ScottPlot](https://swharden.com/scottplot/) library. See instructions on installing this library under the "Usage" section in the [Vektrex.SpikeSafe.CSharp.Samples markdown file](/../../../../README.md#installing-scottplot).
 - External resources are needed to operate the CAS4 spectrometer. These can be obtained by Instrument Systems, and should install the following files:
     - C headers file: C:\Program Files\Instrument Systems\CAS4x64-SDK\VC2013\CAS4.h
     - CAS DLL: C:\Windows\System32\CAS4x64.dll
 - The CAS4 spectrometer requires a configuration (.INI) file and calibration (.ISC) file to operate. Both of these files should be copied and pasted to the Vektrex.SpikeSafe.CSharp.Samples\ApplicationSpecificExamples\RunningLivSweeps folder before starting this sequence.
-- In LIVSweepExample.py, modify the line `cas4InterfaceMode = 3` in order to specify the communication interface for the CAS4. The following communication interfaces are supported:
+- In LIVSweepExample.cs, modify the line `cas4InterfaceMode = 3` in order to specify the communication interface for the CAS4. The following communication interfaces are supported:
     - **1:** PCI
     - **3:** Demo (No hardware (Default))
     - **5:** USB

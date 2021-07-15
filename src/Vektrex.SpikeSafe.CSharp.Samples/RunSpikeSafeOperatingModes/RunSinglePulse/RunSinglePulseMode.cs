@@ -18,7 +18,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
             // start of main program
             try
             {
-                _log.Info("RunSinglePulseMode.py started.");
+                _log.Info("RunSinglePulseMode.Run() started.");
                     
                 // instantiate new TcpSocket to connect to SpikeSafe
                 TcpSocket tcpSocket = new TcpSocket();

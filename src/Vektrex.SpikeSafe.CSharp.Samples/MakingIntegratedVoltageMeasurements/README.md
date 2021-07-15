@@ -9,6 +9,6 @@ These folders contain examples to make voltage measurements using the SpikeSafe 
 
 ## Usage
 
-These sequences involve graphing measurement results, and require the [ScottPlot](https://swharden.com/scottplot/) library. See instructions on installing this library under the "Usage" section in the [Vektrex.SpikeSafe.CSharp.Samples markdown file](/README.md#installing-scottplot).
+These sequences involve graphing measurement results, and require the [ScottPlot](https://swharden.com/scottplot/) library. See instructions on installing this library under the "Usage" section in the [Vektrex.SpikeSafe.CSharp.Samples markdown file](/../../../../README.md#installing-scottplot).
 
 Connect the SpikeSafe PSMU's Force and Sense leads to the LED, Laser, or electrical equipment to be tested. Using the descriptions and screenshots provided, determine which mode fits your test scenario. Run the sequences provided and observe the outputted voltage measurement data onscreen. The code provided sends all the necessary commands to output current and measure voltage for a given test purpose, but sequences may be modified as necessary to fit your specific application.

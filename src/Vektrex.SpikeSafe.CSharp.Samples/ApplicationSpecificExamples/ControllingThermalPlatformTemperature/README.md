@@ -6,7 +6,7 @@ In this sequence, we will address how to control a thermal platform's temperatur
 ## Overview 
 Operates a thermal controller (Arroyo 5400 Series TECSource) to control a thermal platform (Arroyo TEC 284 Series High Power LaserMount). The controller will have the platform to ramp up to 50°C, stabilize, and run for 10 minutes; then ramp down to 25°C, stabilize, and run for 10 minutes. 
 
-Install the libraries listed in the [Considerations](#considerations) section of this document. More information on TECSources can be found [here](https://www.arroyoinstruments.com/categories/temperature-controllers) and LaserMounts [here](https://www.arroyoinstruments.com/categories/lasermounts).
+More information on TECSources can be found [here](https://www.arroyoinstruments.com/categories/temperature-controllers) and LaserMounts [here](https://www.arroyoinstruments.com/categories/lasermounts).
 
 ## Key Settings 
 The following settings are configured by default. At the top of the sequence, there are multiple lines corresponding to individual test parameters. These lines may be modified to match the necessary parameters for your specific LED or Laser.
