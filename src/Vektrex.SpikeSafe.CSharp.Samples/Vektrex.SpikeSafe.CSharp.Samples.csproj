@@ -6,9 +6,7 @@
   <ItemGroup>
     <PackageReference Include="ScottPlot" Version="4.1.16"/>
     <PackageReference Include="NLog" Version="4.7.10"/>
+    <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.1.1"/>
     <None Include="nlog.config" CopyToOutputDirectory="Always"/>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Vektrex.SpikeSafe.CSharp.Lib\src\Vektrex.SpikeSafe.CSharp.Lib\Vektrex.SpikeSafe.CSharp.Lib.csproj"/>
   </ItemGroup>
 </Project>
