@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Text;
 using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEventsSample;
@@ -30,10 +31,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
 {
     class Program
     {
+        private static NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
+
         static void Main(string[] args)
         {
             string spikeSafeIpAddress = "10.0.0.220";
             int spikeSafePortNumber = 8282;
+
+            _log.Info("Vektrex.SpikeSafe.CSharp.Samples - Version {0}", Assembly.GetEntryAssembly().GetName().Version.ToString(3));
 
             // Uncomment line below to run GettingStarted/TcpSocketSample
             //new TcpSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
