@@ -1,1 +1,0 @@
-SpikeSafeCSharpSamples project README
