@@ -27,30 +27,33 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
         {
             TcpSocket tcpSocket = new TcpSocket();
 
+            // start of main program
             try
             {
-                Console.WriteLine("Enter a number corresponding to one of the following options:");
-                Console.WriteLine("1. Run Test");
-                Console.WriteLine("2. Create Graph");
-                int option = int.Parse(Console.ReadLine());
+                _log.Info("MakingTransientDualInterfaceMeasurementExample.Run() started.\n");
+
+                LogAndPrintToConsole("Enter a number corresponding to one of the following options:");
+                LogAndPrintToConsole("1. Run Test");
+                LogAndPrintToConsole("2. Create Graph");
+                int option = int.Parse(ReceiveUserInputAndLog());
 
                 if(1 == option)
                 {
-                    Console.WriteLine("Enter the option # for sampling mode:");
-                    Console.WriteLine("1. FASTLOG");
-                    Console.WriteLine("2. MEDIUMLOG");
-                    Console.WriteLine("3. SLOWLOG");
-                    Console.WriteLine("If this is the second test, please make sure the sampling mode is the same as the first test.");
-                    int samplingMode = int.Parse(Console.ReadLine());
+                    LogAndPrintToConsole("Enter the option # for sampling mode:");
+                    LogAndPrintToConsole("1. FASTLOG");
+                    LogAndPrintToConsole("2. MEDIUMLOG");
+                    LogAndPrintToConsole("3. SLOWLOG");
+                    LogAndPrintToConsole("If this is the second test, please make sure the sampling mode is the same as the first test.");
+                    int samplingMode = int.Parse(ReceiveUserInputAndLog());
 		
-                    Console.WriteLine("Enter the option # for the 1st test:");
-                    Console.WriteLine("1. Grease");
-                    Console.WriteLine("2. No Grease");
-                    int greaseInput = int.Parse(Console.ReadLine());
+                    LogAndPrintToConsole("Enter the option # for the 1st test:");
+                    LogAndPrintToConsole("1. Grease");
+                    LogAndPrintToConsole("2. No Grease");
+                    int greaseInput = int.Parse(ReceiveUserInputAndLog());
 		
                     // connect
                     tcpSocket.Connect(ipAddress, portNumber);
-                    Console.WriteLine("Connected to {0}", ipAddress);
+                    LogAndPrintToConsole(string.Format("Connected to {0}", ipAddress));
 		
                     // SpikeSafe set up
                     SpikeSafeSetup(tcpSocket, samplingMode);
@@ -93,10 +96,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                 {
                     CreateMultiplePlots();
                 }
+                
+                _log.Info("MakingTransientDualInterfaceMeasurementExample.Run() completed.\n");
             }
             catch(Exception e)
             {
-                Console.WriteLine("Digitizer Log Sampling error: {0}", e.Message);
+                string message = string.Format("Digitizer Log Sampling error: {0}", e.Message);
+                Console.WriteLine(message);
+                _log.Error(message);
             }
             finally
             {
@@ -107,10 +114,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
 
                     // disconnect
                     tcpSocket.Disconnect();
-                    Console.WriteLine("Disconnected from {0}", ipAddress);
+                    LogAndPrintToConsole(string.Format("Disconnected from {0}", ipAddress));
                 }
 
-                Console.WriteLine("Press any key to quit");
+                LogAndPrintToConsole("Press any key to quit");
                 Console.ReadKey();
             }            
         }
@@ -423,6 +430,19 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                 }
             }
             return timeAxis;
-        }        
+        }
+
+        private void LogAndPrintToConsole(string messageString)
+        {
+            _log.Info(messageString.Replace('\n','\0'));
+            Console.WriteLine(messageString);
+        }
+
+        private string ReceiveUserInputAndLog()
+        {
+            string inputText = Console.ReadLine();
+            _log.Info(inputText);
+            return inputText;
+        }
     }
 }
