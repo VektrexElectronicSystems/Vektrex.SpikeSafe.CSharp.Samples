@@ -172,7 +172,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
         {
             tcpSocket.SendScpiCommand("VOLT:ABOR");
             // Set digitizer range to 10V
-            tcpSocket.SendScpiCommand("VOLT:RANG 100");
+            tcpSocket.SendScpiCommand("VOLT:RANG 10");
             // Set digitizer sampling mode
             if(FAST_LOG_MODE == sampleMode)
             {
@@ -198,7 +198,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // set auto range
             tcpSocket.SendScpiCommand("SOUR1:CURR:RANG:AUTO 1");
             // set currenty to 1A
-            tcpSocket.SendScpiCommand("SOUR1:CURR 0.2");
+            tcpSocket.SendScpiCommand("SOUR1:CURR 1");
             // set Ramp mode to Fast
             tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
             // request SpikeSafe events and read data
