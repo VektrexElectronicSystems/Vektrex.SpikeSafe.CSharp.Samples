@@ -153,7 +153,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
 
         private void WriteDigitizerVoltageToFile(int greaseInput, List<DigitizerData> digitizerData)
         {
-            string path = System.IO.Directory.GetCurrentDirectory(); 
+            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string fileName = "";
                     
             if(greaseInput == GREASE)
@@ -221,7 +221,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
         private void CreateMultiplePlots()
         {
             int totalSampleCount = 0;
-            string readFilePath = System.IO.Directory.GetCurrentDirectory(); 
+            string readFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string readFileNameNoGrease = "\\digitizer_log_sampling_noGrease.txt";
             string readFileNameGrease = "\\digitizer_log_sampling_grease.txt";
                 
