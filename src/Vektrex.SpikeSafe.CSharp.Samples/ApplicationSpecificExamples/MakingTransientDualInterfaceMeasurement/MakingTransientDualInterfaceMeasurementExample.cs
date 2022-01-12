@@ -16,7 +16,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
         
         private const int FAST_LOG_TOTAL_SAMPLE_COUNT = 525;
         private const int MEDIUM_LOG_TOTAL_SAMPLE_COUNT = 500;
-        private const int SLOW_LOG_TOTAL_SAMPLE_COUNT = 460;
+        private const int SLOW_LOG_TOTAL_SAMPLE_COUNT = 500;
         private const int FAST_LOG_MODE = 1;
         private const int MEDIUM_LOG_MODE = 2;
         private const int SLOW_LOG_MODE = 3;
@@ -332,7 +332,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
 
             if(SLOW_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
             {
-                timeUs = 1000;
+                timeUs = 2;
             }
             else if(MEDIUM_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
             {
@@ -349,26 +349,38 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                 if(SLOW_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
                 {
                     // log time scale
-                    if( sampleNumber > 0 && sampleNumber <=99)
+                    if( sampleNumber > 0 && sampleNumber <=49)
+                    {
+                        timeUs = timeUs + 2;
+                    }
+                    else if(sampleNumber > 49 && sampleNumber <= 139 )
+                    {
+                        timeUs = timeUs + 10;
+                    }
+                    else if(sampleNumber > 139 && sampleNumber <= 229) 
+                    {
+                        timeUs = timeUs + 100;
+                    }
+                    else if(sampleNumber > 229 && sampleNumber <= 319)
                     {
                         timeUs = timeUs + 1000;
                     }
-                    else if(sampleNumber > 99 && sampleNumber <= 189 )
+                    else if(sampleNumber > 319 && sampleNumber <= 364)
                     {
-                        timeUs = timeUs + 10000;
+                        timeUs = timeUs + 20000;
                     }
-                    else if(sampleNumber > 189 && sampleNumber <= 279)
+                    else if(sampleNumber > 364 && sampleNumber <= 409)
                     {
-                        timeUs = timeUs + 100000;
-                    }
-                    else if(sampleNumber > 279 && sampleNumber <= 369)
+                        timeUs = timeUs + 200000;
+                    }                    
+                    else if(sampleNumber > 409 && sampleNumber <= 454)
                     {
-                        timeUs = timeUs + 1000000;
-                    }
-                    else if(sampleNumber > 369 && sampleNumber <= 459)
+                        timeUs = timeUs + 2000000;
+                    }                    
+                    else if(sampleNumber > 454 && sampleNumber <= 500)
                     {
-                        timeUs = timeUs + 10000000;
-                    }
+                        timeUs = timeUs + 20000000;
+                    }                    
                 }
                 else if(MEDIUM_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
                 {
