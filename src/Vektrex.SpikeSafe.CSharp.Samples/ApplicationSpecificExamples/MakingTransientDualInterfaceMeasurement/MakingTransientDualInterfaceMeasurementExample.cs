@@ -78,15 +78,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
 		
                     if(FAST_LOG_MODE == samplingMode)
                     {
-                        logScaleTime = LogTimeData(FAST_LOG_TOTAL_SAMPLE_COUNT);
+                        logScaleTime = LogTimeData(FAST_LOG_TOTAL_SAMPLE_COUNT, samplingMode);
                     }
                     else if(MEDIUM_LOG_MODE == samplingMode)
                     {
-                        logScaleTime = LogTimeData(MEDIUM_LOG_TOTAL_SAMPLE_COUNT);
+                        logScaleTime = LogTimeData(MEDIUM_LOG_TOTAL_SAMPLE_COUNT, samplingMode);
                     }
                     else if(SLOW_LOG_MODE == samplingMode)
                     {
-                        logScaleTime = LogTimeData(SLOW_LOG_TOTAL_SAMPLE_COUNT);
+                        logScaleTime = LogTimeData(SLOW_LOG_TOTAL_SAMPLE_COUNT, samplingMode);
                     }
 					
                     // plot the pulse shape using the fetched voltage readings and the light measurement readings overlaid
@@ -94,7 +94,12 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                 }
                 else if(2 == option)
                 {
-                    CreateMultiplePlots();
+                    LogAndPrintToConsole("Enter the option # for sampling mode:");
+                    LogAndPrintToConsole("1. FASTLOG");
+                    LogAndPrintToConsole("2. MEDIUMLOG");
+                    LogAndPrintToConsole("3. SLOWLOG");
+                    int samplingMode = int.Parse(ReceiveUserInputAndLog());                    
+                    CreateMultiplePlots(samplingMode);
                 }
                 
                 _log.Info("MakingTransientDualInterfaceMeasurementExample.Run() completed.\n");
@@ -218,7 +223,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             ReadAllEvents.ReadUntilEvent(tcpSocket, 100);
         }
 
-        private void CreateMultiplePlots()
+        private void CreateMultiplePlots(int samplingMode)
         {
             int totalSampleCount = 0;
             string readFilePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -263,7 +268,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                 throw new InvalidOperationException("The Grease and no Grease testing were ran with different sampling mode.");
             }      
 
-            logScaleTime = LogTimeData(totalSampleCount);
+            logScaleTime = LogTimeData(totalSampleCount, samplingMode);
 
             var plt = new ScottPlot.Plot();
             // plot the pulse shape using the fetched voltage readings
@@ -275,17 +280,17 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             plt.Legend();
 
             string plotFileName = "";
-            if(SLOW_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+            if(SLOW_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Slow Log Sampling");
                 plotFileName = "slow_log_sampling.png";
             }
-            else if(MEDIUM_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+            else if(MEDIUM_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Medium Log Sampling");
                 plotFileName = "medium_log_sampling.png"; 
             }
-            else if(FAST_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+            else if(FAST_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Fast Log Sampling");
                 plotFileName = "fast_log_sampling.png";
@@ -306,17 +311,17 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             plt2.Legend();   
 
             string plotFileName2 = "";    
-            if(SLOW_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+            if(SLOW_LOG_MODE == samplingMode)
             {
                 plt2.Title("Voltage Subtraction (Slow Log Sampling)");
                 plotFileName2 = "slow_log_sampling_subtraction.png";
             }
-            else if(MEDIUM_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+            else if(MEDIUM_LOG_MODE == samplingMode)
             {
                 plt2.Title("Voltage Subtraction (Medium Log Sampling)");
                 plotFileName2 = "medium_log_sampling_subtraction.png";
             }
-            else if(FAST_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+            else if(FAST_LOG_MODE == samplingMode)
             {
                 plt2.Title("Voltage Subtraction (Fast Log Sampling)");
                 plotFileName2 = "fast_log_sampling_subtraction.png";
@@ -325,7 +330,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             System.Environment.Exit(0);    
         }
 
-        private List<double> LogTimeData(int totalSampleCount)
+        private List<double> LogTimeData(int totalSampleCount, int samplingMode)
         {
             var timeAxis = new List<double>();
             float timeUs = 0;
@@ -346,7 +351,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             for(int sampleNumber=1; sampleNumber<=totalSampleCount; sampleNumber++)
             {
                 timeAxis.Add(timeUs/1000000);
-                if(SLOW_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+                if(SLOW_LOG_MODE == samplingMode)
                 {
                     // log time scale
                     if( sampleNumber > 0 && sampleNumber <=49)
@@ -382,7 +387,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                         timeUs = timeUs + 20000000;
                     }                    
                 }
-                else if(MEDIUM_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+                else if(MEDIUM_LOG_MODE == samplingMode)
                 {
                     if(sampleNumber > 0 && sampleNumber <=49)
                     {
@@ -413,7 +418,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                         timeUs = timeUs + 1200000;
                     }
                 }
-                else if(FAST_LOG_TOTAL_SAMPLE_COUNT == totalSampleCount)
+                else if(FAST_LOG_MODE == samplingMode)
                 {
                     if(sampleNumber > 0 && sampleNumber <=99)
                     {
