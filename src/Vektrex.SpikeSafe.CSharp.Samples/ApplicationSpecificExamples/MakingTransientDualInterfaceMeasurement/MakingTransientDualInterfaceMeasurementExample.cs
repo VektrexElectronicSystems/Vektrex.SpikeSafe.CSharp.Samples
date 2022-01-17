@@ -210,7 +210,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // set auto range
             tcpSocket.SendScpiCommand("SOUR1:CURR:RANG:AUTO 1");
             // set currenty to 1A
-            tcpSocket.SendScpiCommand("SOUR1:CURR 1");
+            tcpSocket.SendScpiCommand("SOUR1:CURR 0.35");
             // set Ramp mode to Fast
             tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
             // request SpikeSafe events and read data
