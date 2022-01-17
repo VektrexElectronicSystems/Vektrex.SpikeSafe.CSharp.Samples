@@ -209,7 +209,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             tcpSocket.SendScpiCommand("SOUR1:VOLT 25");
             // set auto range
             tcpSocket.SendScpiCommand("SOUR1:CURR:RANG:AUTO 1");
-            // set currenty to 1A
+            // set currenty to 0.35A
             tcpSocket.SendScpiCommand("SOUR1:CURR 0.35");
             // set Ramp mode to Fast
             tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
