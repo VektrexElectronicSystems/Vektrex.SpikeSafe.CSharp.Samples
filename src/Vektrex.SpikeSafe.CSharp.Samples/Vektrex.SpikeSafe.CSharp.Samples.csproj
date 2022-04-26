@@ -2,12 +2,12 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net48</TargetFramework>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ScottPlot" Version="4.1.16"/>
-    <PackageReference Include="NLog" Version="4.7.10"/>
-    <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.1.1"/>
-    <None Include="nlog.config" CopyToOutputDirectory="Always"/>
+    <PackageReference Include="ScottPlot" Version="4.1.16" />
+    <PackageReference Include="NLog" Version="4.7.10" />
+    <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.2.0" />
+    <None Include="nlog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

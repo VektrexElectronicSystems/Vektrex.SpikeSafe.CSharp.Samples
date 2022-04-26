@@ -5,8 +5,8 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": ".NET Core Launch (console)",
-            "type": "coreclr",
+            "name": ".NET Launch (console)",
+            "type": "clr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
@@ -18,8 +18,8 @@
             "stopAtEntry": false
         },
         {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
+            "name": ".NET Attach",
+            "type": "clr",
             "request": "attach",
             "processId": "${command:pickProcess}"
         }
