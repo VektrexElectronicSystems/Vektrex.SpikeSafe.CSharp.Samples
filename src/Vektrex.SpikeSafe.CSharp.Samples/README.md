@@ -21,7 +21,7 @@ To run these samples an IDE such as [Visual Studio Code](https://code.visualstud
 The [.NET Framework 4.8 Developer Pack](https://dotnet.microsoft.com/download/dotnet-framework/net48) need to be installed.
 
 ### Installing Vektrex.SpikeSafe.CSharp.Lib Package
-The [Vektrex.SpikeSafe.CSharp.Lib](https://www.nuget.org/packages/Vektrex.SpikeSafe.CSharp.Lib/) package will need to be installed using the command `Install-Package Vektrex.SpikeSafe.CSharp.Lib`. Vektrex recommends always having the latest version of Vektrex.SpikeSafe.CSharp.Lib when running these sequences; the current version is 1.1.1.
+The [Vektrex.SpikeSafe.CSharp.Lib](https://www.nuget.org/packages/Vektrex.SpikeSafe.CSharp.Lib/) package will need to be installed using the command `Install-Package Vektrex.SpikeSafe.CSharp.Lib`. Vektrex recommends always having the latest version of Vektrex.SpikeSafe.CSharp.Lib when running these sequences; the current version is 1.2.0.
 
 Once the Vektrex.SpikeSafe.CSharp.Lib package is installed, each sample can be run independently by commenting out its respectively 'Run()' line in Program.cs. When a sample is run verify the expected outputs are obtained, as specified by the file's markdown description.
 
