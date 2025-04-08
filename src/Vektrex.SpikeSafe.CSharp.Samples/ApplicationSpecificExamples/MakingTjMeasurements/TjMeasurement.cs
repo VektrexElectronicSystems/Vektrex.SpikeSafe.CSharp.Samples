@@ -7,6 +7,7 @@
 // 3.) The SpikeSafe will be run in CDBC mode and the digitizer will make voltage readings at the beginning of an Off Time cycle
 // after step 3, readings will be graphed with a logarithmic x-axis
 
+using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -136,8 +137,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
                 LogAndPrintToConsole("Voltage readings are graphed above. Determine the x-values at which the graph is linear by hovering the mouse over graph and noting the \'x=\' in the bottom right.\n\nTake note of the starting x-value and the last x-value (maximum = 500) at which the graph is linear. Once these values are written down, close the graph and enter those values in the console.\n");
 
                 // plot the pulse shape using the fetched voltage readings
-                plt.YAxis.Label("Voltage (V)");
-                plt.XAxis.Label("Sample number after Heating Current output [logarithmic] (#)");
+                plt.YLabel("Voltage (V)");
+                plt.XLabel("Sample number after Heating Current output [logarithmic] (#)");
                 plt.Title("Digitizer Voltage Readings - Vf(0) Extrapolation");
 
                 // The graph zoom offset is used to zoom in or out to better visualize data in the final graph to make it easier to determine Vf(0). Value is in volts
@@ -146,10 +147,12 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
 
                 // Setting the axes so all data can be effectively visualized. For the y-axis, graphZoomOffset = 0.01 by default. 
                 // Modify as necessary at the top of this sequence so that Vf(0) can effectively be estimated using this graph               
-                plt.SetAxisLimits(1, 500, voltageReadings.Min() - graphZoomOffset, voltageReadings.Last() + graphZoomOffset);
+                plt.Axes.SetLimits(1, 500, voltageReadings.Min() - graphZoomOffset, voltageReadings.Last() + graphZoomOffset);
 
-                plt.AddScatterLines(ScottPlot.Tools.Log10(samples.ToArray()), voltageReadings.ToArray(), Color.Blue, 1);
-                plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"vf0_extrapolation_graph.png"));
+                var scatter = plt.Add.ScatterLine(samples.Select(t => Math.Log10(t)).ToArray(), voltageReadings.ToArray());
+                scatter.Color = Colors.Blue;
+                scatter.LineWidth = 1;
+                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "vf0_extrapolation_graph.png"), 800, 600);
 
                 LogAndPrintToConsole("Enter the Start sample (of the linear portion of the graph):");
                 int firstLinearSample = int.Parse(ReceiveUserInputAndLog());

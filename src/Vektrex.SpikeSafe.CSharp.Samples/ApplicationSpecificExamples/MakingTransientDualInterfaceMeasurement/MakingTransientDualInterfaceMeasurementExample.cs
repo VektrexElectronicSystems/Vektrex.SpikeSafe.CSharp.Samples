@@ -7,6 +7,7 @@ using System.Linq;
 using System.Drawing;
 using System.Reflection;
 using Vektrex.SpikeSafe.CSharp.Lib;
+using ScottPlot;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTransientDualInterfaceMeasurement
 {    
@@ -132,28 +133,29 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             var plt = new ScottPlot.Plot();
 
             // plot the pulse shape using the fetched voltage readings
-            plt.AddScatterLines(ScottPlot.Tools.Log10(logScaleTime.ToArray()), voltageReadings.ToArray(), Color.Blue, 1);
-            plt.YAxis.Label("Voltage (V)");
-            plt.XAxis.Label("Time 10^ (s)");
-            plt.XAxis.MinorLogScale(true);
+            var scatter = plt.Add.ScatterLine(logScaleTime.Select(t => Math.Log10(t)).ToArray(), voltageReadings.ToArray());
+            scatter.Color = Colors.Blue;
+            scatter.LineWidth = 1;
+            plt.YLabel("Voltage (V)");
+            plt.XLabel("Time 10^ (s)");
 
             string plotFileName = "";
-            if(SLOW_LOG_MODE == samplingMode)
+            if (SLOW_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Slow Log Sampling");
                 plotFileName = "slow_log_sampling_single_plot.png";
             }
-            else if(MEDIUM_LOG_MODE == samplingMode)
+            else if (MEDIUM_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Medium Log Sampling");
                 plotFileName = "medium_log_sampling_single_plot.png";
             }
-            else if(FAST_LOG_MODE == samplingMode)
+            else if (FAST_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Fast Log Sampling");
                 plotFileName = "fast_log_sampling_single_plot.png";
             }
-            plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), plotFileName));            
+            plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), plotFileName), 800, 600);
         }
 
         private void WriteDigitizerVoltageToFile(int greaseInput, List<DigitizerData> digitizerData)
@@ -272,62 +274,69 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
 
             var plt = new ScottPlot.Plot();
             // plot the pulse shape using the fetched voltage readings
-            plt.AddScatterLines(ScottPlot.Tools.Log10(logScaleTime.ToArray()), voltageReadingsNoGrease.ToArray(), Color.Blue, 1, label: "No Grease");
-            plt.AddScatterLines(ScottPlot.Tools.Log10(logScaleTime.ToArray()), voltageReadingsGrease.ToArray(), Color.Red, 1, label: "Grease");
-            plt.YAxis.Label("Voltage (V)");
-            plt.XAxis.Label("Time 10^ (s)");
-            plt.XAxis.MinorLogScale(true);
-            plt.Legend();
+            var noGreaseLine = plt.Add.ScatterLine(logScaleTime.Select(t => Math.Log10(t)).ToArray(), voltageReadingsNoGrease.ToArray());
+            noGreaseLine.Color = Colors.Blue;
+            noGreaseLine.LineWidth = 1;
+            noGreaseLine.LegendText = "No Grease";
+            var greaseLine = plt.Add.ScatterLine(logScaleTime.Select(t => Math.Log10(t)).ToArray(), voltageReadingsNoGrease.ToArray());
+            greaseLine.Color = Colors.Red;
+            greaseLine.LineWidth = 1;
+            greaseLine.LegendText = "Grease";
+            plt.YLabel("Voltage (V)");
+            plt.XLabel("Time 10^ (s)");
+            plt.ShowLegend();
 
             string plotFileName = "";
-            if(SLOW_LOG_MODE == samplingMode)
+            if (SLOW_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Slow Log Sampling");
                 plotFileName = "slow_log_sampling.png";
             }
-            else if(MEDIUM_LOG_MODE == samplingMode)
+            else if (MEDIUM_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Medium Log Sampling");
-                plotFileName = "medium_log_sampling.png"; 
+                plotFileName = "medium_log_sampling.png";
             }
-            else if(FAST_LOG_MODE == samplingMode)
+            else if (FAST_LOG_MODE == samplingMode)
             {
                 plt.Title("Digitizer Fast Log Sampling");
                 plotFileName = "fast_log_sampling.png";
             }
-            plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), plotFileName));
-             
+            plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), plotFileName), 800, 600);
+
             // create subtracted plot
             List<double> subtractedVoltage = new List<double>();
-            for(int sampleNumber=0; sampleNumber<totalSampleCount; sampleNumber++)
+            for (int sampleNumber = 0; sampleNumber < totalSampleCount; sampleNumber++)
             {
                 subtractedVoltage.Add(voltageReadingsGrease[sampleNumber] - voltageReadingsNoGrease[sampleNumber]);
             }
             var plt2 = new ScottPlot.Plot();
-            plt2.AddScatterLines(ScottPlot.Tools.Log10(logScaleTime.ToArray()), subtractedVoltage.ToArray(), Color.Green, 1, label: "Voltage Difference");
-            plt2.YAxis.Label("Voltage (V)");
-            plt2.XAxis.Label("Time 10^ (s)");             
-            plt2.XAxis.MinorLogScale(true);
-            plt2.Legend();   
+            var subtractedPlot = plt2.Add.ScatterLine(logScaleTime.Select(t => Math.Log10(t)).ToArray(), subtractedVoltage.ToArray());
+            subtractedPlot.Color = Colors.Green;
+            subtractedPlot.LineWidth = 1;
+            subtractedPlot.LegendText = "Voltage Difference";
+            plt2.YLabel("Voltage (V)");
+            plt2.XLabel("Time 10^ (s)");
+            plt2.ShowLegend();
 
-            string plotFileName2 = "";    
-            if(SLOW_LOG_MODE == samplingMode)
+            string plotFileName2 = "";
+            if (SLOW_LOG_MODE == samplingMode)
             {
                 plt2.Title("Voltage Subtraction (Slow Log Sampling)");
                 plotFileName2 = "slow_log_sampling_subtraction.png";
             }
-            else if(MEDIUM_LOG_MODE == samplingMode)
+            else if (MEDIUM_LOG_MODE == samplingMode)
             {
                 plt2.Title("Voltage Subtraction (Medium Log Sampling)");
                 plotFileName2 = "medium_log_sampling_subtraction.png";
             }
-            else if(FAST_LOG_MODE == samplingMode)
+            else if (FAST_LOG_MODE == samplingMode)
             {
                 plt2.Title("Voltage Subtraction (Fast Log Sampling)");
                 plotFileName2 = "fast_log_sampling_subtraction.png";
-            }   
-            plt2.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), plotFileName2));
-            System.Environment.Exit(0);    
+            }
+            plt2.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), plotFileName2), 800, 600);
+            System.Environment.Exit(0);
         }
 
         private List<double> LogTimeData(int totalSampleCount, int samplingMode)

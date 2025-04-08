@@ -3,6 +3,7 @@
 // Load the results of sample number, current, voltage, and calculated voltage to a table
 // Graph the results of current (I), voltage (V), and calculated voltage (V) measurements. Voltage and calculated voltage can be compared
 
+using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -138,19 +139,25 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 }
 
                 // configure the voltage data
-                var voltageReadingsLine = plt.AddScatterLines(currentSteps.ToArray(), voltageReadings.ToArray(), Color.Red, 1);
-                voltageReadingsLine.YAxisIndex = 0;
-                plt.YAxis.Label("Voltage (V)", Color.Red);
-                plt.XAxis.Label("Set Current (A)");               
-                
+                var voltageReadingsLine = plt.Add.ScatterLine(currentSteps.ToArray(), voltageReadings.ToArray());
+                voltageReadingsLine.Color = Colors.Red;
+                voltageReadingsLine.LineWidth = 1;
+                voltageReadingsLine.Axes.YAxis = plt.Axes.Left;
+                plt.XLabel("Set Current (mA)");
+                plt.Axes.Left.Label.Text = "Voltage (V)";
+                plt.Axes.Left.Label.ForeColor = Colors.Red;
+
                 // configure the calculated voltage data
-                var voltageCalculatedReadingsLine = plt.AddScatterLines(currentSteps.ToArray(), voltageCalculatedReadings.ToArray(), Color.Blue, 1);
-                voltageCalculatedReadingsLine.YAxisIndex = 1;
-                plt.YAxis2.Label("Calculated Voltage (V)", Color.Blue);
-                plt.YAxis2.Ticks(true);
+                var voltageCalculatedReadingsLine = plt.Add.ScatterLine(currentSteps.ToArray(), voltageCalculatedReadings.ToArray());
+                voltageCalculatedReadingsLine.Color = Colors.Blue;
+                voltageCalculatedReadingsLine.LineWidth = 1;
+                voltageCalculatedReadingsLine.Axes.YAxis = plt.Axes.Right;
+                plt.Axes.Right.Label.Text = "Calculated Voltage (V)";
+                plt.Axes.Right.Label.ForeColor = Colors.Blue;
+                plt.Axes.Right.IsVisible = true; // ensure right Y axis is shown
 
                 plt.Title(string.Format("Sweep ({0}A to {1}A)", startCurrentAmps, stopCurrentAmps));
-                plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"dc_staircase_graph.png"));
+                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "dc_staircase_graph.png"), 800, 600);
 
                 _log.Info("MeasuringDcStaircaseVoltages.Run() completed.\n");
             }

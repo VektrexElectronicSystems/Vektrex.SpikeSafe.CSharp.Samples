@@ -5,6 +5,7 @@
 // Expectation: 
 // Channel 1 will be driven with 100mA with a forward voltage of ~1V during this time
 
+using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -104,11 +105,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 }
 
                 // plot the pulse shape using the fetched voltage readings
-                plt.AddScatterLines(samples.ToArray(), voltageReadings.ToArray(), Color.Blue, 1);
-                plt.YAxis.Label("Voltage (V)");
-                plt.XAxis.Label("Sample Number (#)");
+                var scatter = plt.Add.ScatterLine(samples.ToArray(), voltageReadings.ToArray());
+                scatter.Color = Colors.Blue;
+                scatter.LineWidth = 1;
+                plt.YLabel("Voltage (V)");
+                plt.XLabel("Sample Number (#)");
                 plt.Title("Digitizer Voltage Readings - 1ms 100mA Pulse");
-                plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"single_pulse_digitizer_voltage.png"));
+                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"single_pulse_digitizer_voltage.png"), 800, 600);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();

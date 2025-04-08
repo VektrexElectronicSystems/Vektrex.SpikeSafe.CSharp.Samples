@@ -4,6 +4,7 @@
 // Expectation: 
 // The digitizer will output a trigger signal, the SpikeSafe will run a 3-pulse Multi Pulse sequence, and the voltages will be measured by the Digitizer and graphed
 
+using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -127,13 +128,17 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 }
 
                 // plot the pulse shape using the fetched voltage readings
-                plt.YAxis.Label("Voltage (V)");
-                plt.XAxis.Label("Sample Number (#)");
+                plt.YLabel("Voltage (V)");
+                plt.XLabel("Sample Number (#)");
                 plt.Title("Digitizer Voltage Readings - two 3-pulse Multi-Pulse outputs");
-                plt.XAxis.ManualTickSpacing(1);
-                plt.SetAxisLimits(0, 7, voltageReadings.Min() - 0.1, voltageReadings.Max() + 0.1);
-                plt.AddScatterLines(samples.ToArray(), voltageReadings.ToArray(), Color.Blue, 1);
-                plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"digitizer_readings_graph.png"));
+                ScottPlot.TickGenerators.NumericAutomatic tickGenX = new ScottPlot.TickGenerators.NumericAutomatic();
+                tickGenX.MinimumTickSpacing = 1;
+                plt.Axes.Bottom.TickGenerator = tickGenX;
+                plt.Axes.SetLimits(0, 7, voltageReadings.Min() - 0.1, voltageReadings.Max() + 0.1);
+                var scatter = plt.Add.ScatterLine(samples.ToArray(), voltageReadings.ToArray());
+                scatter.Color = Colors.Blue;
+                scatter.LineWidth = 1;
+                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "digitizer_readings_graph.png"), 800, 600);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();
