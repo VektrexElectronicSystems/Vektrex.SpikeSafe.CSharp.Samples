@@ -7,6 +7,7 @@
 // Channel 1 will run a sweep from 20mA to 200mA, which will take 100ms. Expecting a low (<1V) forward voltage
 // Using external CAS DLL, control the spectrometer to make light measurements throughout the Pulsed Sweep
 
+using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,7 +40,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
 
                 double complianceVoltageVolts = 20;
                 double pulseOnTimeSeconds = 0.02;
-                double pulseOffTimeSeconds = 0.0; // setting too small of an off time may result in missed measurements by the CAS4
+                double pulseOffTimeSeconds = 0.05; // setting too small of an off time may result in missed measurements by the CAS4
 
                 // CAS4 measurement settings
                 double cas4IntegrationTimeMilliseconds = 10;
@@ -71,20 +72,20 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 // check for errors on the CAS4
                 CheckCASError(deviceId);
 
-                string livSweepsFolder = "ApplicationSpecificExamples\\RunningLivSweeps";
+                string livSweepsFolder = @"..\..\..\ApplicationSpecificExamples\RunningLivSweeps";
 
                 // specify and configure the .INI configuration and .ISC calibration file to initialize the CAS4
                 Console.WriteLine("Enter .INI configuration file (must be located in src\\ApplicationSpecificExamples\\RunningLivSweeps) to be used for CAS operation:");
                 string iniFileString = Console.ReadLine();
                 if (iniFileString.EndsWith(".ini") == false)
                     iniFileString += ".ini";
-                string iniFilePath = Path.Combine(Directory.GetCurrentDirectory(), livSweepsFolder, iniFileString);
+                string iniFilePath = Path.GetFullPath(Path.Combine(livSweepsFolder, iniFileString));
 
                 Console.WriteLine("Enter .ISC calibration file (must be located in src\\ApplicationSpecificExamples\\RunningLivSweeps) to be used for CAS operation:");
                 string iscFileString = Console.ReadLine();
                 if (iscFileString.EndsWith(".isc") == false)
                     iscFileString += ".isc";
-                string iscFilePath = Path.Combine(Directory.GetCurrentDirectory(), livSweepsFolder, iscFileString);
+                string iscFilePath = Path.GetFullPath(Path.Combine(livSweepsFolder, iscFileString));
 
                 CAS4DLL.casSetDeviceParameterString(deviceId, CAS4DLL.dpidConfigFileName, iniFilePath);
                 CAS4DLL.casSetDeviceParameterString(deviceId, CAS4DLL.dpidCalibFileName, iscFilePath);
@@ -231,17 +232,25 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 var plt = new ScottPlot.Plot();
 
                 // configure the voltage data
-                var voltageReadingsLine = plt.AddScatterLines(currentSteps.ToArray(), voltageReadings.ToArray(), Color.Red, 1);
-                plt.XAxis.Label("Set Current (mA)");         
-                plt.YAxis.Label("Voltage (V)", Color.Red);  
-                
-                // configure the light measurement data
-                var voltageCalculatedReadingsLine = plt.AddScatterLines(currentSteps.ToArray(), lightReadings.ToArray(), Color.Blue, 1);
-                plt.YAxis2.Label("Photometric (lm)", Color.Blue);
-                plt.YAxis2.Ticks(true);
+                var voltageReadingsLine = plt.Add.ScatterLine(currentSteps.ToArray(), voltageReadings.ToArray());
+                voltageReadingsLine.Color = Colors.Red;
+                voltageReadingsLine.LineWidth = 1;
+                voltageReadingsLine.Axes.YAxis = plt.Axes.Left;
+                plt.XLabel("Set Current (mA)");         
+                plt.Axes.Left.Label.Text = "Voltage (V)";
+                plt.Axes.Left.Label.ForeColor = Colors.Red;
 
-                plt.Title(string.Format("'LIV Sweep ({}mA to {}mA)", livStartCurrentMilliamps, livStopCurrentMilliamps));
-                plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"liv_sweep_graph_screenshot.png"));
+                // configure the light measurement data
+                var voltageCalculatedReadingsLine = plt.Add.ScatterLine(currentSteps.ToArray(), lightReadings.ToArray());
+                voltageCalculatedReadingsLine.Color = Colors.Blue;
+                voltageCalculatedReadingsLine.LineWidth = 1;
+                voltageCalculatedReadingsLine.Axes.YAxis = plt.Axes.Right;
+                plt.Axes.Right.Label.Text = "Photometric (lm)";
+                plt.Axes.Right.Label.ForeColor = Colors.Blue;
+                plt.Axes.Right.IsVisible = true; // ensure right Y axis is shown
+
+                plt.Title(string.Format("'LIV Sweep ({0}mA to {1}mA)", livStartCurrentMilliamps, livStopCurrentMilliamps));
+                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"liv_sweep_graph_screenshot.png"), 800, 600);
 
                 _log.Info("LIVSweepExample.Run() completed.\n");
             }

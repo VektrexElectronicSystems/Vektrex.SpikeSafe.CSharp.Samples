@@ -6,6 +6,7 @@
 // Channel 1 will output 100mA DC current. Expecting a low (<1V) forward voltage
 // Using external CAS DLL, control the spectrometer to make light measurements and then graph the wavelength spectrum
 
+using ScottPlot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -64,20 +65,20 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 // check for errors on the CAS4
                 CheckCASError(deviceId);
 
-                string measuringWaveLengthFolder = "ApplicationSpecificExamples\\MeasuringWavelengthSpectrum";
+                string measuringWaveLengthFolder = @"..\..\..\ApplicationSpecificExamples\MeasuringWavelengthSpectrum";
 
                 // specify and configure the .INI configuration and .ISC calibration file to initialize the CAS4
                 Console.WriteLine("Enter .INI configuration file (must be located in src\\ApplicationSpecificExamples\\MeasuringWavelengthSpectrum) to be used for CAS operation:");
                 string iniFileString = Console.ReadLine();
                 if (iniFileString.EndsWith(".ini") == false)
                     iniFileString += ".ini";
-                string iniFilePath = Path.Combine(Directory.GetCurrentDirectory(), measuringWaveLengthFolder, iniFileString);
+                string iniFilePath = Path.GetFullPath(Path.Combine(measuringWaveLengthFolder, iniFileString));
 
                 Console.WriteLine("Enter .ISC calibration file (must be located in src\\ApplicationSpecificExamples\\MeasuringWavelengthSpectrum) to be used for CAS operation:");
                 string iscFileString = Console.ReadLine();
                 if (iscFileString.EndsWith(".isc") == false)
                     iscFileString += ".isc";
-                string iscFilePath = Path.Combine(Directory.GetCurrentDirectory(), measuringWaveLengthFolder, iscFileString);
+                string iscFilePath = Path.GetFullPath(Path.Combine(measuringWaveLengthFolder, iscFileString));
 
                 CAS4DLL.casSetDeviceParameterString(deviceId, CAS4DLL.dpidConfigFileName, iniFilePath);
                 CAS4DLL.casSetDeviceParameterString(deviceId, CAS4DLL.dpidCalibFileName, iscFilePath);
@@ -194,11 +195,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                     spectralIntensity.Add((point/spectrumMax) * 100);
 
                 var plt = new ScottPlot.Plot();
-                plt.AddScatterLines(wavelengths.ToArray(), spectralIntensity.ToArray(), Color.Blue, 1);
-                plt.YAxis.Label("Spectral Intensity (%)");
-                plt.XAxis.Label("Wavelength (nm))");               
-                plt.SetAxisLimits(wavelengths.Min(), wavelengths.Max(), spectralIntensity.Min(), 100);
-                plt.SaveFig(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"spectrum_output.png"));
+                var scatter = plt.Add.ScatterLine(wavelengths.ToArray(), spectralIntensity.ToArray());
+                scatter.Color = Colors.Blue;
+                scatter.LineWidth = 1;
+                plt.YLabel("Spectral Intensity (%)");
+                plt.XLabel("Wavelength (nm))");
+                plt.Axes.SetLimits(wavelengths.Min(), wavelengths.Max(), spectralIntensity.Min(), 100);
+                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"spectrum_output.png"), 800, 600);
 
                 _log.Info("WavelengthSpectrumExample.Run() completed.\n");
             }
