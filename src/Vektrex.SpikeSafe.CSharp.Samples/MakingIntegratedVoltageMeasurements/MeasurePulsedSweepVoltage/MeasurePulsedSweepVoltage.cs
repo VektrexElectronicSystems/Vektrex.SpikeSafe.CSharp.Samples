@@ -77,7 +77,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is fully ramped so we can send a trigger command for a pulsed sweep
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // start Digitizer measurements. We want the digitizer waiting for triggers before starting the pulsed sweep
                 tcpSocket.SendScpiCommand("VOLT:INIT");

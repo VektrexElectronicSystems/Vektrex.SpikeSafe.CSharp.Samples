@@ -59,19 +59,19 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // Wait until Channel 1 is ready for a trigger command
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // Output pulsed sweep for Channel 1
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
 
                 // Wait for the Pulsed Sweep to be complete
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 109); // event 109 is "Pulsed Sweep Complete"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.PULSED_SWEEP_COMPLETE); // event 109 is "Pulsed Sweep Complete"
 
                 // Output pulsed sweep for Channel 1. Multiple sweeps can be run while the channel is enabled
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
 
                 // Wait for the Pulsed Sweep to be complete
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 109); // event 109 is "Pulsed Sweep Complete"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.PULSED_SWEEP_COMPLETE); // event 109 is "Pulsed Sweep Complete"
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
