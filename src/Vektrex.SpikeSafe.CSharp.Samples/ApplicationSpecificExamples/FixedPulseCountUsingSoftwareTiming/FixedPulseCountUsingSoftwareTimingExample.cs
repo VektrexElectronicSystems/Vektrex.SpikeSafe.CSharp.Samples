@@ -83,7 +83,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPuls
                 tcpSocket.SendScpiCommand("OUTP1 ON");
 
                 // wait until Channel 1 is ready
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // pulsing starts before before getting Channel Ready message
                 // wait 30ms for getting ~10000 pulses

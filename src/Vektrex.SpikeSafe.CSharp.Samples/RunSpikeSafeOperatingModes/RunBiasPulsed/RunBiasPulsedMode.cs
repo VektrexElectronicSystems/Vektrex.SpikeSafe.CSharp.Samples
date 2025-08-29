@@ -67,7 +67,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBiasPul
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until the channel is fully ramped
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // check for all events and measure readings on Channel 1 once per second for 10 seconds,
                 // it is best practice to do this to ensure Channel 1 is on and does not have any errors

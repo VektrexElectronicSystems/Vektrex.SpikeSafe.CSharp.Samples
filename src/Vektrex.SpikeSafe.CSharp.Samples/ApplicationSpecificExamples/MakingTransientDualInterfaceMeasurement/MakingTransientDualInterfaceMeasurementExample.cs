@@ -222,7 +222,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // Start the channel
             tcpSocket.SendScpiCommand("OUTP1 ON");
             // wait for channel ready
-            ReadAllEvents.ReadUntilEvent(tcpSocket, 100);
+            ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY);
         }
 
         private void CreateMultiplePlots(int samplingMode)

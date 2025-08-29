@@ -49,13 +49,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 tcpSocket.SendScpiCommand("OUTP1 1");                                         
 
                 // Wait until channel is ready for a trigger command
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // Output modulated sequence
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
 
                 // Wait until channel has completed it modulated sequence
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 105); // event 105 is "Modulated SEQ completed"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.MODULATED_SEQ_IS_COMPLETED); // event 105 is "Modulated SEQ completed"
 
                 // turn off Channel 1
                 tcpSocket.SendScpiCommand("OUTP1 0");      
@@ -70,7 +70,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 tcpSocket.SendScpiCommand("OUTP1 1");                                         
 
                 // Wait until channel is ready for a trigger command
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // Output modulated sequence
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");

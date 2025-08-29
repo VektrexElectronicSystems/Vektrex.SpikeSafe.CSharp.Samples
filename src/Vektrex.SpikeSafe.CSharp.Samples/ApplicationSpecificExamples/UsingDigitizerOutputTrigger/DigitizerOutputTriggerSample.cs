@@ -81,7 +81,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready to pulse
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // output the Digitizer hardware output trigger. 10µs after this signal is outputted, the Multi Pulse sequence will start
                 tcpSocket.SendScpiCommand("VOLT:OUTP:TRIG");

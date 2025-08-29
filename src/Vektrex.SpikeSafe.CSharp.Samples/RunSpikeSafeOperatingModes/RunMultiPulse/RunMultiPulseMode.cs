@@ -59,7 +59,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPu
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // Wait until channel is ready for a trigger command
-                ReadAllEvents.ReadUntilEvent(tcpSocket, 100); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // Output 1ms pulse for Channel 1
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
