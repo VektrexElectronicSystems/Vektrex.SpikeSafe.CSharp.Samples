@@ -14,6 +14,8 @@
             TcpSocket spikeSafeSocket,
             bool? enableLogging = null,
             int? digitizerNumber = null)
+        - Added optional parameters:
+            - digitizerNumber: The Digitizer number to fetch from. If null, fetches from Digitizer 1 ("VOLT").
     - DigitizerDataFetch.GetNewVoltageDataEstimatedCompleteTime(
             int apertureMicroseconds,
             int readingCount,
@@ -25,6 +27,10 @@
             bool? enableLogging = null,
             double? timeout = null,
             int? digitizerNumber = null)
+        - Added optional parameters:
+            - timeout: Timeout in seconds for waiting for new data. When null, waits indefinitely, otherwise a TimeoutException is thrown when the timeout is reached.
+            - digitizerNumber: The Digitizer number to query. When null, queries Digitizer 1 (prefix "VOLT").
+        - Now returns when Digitizer partial data is ready as well as full data
     - Discharge.WaitForSpikeSafeChannelDischarge(TcpSocket spikeSafeSocket, SpikeSafeInfo spikeSafeInfo, double complianceVoltage, int channelNumber = 1)
 - Updated
     - PulseWidthCorrection.GetOptimumPulseWidthCorrection(double spikeSafeModelMaxCurrentAmps, double setCurrentAmps, LoadImpedance loadImpedance, RiseTime riseTime)
