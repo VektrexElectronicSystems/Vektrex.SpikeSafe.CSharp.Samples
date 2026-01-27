@@ -35,7 +35,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
-                // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
+                // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU.  VOLT:ABOR is included with RST command on newer SMU's.
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
                 // Parse SpikeSafe information for later use
@@ -93,7 +93,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // trigger Channel 1 to start the pulsed sweep output
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
 
-                // Get estimated completion time for Digitizer measurements to occur
+                // Get estimated completion time for Digitizer measurements to occur. Estimating completion time minimizes digitizer polling during DigitizerDataFetch.
                 double estimatedCompleteTimeSeconds = DigitizerDataFetch.GetNewVoltageDataEstimatedCompleteTime(
                     apertureMicroseconds: apertureMicroseconds,
                     readingCount: readingCount,
@@ -139,7 +139,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
 
-                // wait for Channel 1 to fully discharge to ensure safe conditions before changing settings or disconnecting the load
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
                 Discharge.WaitForSpikeSafeChannelDischarge(
                     spikeSafeSocket: tcpSocket, 
                     spikeSafeInfo: spikeSafeInfo,
