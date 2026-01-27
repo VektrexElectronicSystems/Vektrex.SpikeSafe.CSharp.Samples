@@ -10,4 +10,7 @@
     <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.4.1" />
     <None Include="nlog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Vektrex.SpikeSafe.CSharp.Lib.Docs\_releases\" />
+  </ItemGroup>
 </Project>
