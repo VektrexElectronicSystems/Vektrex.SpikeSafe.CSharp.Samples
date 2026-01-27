@@ -28,6 +28,7 @@
             double? timeout = null,
             int? digitizerNumber = null)
         - Added optional parameters:
+            - waitTime: Wait time in seconds between each VOLT:NDAT? query.
             - timeout: Timeout in seconds for waiting for new data. When null, waits indefinitely, otherwise a TimeoutException is thrown when the timeout is reached.
             - digitizerNumber: The Digitizer number to query. When null, queries Digitizer 1 (prefix "VOLT").
         - Now returns when Digitizer partial data is ready as well as full data
