@@ -100,13 +100,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                     hardwareTriggerCount: hardwareTriggerCount,
                     hardwareTriggerDelayMicroseconds: hardwareTriggerDelayMicroseconds);
 
+                // fetch voltage data from Digitizer containing sample number and voltage reading
                 List<DigitizerData> digitizerData = null;
 
                 try
                 {
                     // wait for the Digitizer measurements to complete. We need to wait for the data acquisition to complete before fetching the data
                     DigitizerDataFetch.WaitForNewVoltageData(
-                        tcpSocket,
+                        spikeSafeSocket: tcpSocket,
                         waitTime: estimatedCompleteTimeSeconds,
                         enableLogging: null,
                         timeout: 10,
@@ -126,6 +127,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
 
                     // attempt to abort partial digitizer readings
                     tcpSocket.SendScpiCommand("VOLT:ABOR:PART", tcpSocket.EnableLogging);
+
+                    // wait for the Digitizer partial measurements to complete. It's expected that the wait time here will be small since we are fetching partial data after an abort.
+                    DigitizerDataFetch.WaitForNewVoltageData(
+                        spikeSafeSocket: tcpSocket,
+                        waitTime: 0.01,
+                        enableLogging: null,
+                        timeout: 10,
+                        digitizerNumber: null);
 
                     // fetch whatever data is available
                     digitizerData = DigitizerDataFetch.FetchVoltageData(
