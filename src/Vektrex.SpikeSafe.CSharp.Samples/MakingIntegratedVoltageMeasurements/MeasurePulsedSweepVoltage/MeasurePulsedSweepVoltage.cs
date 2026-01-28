@@ -35,15 +35,19 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
-                // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
+                // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU.  VOLT:ABOR is included with RST command on newer SMU's.
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
+
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket);
 
                 // set up Channel 1 for pulsed sweep output. To find more explanation, see InstrumentExamples/RunSpikeSafeOperatingModes/RunPulsed
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:STAR 0.02");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:STOP 0.2");   
-                tcpSocket.SendScpiCommand("SOUR1:CURR:STEP 100");    
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");   
+                tcpSocket.SendScpiCommand("SOUR1:CURR:STEP 100");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.0001");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.0099");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
@@ -52,11 +56,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // set Digitizer voltage range to 10V since we expect to measure voltages significantly less than 10V
                 tcpSocket.SendScpiCommand("VOLT:RANG 10");
 
-                // set Digitizer aperture for 60µs. Aperture specifies the measurement time, and we want to measure a majority of the pulse's constant current output
-                tcpSocket.SendScpiCommand("VOLT:APER 60");
+                // set Digitizer aperture. Aperture specifies the measurement time, and we want to measure a majority of the pulse's constant current output
+                int apertureMicroseconds = 60;
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(apertureMicroseconds)}");
 
-                // set Digitizer trigger delay to 20µs. We want to give sufficient delay to omit any overshoot the current pulse may have
-                tcpSocket.SendScpiCommand("VOLT:TRIG:DEL 20");
+                // set Digitizer trigger delay. We want to give sufficient delay to omit any overshoot the current pulse may have
+                int hardwareTriggerDelayMicroseconds = 20;
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(hardwareTriggerDelayMicroseconds)}");
 
                 // set Digitizer trigger source to hardware. When set to a hardware trigger, the digitizer waits for a trigger signal from the SpikeSafe to start a measurement
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
@@ -64,11 +70,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // set Digitizer trigger edge to rising. The Digitizer will start a measurement after the SpikeSafe's rising pulse edge occurs
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
 
-                // set Digitizer trigger count to 100. We want to take one voltage reading for every step in the pulsed sweep
-                tcpSocket.SendScpiCommand("VOLT:TRIG:COUN 100");
+                // set Digitizer trigger count. We want to take one voltage reading for every step in the pulsed sweep
+                int hardwareTriggerCount = 100;
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {hardwareTriggerCount}");
 
-                // set Digitizer reading count to 1. This is the amount of readings that will be taken when the Digitizer receives its specified trigger signal
-                tcpSocket.SendScpiCommand("VOLT:READ:COUN 1");
+                // set Digitizer reading count. This is the amount of readings that will be taken when the Digitizer receives its specified trigger signal
+                int readingCount = 1;
+                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {readingCount}");
 
                 // check all SpikeSafe event since all settings have been sent
                 ReadAllEvents.LogAllEvents(tcpSocket);
@@ -85,14 +93,70 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // trigger Channel 1 to start the pulsed sweep output
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
 
-                // wait for the Digitizer measurements to complete. We need to wait for the data acquisition to complete before fetching the data
-                DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);
+                // Get estimated completion time for Digitizer measurements to occur. Estimating completion time minimizes digitizer polling during DigitizerDataFetch.
+                double estimatedCompleteTimeSeconds = DigitizerDataFetch.GetNewVoltageDataEstimatedCompleteTime(
+                    apertureMicroseconds: apertureMicroseconds,
+                    readingCount: readingCount,
+                    hardwareTriggerCount: hardwareTriggerCount,
+                    hardwareTriggerDelayMicroseconds: hardwareTriggerDelayMicroseconds);
 
-                // fetch the Digitizer voltage readings
-                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
+                // fetch voltage data from Digitizer containing sample number and voltage reading
+                List<DigitizerData> digitizerData = null;
+
+                try
+                {
+                    // wait for the Digitizer measurements to complete. We need to wait for the data acquisition to complete before fetching the data
+                    DigitizerDataFetch.WaitForNewVoltageData(
+                        spikeSafeSocket: tcpSocket,
+                        waitTime: estimatedCompleteTimeSeconds,
+                        enableLogging: null,
+                        timeout: 10,
+                        digitizerNumber: null);
+
+                    // fetch complete data
+                    digitizerData = DigitizerDataFetch.FetchVoltageData(
+                        spikeSafeSocket: tcpSocket, 
+                        enableLogging: null, 
+                        digitizerNumber: null);
+
+                    _log.Info("Complete VOLT:FETC? Response returned with {0} readings", digitizerData.Count);
+                }
+                catch (Exception err)
+                {
+                    // on timeout or error, abort the digitizer and fetch any partial readings
+
+                    // attempt to abort partial digitizer readings
+                    tcpSocket.SendScpiCommand("VOLT:ABOR:PART", tcpSocket.EnableLogging);
+
+                    // wait for the Digitizer partial measurements to complete. It's expected that the wait time here will be small since we are fetching partial data after an abort.
+                    DigitizerDataFetch.WaitForNewVoltageData(
+                        spikeSafeSocket: tcpSocket,
+                        waitTime: 0.01,
+                        enableLogging: null,
+                        timeout: 10,
+                        digitizerNumber: null);
+
+                    // fetch whatever data is available
+                    digitizerData = DigitizerDataFetch.FetchVoltageData(
+                        spikeSafeSocket: tcpSocket,
+                        enableLogging: null,
+                        digitizerNumber: null);
+
+                    _log.Info("Partial VOLT:FETC? Response after error returned with {0} readings", digitizerData.Count);
+                }
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket, 
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
+
+                // disconnect from SpikeSafe                      
+                tcpSocket.Disconnect();
 
                 // put the fetched data in a plottable data format
                 var plt = new ScottPlot.Plot();
@@ -114,9 +178,6 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 plt.XLabel("Set Current (mA)");
                 plt.Title("Digitizer Voltage Readings - Pulsed Sweep (20mA to 200mA)");
                 plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"pulsed_sweep_voltages.png"), 800, 600);
-
-                // disconnect from SpikeSafe                      
-                tcpSocket.Disconnect();    
 
                 _log.Info("MeasurePulsedSweepVoltage.Run() completed.\n");
             }
