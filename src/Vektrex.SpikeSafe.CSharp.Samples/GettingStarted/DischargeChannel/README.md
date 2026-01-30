@@ -10,7 +10,7 @@ Newer SpikeSafe Firmware versions support using the SpikeSafe Get Discharge Comp
 ### Overview 
 Operates the first test using SpikeSafe as a DC current source with single output current, stops current output, and then polls the SpikeSafe Get Discharge Complete query to properly discharge the load with the intent of running a second test. Afterwards, the same process is repeated for the second and final test with the intent of ensuring the load is safe to be disconnected. 
 
-In this process, Discharge.WaitForSpikeSafeChannelDischarge() used to delay execution until the discharge is complete.
+In this process, Discharge.WaitForSpikeSafeChannelDischarge() is used to delay execution until the discharge is complete.
 
 ### Expected Output
 Once the SpikeSafe Get Discharge Complete query returns `TRUE` after the first test has completed, the second test begins supplying output current again to the load. Once the second test has completed, the SpikeSafe Get Discharge Complete query is monitored until all load voltage is discharged to notify the operator that it is safe be disconnected.
@@ -58,7 +58,7 @@ discharge_channel_using_delay.py completed.
 ### Overview
 Operates SpikeSafe as a DC current source with single output current, stops current output, and then waits to properly discharge the load with the intent of running a second test. Afterwards, the same process is repeated for the second and final test with the intent of ensuring the load is safe to be disconnected.
 
-In this process, Discharge.WaitForSpikeSafeChannelDischarge() used to delay execution until the discharge is complete.
+In this process, Discharge.WaitForSpikeSafeChannelDischarge() is used to delay execution until the discharge is complete.
 
 ### Expected Output
 Once the delay to discharge after the first test has completed, the second test begins supplying output current again to the load. Once the second test has completed, another delay to discharge occurs until all load voltage is discharged to notify the operator that it is safe to be disconnected.
