@@ -7,7 +7,7 @@ For first-time users, Vektrex recommends running the samples in the order shown 
 
 1. [TCP Sample](TcpSocketSample) - a more in depth example that connects to the SpikeSafe using a TCP socket. An *IDN? query is sent with more verbose C# commands
 1. [Read *IDN?](ReadIdn) - Uses the SCPI Standard "*IDN?" query and following information queries to obtain the model of your SpikeSafe
-1. [Read All Events](ReadAllEvents) - Reads all events from the SpikeSafe event queue 
+1. [Read All Events](ReadAllEventsSample) - Reads all events from the SpikeSafe event queue 
 1. [Read Memory Table Data](ReadMemoryTableData) - Reads the SpikeSafe status and obtains current operational information from the SpikeSafe
 1. [Discharge Channel](DischargeChannel) - Shows how to properly shut down the SpikeSafe channel and wait for the load voltage to discharge before taking further action
 
