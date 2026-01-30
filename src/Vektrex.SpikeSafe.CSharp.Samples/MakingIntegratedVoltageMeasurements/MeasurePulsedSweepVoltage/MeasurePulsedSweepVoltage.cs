@@ -39,7 +39,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
                 // Parse SpikeSafe information for later use
-                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket);
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set up Channel 1 for pulsed sweep output. To find more explanation, see InstrumentExamples/RunSpikeSafeOperatingModes/RunPulsed
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
@@ -123,26 +123,47 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 }
                 catch (Exception err)
                 {
-                    // on timeout or error, abort the digitizer and fetch any partial readings
+                    _log.Error("Complete VOLT:FETC? Response error: {0}", err.Message);
 
-                    // attempt to abort partial digitizer readings
-                    tcpSocket.SendScpiCommand("VOLT:ABOR:PART", tcpSocket.EnableLogging);
+                    try
+                    {
+                        // on timeout or error, abort the digitizer and fetch any partial readings
 
-                    // wait for the Digitizer partial measurements to complete. It's expected that the wait time here will be small since we are fetching partial data after an abort.
-                    DigitizerDataFetch.WaitForNewVoltageData(
-                        spikeSafeSocket: tcpSocket,
-                        waitTime: 0.01,
-                        enableLogging: null,
-                        timeout: 10,
-                        digitizerNumber: null);
+                        // attempt to abort partial digitizer readings
+                        tcpSocket.SendScpiCommand("VOLT:ABOR:PART", tcpSocket.EnableLogging);
 
-                    // fetch whatever data is available
-                    digitizerData = DigitizerDataFetch.FetchVoltageData(
-                        spikeSafeSocket: tcpSocket,
-                        enableLogging: null,
-                        digitizerNumber: null);
+                        // wait for the Digitizer partial measurements to complete. It's expected that the wait time here will be small since we are fetching partial data after an abort.
+                        DigitizerDataFetch.WaitForNewVoltageData(
+                            spikeSafeSocket: tcpSocket,
+                            waitTime: 0.01,
+                            enableLogging: null,
+                            timeout: 10,
+                            digitizerNumber: null);
 
-                    _log.Info("Partial VOLT:FETC? Response after error returned with {0} readings", digitizerData.Count);
+                        // fetch whatever data is available
+                        digitizerData = DigitizerDataFetch.FetchVoltageData(
+                            spikeSafeSocket: tcpSocket,
+                            enableLogging: null,
+                            digitizerNumber: null);
+
+                        _log.Info("Partial VOLT:FETC? Response after error returned with {0} readings", digitizerData.Count);
+
+                        // check if partial measurements were a result of a SpikeSafe error
+                        ReadAllEvents.LogAllEvents(tcpSocket);
+                    }
+                    catch (TimeoutException e)
+                    {
+                        // Timeout error will occur if no partial measurements were taken
+                        _log.Error("Partial VOLT:FETC? Response error: {0}", e.Message);
+
+                        // check if no partial measurements were a result of a SpikeSafe error
+                        ReadAllEvents.ReadAllEventData(tcpSocket);
+                    }
+                    catch (Exception)
+                    {
+                        // All other errors, exit the script
+                        throw;
+                    }
                 }
 
                 // turn off Channel 1 after routine is complete
