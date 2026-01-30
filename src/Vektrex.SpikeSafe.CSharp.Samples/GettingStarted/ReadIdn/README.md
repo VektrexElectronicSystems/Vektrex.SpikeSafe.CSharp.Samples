@@ -42,3 +42,12 @@ An Identify SpikeSafe query will be sent, and its response will be read. This ty
 `OUTP1:CONN:AVAIL?`
 
 `ALL`
+
+## **Read SpikeSafe Information using SpikeSafeInfoParser**
+Corresponds to running [ReadSpikeSafeInfo.cs](./ReadSpikeSafeInfo.cs).
+
+### Purpose
+Demonstrate using SpikeSafeInfoParser to seamlessly gather all important SpikeSafe Information with a single function call. This parser automatically handles sending all of the necessary SCPI queries so that you can keep your python script clean.
+
+### Expected Output
+An Identify SpikeSafe query will automatically be sent, responses will be read, and a SpikeSafeInfo object returned with easily accessible attributes.

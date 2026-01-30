@@ -48,6 +48,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             // Uncomment line below to run GettingStarted/ReadIdn
             //new ReadIdnExpanded().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
+            // Uncomment line below to run GettingStarted/ReadSpikeSafeInfo
+            //new ReadSpikeSafeInfo().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
             // Uncomment line below to run GettingStarted/ReadAllEvents
             //new ReadAllEventsSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
