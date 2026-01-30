@@ -16,7 +16,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
         {
             try
             {
-                _log.Info("DischargeChannel.cs started.");
+                _log.Info("DischargeChannel.Run() started.");
                 _log.Info("CLR version: {0}", Environment.Version);
 
                 // instantiate new TcpSocket to connect to SpikeSafe
@@ -108,7 +108,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 // disconnect from SpikeSafe
                 tcpSocket.Disconnect();
 
-                _log.Info("DischargeChannel.cs completed.");
+                _log.Info("DischargeChannel.Run() completed.");
             }
             catch (SpikeSafeException ssErr)
             {
