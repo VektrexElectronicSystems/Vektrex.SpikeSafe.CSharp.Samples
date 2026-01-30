@@ -20,7 +20,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 Log.Info("CLR version: {0}", Environment.Version);
 
                 // instantiate new TcpSocket to connect to SpikeSafe
-                var tcpSocket = new TcpSocket();
+                TcpSocket tcpSocket = new TcpSocket();
                 tcpSocket.Connect(ipAddress, portNumber);
 
                 // reset to default state and check for all events
@@ -28,7 +28,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // parse the SpikeSafe information
-                var spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set Channel 1's pulse mode to DC and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DC");
@@ -43,7 +43,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's voltage to 20 V and check for all events
-                var complianceVoltage = 20.0;
+                double complianceVoltage = 20.0;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
@@ -55,7 +55,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // check for all events and measure readings on Channel 1 once per second for 5 seconds
-                var timeEnd = DateTime.UtcNow.AddSeconds(5);
+                DateTime timeEnd = DateTime.UtcNow.AddSeconds(5);
                 while (DateTime.UtcNow < timeEnd)
                 {
                     ReadAllEvents.LogAllEvents(tcpSocket);
@@ -112,14 +112,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
             }
             catch (SpikeSafeException ssErr)
             {
-                var errorMessage = $"SpikeSafe error: {ssErr}\n";
+                string errorMessage = $"SpikeSafe error: {ssErr}\n";
                 Log.Error(errorMessage);
                 Console.Error.WriteLine(errorMessage);
                 Environment.Exit(1);
             }
             catch (Exception err)
             {
-                var errorMessage = $"Program error: {err}\n";
+                string errorMessage = $"Program error: {err}\n";
                 Log.Error(errorMessage);
                 Console.Error.WriteLine(errorMessage);
                 Environment.Exit(1);
