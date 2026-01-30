@@ -10,14 +10,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
 {
     public class DischargeChannel
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
         public void Run(string ipAddress, int portNumber)
         {
             try
             {
-                Log.Info("DischargeChannel.cs started.");
-                Log.Info("CLR version: {0}", Environment.Version);
+                _log.Info("DischargeChannel.cs started.");
+                _log.Info("CLR version: {0}", Environment.Version);
 
                 // instantiate new TcpSocket to connect to SpikeSafe
                 TcpSocket tcpSocket = new TcpSocket();
@@ -68,7 +68,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // wait until the channel is fully discharged before starting test #2
-                Log.Info("Waiting for Channel 1 to fully discharge after test #1...");
+                _log.Info("Waiting for Channel 1 to fully discharge after test #1...");
                 Discharge.WaitForSpikeSafeChannelDischarge(
                     spikeSafeSocket: tcpSocket,
                     spikeSafeInfo: spikeSafeInfo,
@@ -97,7 +97,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // wait until the channel is fully discharged before disconnecting the load
-                Log.Info("Waiting for Channel 1 to fully discharge after test #2...");
+                _log.Info("Waiting for Channel 1 to fully discharge after test #2...");
                 Discharge.WaitForSpikeSafeChannelDischarge(
                     spikeSafeSocket: tcpSocket,
                     spikeSafeInfo: spikeSafeInfo,
@@ -108,21 +108,17 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 // disconnect from SpikeSafe
                 tcpSocket.Disconnect();
 
-                Log.Info("DischargeChannel.cs completed.");
+                _log.Info("DischargeChannel.cs completed.");
             }
             catch (SpikeSafeException ssErr)
             {
                 string errorMessage = $"SpikeSafe error: {ssErr}\n";
-                Log.Error(errorMessage);
-                Console.Error.WriteLine(errorMessage);
-                Environment.Exit(1);
+                _log.Error(errorMessage);
             }
             catch (Exception err)
             {
                 string errorMessage = $"Program error: {err}\n";
-                Log.Error(errorMessage);
-                Console.Error.WriteLine(errorMessage);
-                Environment.Exit(1);
+                _log.Error(errorMessage);
             }
         }
     }
