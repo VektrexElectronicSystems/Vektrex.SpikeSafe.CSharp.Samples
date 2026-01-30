@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text;
 using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages;
+using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEventsSample;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadIdn;
 using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadMemoryTableData;
@@ -52,6 +53,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
 
             // Uncomment line below to run GettingStarted/ReadMemoryTableData
             //new ReadMemoryTableData().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run Gettingstarted/DischargeChannel
+            //new DischargeChannel().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunBias
             //new RunBias().Run(spikeSafeIpAddress, spikeSafePortNumber);
