@@ -38,23 +38,23 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP BIASPULSEDSWEEP");
 
                 // set Channel 1's Pulsed Sweep parameters to match the test expectation
-                tcpSocket.SendScpiCommand("SOUR1:CURR:STAR 0.02");
-                tcpSocket.SendScpiCommand("SOUR1:CURR:STOP 0.2");   
-                tcpSocket.SendScpiCommand("SOUR1:CURR:STEP 100");   
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STAR {Precision.GetPreciseCurrentCommandArgument(0.02)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STOP {Precision.GetPreciseCurrentCommandArgument(0.2)}");
+                tcpSocket.SendScpiCommand("SOUR1:CURR:STEP 100");
 
                 // set Channel 1 to output one pulse per step
                 tcpSocket.SendScpiCommand("SOUR1:PULS:COUN 1");
 
                 // set Channel 1's Bias Current to 10mA
-                tcpSocket.SendScpiCommand("SOUR1:CURR:BIAS 0.01");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:BIAS {Precision.GetPreciseCurrentCommandArgument(0.01)}");
 
                 // set Channel 1's voltage to 20 V 
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set Channel 1's pulse settings for a 1% duty cycle and 1ms Period using the Pulse On Time and Pulse Off Time commands
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.0001");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.0099");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.0001)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.0099)}");
 
                 // set Channel 1's compensation settings to High/Fast
                 // For higher power loads or shorter pulses, these settings may have to be adjusted to obtain ideal pulse shape

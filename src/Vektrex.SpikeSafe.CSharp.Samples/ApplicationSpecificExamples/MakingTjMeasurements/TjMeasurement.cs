@@ -46,7 +46,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
 
                 // set up Channel 1 for Bias Current output to determine the K-factor
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP BIAS");
-                tcpSocket.SendScpiCommand("SOUR0:CURR:BIAS 0.033");
+                tcpSocket.SendScpiCommand($"SOUR0:CURR:BIAS {Precision.GetPreciseCurrentCommandArgument(0.033)}");
                 double complianceVoltage = 40;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
@@ -93,19 +93,19 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
 
                 // set up Channel 1 for CDBC output to make the junction temperature measurement
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP BIASPULSEDDYNAMIC");
-                tcpSocket.SendScpiCommand("SOUR1:CURR 3.5");
-                tcpSocket.SendScpiCommand("SOUR0:CURR:BIAS 0.033");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(3.5)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:BIAS {Precision.GetPreciseCurrentCommandArgument(0.033)}");
                 complianceVoltage = 40;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.001");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(1)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.001)}");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");  
 
                 // set Digitizer settings to take a series of quick measurements during the Off Time of CDBC operation
                 tcpSocket.SendScpiCommand("VOLT:RANG 100");
-                tcpSocket.SendScpiCommand("VOLT:APER 2");
-                tcpSocket.SendScpiCommand("VOLT:TRIG:DEL 0");
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(2)}");
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(0)}");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE FALLING");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:COUN 1");

@@ -146,20 +146,20 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
 
                 // set up SpikeSafe Channel 1 for Pulsed Sweep output. To find more explanation, see InstrumentExamples/RunPulsedSweep
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STAR {0}", (livStartCurrentMilliamps) / 1000));
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STOP {0}", (livStopCurrentMilliamps) / 1000));
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STEP {0}", livSweepStepCount));
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STAR {Precision.GetPreciseCurrentCommandArgument(livStartCurrentMilliamps / 1000)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STOP {Precision.GetPreciseCurrentCommandArgument(livStopCurrentMilliamps / 1000)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STEP {livSweepStepCount}");
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:TON {0}", pulseOnTimeSeconds));
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:TOFF {0}", pulseOffTimeSeconds)); 
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(pulseOnTimeSeconds)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(pulseOffTimeSeconds)}");
 
                 // Check for any errors with SpikeSafe initialization commands
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set up SpikeSafe Digitizer to measure Pulsed Sweep output. To find more explanation, see MakingIntegratedVoltageMeasurements/MeasurePulsedSweepVoltage
                 tcpSocket.SendScpiCommand("VOLT:RANG 100");
-                tcpSocket.SendScpiCommand(string.Format("VOLT:APER {0}", pulseOnTimeSeconds * 600000)); // we want to measure 60% of the pulse
-                tcpSocket.SendScpiCommand(string.Format("VOLT:TRIG:DEL {0}", pulseOnTimeSeconds * 200000)); // we want to skip the first 20% of the pulse
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(pulseOnTimeSeconds * 600000)}"); // we want to measure 60% of the pulse
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(pulseOnTimeSeconds * 200000)}"); // we want to skip the first 20% of the pulse
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
                 tcpSocket.SendScpiCommand(string.Format("VOLT:TRIG:COUN {0}", livSweepStepCount));

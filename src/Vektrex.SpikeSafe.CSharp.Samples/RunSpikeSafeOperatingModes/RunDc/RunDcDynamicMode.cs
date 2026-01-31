@@ -42,7 +42,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc
                 ReadAllEvents.LogAllEvents(tcpSocket); 
 
                 // set Channel 1's current to 50 mA and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.05");        
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.05)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's voltage to 20 V and check for all events
@@ -68,25 +68,25 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc
                 }       
 
                 // While the channel is running, dynamically change the Set Current to 100mA. Check events and measure readings afterward
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");        
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
                 MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                 Threading.Wait(1);
 
                 // While the channel is running, dynamically change the Set Current to 150mA. Check events and measure readings afterward
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.15");        
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.15)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
                 MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                 Threading.Wait(1);
 
                 // While the channel is running, dynamically change the Set Current to 200mA. Check events and measure readings afterward
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.2");        
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.2)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
                 MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                 Threading.Wait(1);
 
                 // While the channel is running, dynamically change the Set Current to 100mA. Check events and measure readings afterward
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");        
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
                 MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                 Threading.Wait(1);

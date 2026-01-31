@@ -43,13 +43,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
 
                 // set up Channel 1 for pulsed output. To find more explanation, see InstrumentExamples/RunPulsed
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSED");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.001");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.009");
-                tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.001)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.009)}");
+                tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");                   
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");  
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
@@ -57,10 +57,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("VOLT:RANG 10");
 
                 // set Digitizer aperture for 600µs. Aperture specifies the measurement time, and we want to measure a majority of the pulse's constant current output
-                tcpSocket.SendScpiCommand("VOLT:APER 600");
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(600)}");
 
                 // set Digitizer trigger delay to 200µs. We want to give sufficient delay to omit any overshoot the current pulse may have
-                tcpSocket.SendScpiCommand("VOLT:TRIG:DEL 200");
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(0)}");
 
                 // set Digitizer trigger source to hardware. When set to a hardware trigger, the digitizer waits for a trigger signal from the SpikeSafe to start a measurement
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");

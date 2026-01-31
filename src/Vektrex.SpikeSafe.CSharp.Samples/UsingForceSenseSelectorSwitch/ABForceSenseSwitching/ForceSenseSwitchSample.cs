@@ -52,7 +52,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 // set Channel 1 settings to operate in DC mode
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DC");    
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 

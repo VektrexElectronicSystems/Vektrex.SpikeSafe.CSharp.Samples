@@ -140,8 +140,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
 
                 // set SpikeSafe Channel 1's pulse mode to Single Pulse and set all relevant settings. For more information, see RunSpikeSafeOperatingModes/RunDc
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP SINGLEPULSE");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");    
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR {0}", setCurrentAmps));        
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(1)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(setCurrentAmps)}");        
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");         
                 ReadAllEvents.LogAllEvents(tcpSocket); 
 

@@ -36,14 +36,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 tcpSocket.SendScpiCommand("SOUR0:FUNC:SHAP SINGLEPULSE");
 
                 // set each channel's current to 100 mA
-                tcpSocket.SendScpiCommand("SOUR0:CURR 0.1");
+                tcpSocket.SendScpiCommand($"SOUR0:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
 
                 // set each channel's voltage to 20 V 
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set each channel's pulse width to 1ms. Of the pulse time settings, only Pulse On Time and Pulse Width [+Offset] are relevant in Single Pulse mode
-                tcpSocket.SendScpiCommand("SOUR0:PULS:TON 0.001");
+                tcpSocket.SendScpiCommand($"SOUR0:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.001)}");
 
                 // set each channel's compensation settings to their default values
                 // For higher power loads or shorter pulses, these settings may have to be adjusted to obtain ideal pulse shape
@@ -84,7 +84,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                     Threading.Wait(1);
                 }     
                 // After the pulse is complete, set each channel's current to 200 mA while the channels are enabled
-                tcpSocket.SendScpiCommand("SOUR0:CURR 0.2");  
+                tcpSocket.SendScpiCommand($"SOUR0:CURR {Precision.GetPreciseCurrentCommandArgument(0.2)}");
 
                 // Output 1ms pulse for all channels
                 tcpSocket.SendScpiCommand("OUTP0:TRIG");

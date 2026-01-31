@@ -216,7 +216,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // set digitizer trigger source to HARDWARE
             tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
             // set digitizer trigger delay to 50us
-            tcpSocket.SendScpiCommand("VOLT:TRIG:DEL 50");
+            tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(50)}");
             // SMU setting
             // Set DC Dynamic mode
             tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DCDYNAMIC");
@@ -226,7 +226,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // set auto range
             tcpSocket.SendScpiCommand("SOUR1:CURR:RANG:AUTO 1");
             // set currenty to 0.35A
-            tcpSocket.SendScpiCommand("SOUR1:CURR 0.35");
+            tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.35)}");
             // set Ramp mode to Fast
             tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
             // request SpikeSafe events and read data

@@ -47,11 +47,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPuls
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's Pulse On Time to 1us and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.000001");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.000001)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's Pulse Off Time 9us and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.000009");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.000009)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's Pulse Width adjustment to disabled and check for all events
@@ -59,7 +59,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPuls
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's current to 100mA and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's voltage to 20V and check for all events

@@ -41,14 +41,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP SINGLEPULSE");
 
                 // set channel 1's current to 100 mA
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
 
                 // set channel 1's voltage to 20 V 
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set channel 1's pulse width to 100µs. Of the pulse time settings, only Pulse On Time and Pulse Width [+Offset] are relevant in Single Pulse mode
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.0001");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.0001)}");
 
                 // set channel 1's output ramp to fast so that tests can be run in succession
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");

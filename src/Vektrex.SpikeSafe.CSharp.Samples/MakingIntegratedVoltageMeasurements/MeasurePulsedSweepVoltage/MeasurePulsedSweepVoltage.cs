@@ -43,13 +43,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
 
                 // set up Channel 1 for pulsed sweep output. To find more explanation, see InstrumentExamples/RunSpikeSafeOperatingModes/RunPulsed
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
-                tcpSocket.SendScpiCommand("SOUR1:CURR:STAR 0.02");
-                tcpSocket.SendScpiCommand("SOUR1:CURR:STOP 0.2");   
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STAR {Precision.GetPreciseCurrentCommandArgument(0.02)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STOP {Precision.GetPreciseCurrentCommandArgument(0.2)}");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:STEP 100");
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.0001");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.0099");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.0001)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.0099)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
 

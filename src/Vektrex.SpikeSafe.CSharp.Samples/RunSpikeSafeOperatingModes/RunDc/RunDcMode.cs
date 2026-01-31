@@ -38,7 +38,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's current to 100 mA and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");        
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's voltage to 10 V and check for all events

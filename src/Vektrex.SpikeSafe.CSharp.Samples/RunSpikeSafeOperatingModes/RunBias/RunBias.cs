@@ -43,7 +43,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBias
                 ReadAllEvents.LogAllEvents(tcpSocket); 
 
                 // set Channel 1's bias current to 10 mA and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:CURR:BIAS 0.01");        
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:BIAS {Precision.GetPreciseCurrentCommandArgument(0.01)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's voltage to 10 V and check for all events

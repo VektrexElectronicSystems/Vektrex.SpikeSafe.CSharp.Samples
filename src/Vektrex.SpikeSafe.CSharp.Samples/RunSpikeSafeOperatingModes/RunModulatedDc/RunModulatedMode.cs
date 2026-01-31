@@ -36,7 +36,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MODULATED");    
 
                 // set Channel 1's current to 200 mA. This will be the output current when a sequence step specifies "@100"
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.2");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.2)}");
 
                 // set Channel 1's voltage to 20 V
                 double complianceVoltage = 20;

@@ -58,7 +58,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's current to start current and check for all events
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR {0}", startCurrentAmps));
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(startCurrentAmps)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's Ramp mode to Fast and check for all events
@@ -76,7 +76,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Digitizer Aperture to 10us and check for all events
-                tcpSocket.SendScpiCommand("VOLT:APER 10");
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(10)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Digitizer Trigger Count to step count and check for all events

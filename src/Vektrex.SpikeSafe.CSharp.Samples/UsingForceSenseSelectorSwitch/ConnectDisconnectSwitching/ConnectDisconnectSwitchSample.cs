@@ -50,11 +50,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
 
                 // set Channel 1's settings to operate in Multi-Pulse mode
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MULTIPULSE");
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 1");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(1)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(1)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:COUN 3");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
