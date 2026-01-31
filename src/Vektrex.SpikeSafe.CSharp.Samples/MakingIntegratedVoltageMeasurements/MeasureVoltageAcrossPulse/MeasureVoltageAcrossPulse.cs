@@ -39,6 +39,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set up Channel 1 for single pulse output. To find more explanation, see RunSpikeSafeOperatingModes/RunSinglePulse
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP SINGLEPULSE");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.001");
@@ -46,8 +49,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");  
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");   
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");
+                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set Digitizer voltage range to 10V since we expect to measure voltages significantly less than 10V
                 tcpSocket.SendScpiCommand("VOLT:RANG 10");
@@ -93,6 +97,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // put the fetched data in a plottable data format
                 var plt = new ScottPlot.Plot();

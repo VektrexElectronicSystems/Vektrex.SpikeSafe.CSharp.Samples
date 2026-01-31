@@ -41,10 +41,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
                 // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set up Channel 1 for Bias Current output to determine the K-factor
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP BIAS");
                 tcpSocket.SendScpiCommand("SOUR0:CURR:BIAS 0.033");
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 40");
+                double complianceVoltage = 40;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");  
 
@@ -78,13 +82,21 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
                 // turn off Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 0");
 
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
+
                 LogAndPrintToConsole("\nK-factor values obtained. Stopped bias current output. Configuring to perform Electrical Test Method measurement.");
 
                 // set up Channel 1 for CDBC output to make the junction temperature measurement
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP BIASPULSEDDYNAMIC");
                 tcpSocket.SendScpiCommand("SOUR1:CURR 3.5");
                 tcpSocket.SendScpiCommand("SOUR0:CURR:BIAS 0.033");
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 40");
+                complianceVoltage = 40;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.001");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
@@ -123,6 +135,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // prepare digitizer voltage data to plot
                 var plt = new ScottPlot.Plot();

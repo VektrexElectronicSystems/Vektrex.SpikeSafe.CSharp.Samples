@@ -24,9 +24,12 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
         private const int GREASE = 1;
         private const int NO_GREASE = 2;
 
+        private double _complianceVoltage;
+
         public void Run(string ipAddress, int portNumber)
         {
             TcpSocket tcpSocket = new TcpSocket();
+            SpikeSafeInfo spikeSafeInfo = null;
 
             // start of main program
             try
@@ -55,7 +58,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                     // connect
                     tcpSocket.Connect(ipAddress, portNumber);
                     LogAndPrintToConsole(string.Format("Connected to {0}", ipAddress));
-		
+
+                    // Parse SpikeSafe information for later use
+                    spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                     // SpikeSafe set up
                     SpikeSafeSetup(tcpSocket, samplingMode);
 		
@@ -117,6 +123,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                 {
                     // stop channel
                     tcpSocket.SendScpiCommand("OUTP1 0");
+
+                    // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                    Discharge.WaitForSpikeSafeChannelDischarge(
+                        spikeSafeSocket: tcpSocket,
+                        spikeSafeInfo: spikeSafeInfo,
+                        complianceVoltage: _complianceVoltage,
+                        channelNumber: 1);
 
                     // disconnect
                     tcpSocket.Disconnect();
@@ -208,7 +221,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // Set DC Dynamic mode
             tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DCDYNAMIC");
             // set MCV to 25V
-            tcpSocket.SendScpiCommand("SOUR1:VOLT 25");
+            _complianceVoltage = 25;
+            tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(_complianceVoltage)}");
             // set auto range
             tcpSocket.SendScpiCommand("SOUR1:CURR:RANG:AUTO 1");
             // set currenty to 0.35A

@@ -135,11 +135,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set SpikeSafe Channel 1's pulse mode to Single Pulse and set all relevant settings. For more information, see RunSpikeSafeOperatingModes/RunDc
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP SINGLEPULSE");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");    
                 tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR {0}", setCurrentAmps));        
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:VOLT {0}", complianceVoltageVolts));         
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");         
                 ReadAllEvents.LogAllEvents(tcpSocket); 
 
                 // turn on SpikeSafe Channel 1 and check for all events
@@ -176,6 +179,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 // turn off SpikeSafe Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 0");               
                 ReadAllEvents.LogAllEvents(tcpSocket);
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltageVolts,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();

@@ -141,12 +141,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 tcpSocket.SendScpiCommand("VOLT:ABOR");               
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set up SpikeSafe Channel 1 for Pulsed Sweep output. To find more explanation, see InstrumentExamples/RunPulsedSweep
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
                 tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STAR {0}", (livStartCurrentMilliamps) / 1000));
                 tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STOP {0}", (livStopCurrentMilliamps) / 1000));
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STEP {0}", livSweepStepCount));   
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:VOLT {0}", complianceVoltageVolts));   
+                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STEP {0}", livSweepStepCount));
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");
                 tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:TON {0}", pulseOnTimeSeconds));
                 tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:TOFF {0}", pulseOffTimeSeconds)); 
 
@@ -208,6 +211,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
 
                 // turn off SpikeSafe Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltageVolts,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();    

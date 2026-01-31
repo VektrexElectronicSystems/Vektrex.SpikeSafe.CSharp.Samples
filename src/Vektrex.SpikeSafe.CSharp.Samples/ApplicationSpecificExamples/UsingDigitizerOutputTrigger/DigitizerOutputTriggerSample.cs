@@ -38,10 +38,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
                 tcpSocket.SendScpiCommand("VOLT:ABOR");
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set up Channel 1 for Multi Pulse output. To find more explanation, see RunSpikeSafeOperationModes/RunMultiPulse
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MULTIPULSE");
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");   
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");
+                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 1");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:COUN 3");
@@ -116,6 +120,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // prepare digitizer voltage data to plot
                 var plt = new ScottPlot.Plot();

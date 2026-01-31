@@ -31,6 +31,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set Channel 1's pulse mode to Bias Pulsed Sweep and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP BIASPULSEDSWEEP");
 
@@ -43,10 +46,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 tcpSocket.SendScpiCommand("SOUR1:PULS:COUN 1");
 
                 // set Channel 1's Bias Current to 10mA
-                tcpSocket.SendScpiCommand("SOUR1:CURR:BIAS 0.01");   
+                tcpSocket.SendScpiCommand("SOUR1:CURR:BIAS 0.01");
 
                 // set Channel 1's voltage to 20 V 
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");   
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set Channel 1's pulse settings for a 1% duty cycle and 1ms Period using the Pulse On Time and Pulse Off Time commands
                 tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.0001");
@@ -80,6 +84,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();

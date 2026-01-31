@@ -29,14 +29,18 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set Channel 1's pulse mode to Modulated DC
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MODULATED");    
 
                 // set Channel 1's current to 200 mA. This will be the output current when a sequence step specifies "@100"
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.2");        
+                tcpSocket.SendScpiCommand("SOUR1:CURR 0.2");
 
                 // set Channel 1's voltage to 20 V
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20"); 
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set Channel 1's modulated sequence to a DC staircase with 5 steps
                 // There are 5 current steps that each last for 1 second: 40mA, 80mA, 120mA, 160mA, and 200mA
@@ -58,7 +62,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.MODULATED_SEQ_IS_COMPLETED); // event 105 is "Modulated SEQ completed"
 
                 // turn off Channel 1
-                tcpSocket.SendScpiCommand("OUTP1 0");      
+                tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // set Channel 1's modulated sequence to an infinite pulsing pattern. This pulsing pattern will repeatedly perform 3 steps:
                 //       1.) it will pulse Off for 250ms, then On for 250ms at 120mA. This will happen twice
@@ -86,7 +97,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 }                                   
                 
                 // turn off Channel 1. Since the sequence runs indefinitely, we do not wait for a "Modulated SEQ completed" message
-                tcpSocket.SendScpiCommand("OUTP1 0");      
+                tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();   

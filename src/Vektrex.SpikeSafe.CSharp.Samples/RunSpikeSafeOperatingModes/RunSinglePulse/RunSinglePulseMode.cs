@@ -29,14 +29,18 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set each channel's pulse mode to Single Pulse
                 tcpSocket.SendScpiCommand("SOUR0:FUNC:SHAP SINGLEPULSE");
 
                 // set each channel's current to 100 mA
-                tcpSocket.SendScpiCommand("SOUR0:CURR 0.1");     
+                tcpSocket.SendScpiCommand("SOUR0:CURR 0.1");
 
                 // set each channel's voltage to 20 V 
-                tcpSocket.SendScpiCommand("SOUR0:VOLT 20");   
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set each channel's pulse width to 1ms. Of the pulse time settings, only Pulse On Time and Pulse Width [+Offset] are relevant in Single Pulse mode
                 tcpSocket.SendScpiCommand("SOUR0:PULS:TON 0.001");
@@ -96,6 +100,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
 
                 // turn off all channels after routine is complete
                 tcpSocket.SendScpiCommand("OUTP0 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();   
