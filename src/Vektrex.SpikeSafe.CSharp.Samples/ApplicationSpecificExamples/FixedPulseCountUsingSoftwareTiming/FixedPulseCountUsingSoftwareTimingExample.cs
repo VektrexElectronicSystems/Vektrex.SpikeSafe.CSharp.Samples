@@ -84,7 +84,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPuls
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // Start the channel
-                tcpSocket.SendScpiCommand("OUTP1 ON");
+                tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready
                 ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
@@ -94,7 +94,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPuls
                 Threading.Wait(0.030);
                 
                 // disable Channel
-                tcpSocket.SendScpiCommand("OUTP1 OFF");
+                tcpSocket.SendScpiCommand("OUTP1 0");
 
                 // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
                 Discharge.WaitForSpikeSafeChannelDischarge(

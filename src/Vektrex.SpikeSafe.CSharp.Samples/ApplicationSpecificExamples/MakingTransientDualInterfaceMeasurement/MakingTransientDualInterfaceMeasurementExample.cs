@@ -234,7 +234,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // the trigger signal come from the voltage start up
             tcpSocket.SendScpiCommand("VOLT:INIT");
             // Start the channel
-            tcpSocket.SendScpiCommand("OUTP1 ON");
+            tcpSocket.SendScpiCommand("OUTP1 1");
             // wait for channel ready
             ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY);
         }

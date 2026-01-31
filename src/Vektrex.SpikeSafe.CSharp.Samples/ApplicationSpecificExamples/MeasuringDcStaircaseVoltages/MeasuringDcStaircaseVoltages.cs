@@ -66,7 +66,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // start the Channel 1
-                tcpSocket.SendScpiCommand("OUTP1 ON");
+                tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready
                 ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
