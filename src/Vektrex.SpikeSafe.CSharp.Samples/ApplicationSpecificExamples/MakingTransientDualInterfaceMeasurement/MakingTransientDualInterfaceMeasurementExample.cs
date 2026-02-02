@@ -207,15 +207,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // Set digitizer sampling mode
             if(FAST_LOG_MODE == sampleMode)
             {
-                tcpSocket.SendScpiCommand("VOLT:SAMPMODE FASTLOG");
+                tcpSocket.SendScpiCommand("VOLT:SAMP:MODE FASTLOG");
             }
             else if(MEDIUM_LOG_MODE == sampleMode)
             {
-                tcpSocket.SendScpiCommand("VOLT:SAMPMODE MEDIUMLOG");
+                tcpSocket.SendScpiCommand("VOLT:SAMP:MODE MEDIUMLOG");
             }
             else if(SLOW_LOG_MODE == sampleMode)
             {
-                tcpSocket.SendScpiCommand("VOLT:SAMPMODE SLOWLOG");
+                tcpSocket.SendScpiCommand("VOLT:SAMP:MODE SLOWLOG");
             }
             // set digitizer trigger source to HARDWARE
             tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
