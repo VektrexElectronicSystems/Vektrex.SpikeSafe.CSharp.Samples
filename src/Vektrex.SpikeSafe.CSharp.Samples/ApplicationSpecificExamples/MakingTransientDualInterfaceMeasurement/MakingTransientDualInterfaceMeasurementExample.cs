@@ -59,6 +59,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                     tcpSocket.Connect(ipAddress, portNumber);
                     LogAndPrintToConsole(string.Format("Connected to {0}", ipAddress));
 
+                    // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
+                    // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
+                    tcpSocket.SendScpiCommand("*RST");
+                    ReadAllEvents.LogAllEvents(tcpSocket);
+
                     // Parse SpikeSafe information for later use
                     spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
@@ -197,7 +202,6 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
 
         private void SpikeSafeSetup(TcpSocket tcpSocket, int sampleMode)
         {
-            tcpSocket.SendScpiCommand("VOLT:ABOR");
             // Set digitizer range to 10V
             tcpSocket.SendScpiCommand("VOLT:RANG 10");
             // Set digitizer sampling mode

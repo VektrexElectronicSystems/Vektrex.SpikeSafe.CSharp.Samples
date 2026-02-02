@@ -33,13 +33,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
                 TcpSocket tcpSocket = new TcpSocket();
                 tcpSocket.Connect(ipAddress, portNumber);
 
-                // reset to default state and check for all events,
-                // it is best practice to check for errors after sending each command      
-                tcpSocket.SendScpiCommand("*RST");                  
+                // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
+                // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
+                tcpSocket.SendScpiCommand("*RST");
                 ReadAllEvents.LogAllEvents(tcpSocket);
-
-                // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
-                tcpSocket.SendScpiCommand("VOLT:ABOR");
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);

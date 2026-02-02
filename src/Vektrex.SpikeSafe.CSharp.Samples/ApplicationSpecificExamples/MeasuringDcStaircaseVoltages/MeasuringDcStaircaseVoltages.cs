@@ -36,9 +36,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 TcpSocket tcpSocket = new TcpSocket();
                 tcpSocket.Connect(ipAddress, portNumber);
 
-                // reset to default state and check for all events,
-                // it is best practice to check for errors after sending each command      
-                tcpSocket.SendScpiCommand("*RST");                  
+                // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
+                // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
+                tcpSocket.SendScpiCommand("*RST");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // Parse SpikeSafe information for later use
@@ -70,10 +70,6 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
 
                 // wait until Channel 1 is ready
                 ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
-                
-                // set Digitizer to abort any measurements
-                tcpSocket.SendScpiCommand("VOLT:ABOR");
-                ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Digitizer Aperture to 10us and check for all events
                 tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(10)}");
