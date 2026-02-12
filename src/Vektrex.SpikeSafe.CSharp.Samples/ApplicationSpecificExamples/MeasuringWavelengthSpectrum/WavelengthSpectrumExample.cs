@@ -150,7 +150,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);                            
 
                 // wait until the channel is fully ramped and output a single pulse
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");   
 
                 // take a CAS4 measurement

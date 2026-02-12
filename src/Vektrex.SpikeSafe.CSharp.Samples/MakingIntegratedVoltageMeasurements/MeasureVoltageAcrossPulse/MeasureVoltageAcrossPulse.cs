@@ -81,7 +81,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready to pulse
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // output a current pulse for Channel 1
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");

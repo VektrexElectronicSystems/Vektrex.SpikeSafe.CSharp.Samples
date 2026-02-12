@@ -69,7 +69,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // set Digitizer Aperture to 10us and check for all events
                 tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(10)}");

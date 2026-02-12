@@ -56,7 +56,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBias
                 ReadAllEvents.LogAllEvents(tcpSocket);                            
 
                 // wait until the channel is fully ramped to 10mA
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // check for all events and measure readings on Channel 1 once per second for 15 seconds,
                 // it is best practice to do this to ensure Channel 1 is on and does not have any errors

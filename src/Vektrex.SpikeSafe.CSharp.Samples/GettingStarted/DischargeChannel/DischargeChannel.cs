@@ -52,7 +52,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // wait until the channel is fully ramped to target current
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // check for all events and measure readings on Channel 1 once per second for 5 seconds
                 DateTime timeEnd = DateTime.UtcNow.AddSeconds(5);
@@ -81,7 +81,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // wait until the channel is fully ramped to target current
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // check for all events and measure readings on Channel 1 once per second for 5 seconds
                 timeEnd = DateTime.UtcNow.AddSeconds(5);

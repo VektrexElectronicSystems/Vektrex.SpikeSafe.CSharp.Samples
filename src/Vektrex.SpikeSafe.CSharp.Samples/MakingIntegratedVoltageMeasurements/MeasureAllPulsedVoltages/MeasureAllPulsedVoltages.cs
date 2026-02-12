@@ -78,7 +78,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is fully ramped before we take any digitizer measurements. We are looking to measure consistent voltage values
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // start Digitizer measurements
                 tcpSocket.SendScpiCommand("VOLT:INIT");

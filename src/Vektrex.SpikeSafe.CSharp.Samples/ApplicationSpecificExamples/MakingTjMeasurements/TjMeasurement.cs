@@ -55,7 +55,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready to pulse
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 LogAndPrintToConsole("\nMeasurement Current is currently outputting to the DUT.\n\nPress \'Enter\' in the console once temperature has been stabilized at T1, then record V1 and T1.");
                 Console.ReadLine();
@@ -115,7 +115,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready to pulse
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 LogAndPrintToConsole("\nHeating Current is being outputted.\n\nWait until temperature has stabilized, then press \'Enter\' in the console to take voltage measurements.");
                 Console.ReadLine();
