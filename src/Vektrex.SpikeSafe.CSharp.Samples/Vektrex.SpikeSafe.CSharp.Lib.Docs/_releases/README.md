@@ -1,5 +1,29 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
+## v1.5.29
+2/12/26
+
+- Added
+    - DigitizerData.TimeSinceStartSeconds
+    - DigitizerDataFetch.FetchVoltageDataSamplingModeLinear()
+    - DigitizerDataFetch.FetchVoltageDataSamplingModeLogarithmic()
+    - DigitizerDataFetch.FetchVoltageDataSamplingModeCustom()
+    - DigitizerEnums class
+    - DigitizerVfCustomSequence class
+    - DigitizerVfCustomSequenceStep class
+    - Discharge.WaitForSpikeSafeChannelDischarge()
+        - Added optional parameter bool? enableLogging. Overrides spikeSafeSocket.EnableLogging attribute (default to null will use spikeSafeSocket.EnableLogging value)
+    - ReadAllEvents.ReadUntilEvent()
+        - Added parameter code as type SpikeSafeEvent enum
+        - Added optional parameter timeout. Maximum time in seconds to wait for the desired event before raising an exception (default to None will wait indefinitely)
+    - ScpiFormatter class
+    - SpikeSafeInfoParser.Parse()
+        - optional parameter bool? enableLogging. Overrides spikeSafeSocket.EnableLogging attribute (default to null will use spikeSafeSocket.EnableLogging value)
+    - SpikeSafeInfoParser.CompareRevVersion()
+- Fixed
+    - DigitizerDataFetch.WaitForNewVoltageData()
+        - Calculation now returns the correct time, which before returned a time larger by a factor of 10.
+
 ## v1.5.11
 1/26/26
 
