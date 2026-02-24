@@ -11,6 +11,7 @@ These folders contain examples to run specific SpikeSafe modes. Basic settings w
 - [Run Pulsed](RunPulsed)
 - [Run Pulsed Sweep](RunPulsedSweep)
 - [Run Single Pulse](RunSinglePulse)
+- [Run Staircase Sweep](RunStaircaseSweep)
 
 ## Usage
 
