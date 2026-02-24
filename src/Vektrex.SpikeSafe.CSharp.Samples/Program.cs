@@ -69,7 +69,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             //new RunSpikeSafeOperatingModes.RunSinglePulse.RunBiasSinglePulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunSinglePulse/RunSinglePulseMode
-            //new RunSpikeSafeOperatingModes.RunPulsedSweep.RunSinglePulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunSinglePulse.RunSinglePulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunStaircaseSweep/RunStaircaseSweepMode.cs
+            //new RunSpikeSafeOperatingModes.RunStaircaseSweep.RunStaircaseSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureAllPulsedVoltages
             //new MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages.MeasureAllPulsedVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
