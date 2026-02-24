@@ -80,6 +80,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasurePulsedSweepVoltage
             //new MakingIntegratedVoltageMeasurements.MeasurePulsedSweepVoltage.MeasurePulsedSweepVoltage().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
+            // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureStaircaseSweepVoltage
+            //new MakingIntegratedVoltageMeasurements.MeasureStaircaseSweepVoltage.MeasureStaircaseSweepVoltage().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureVoltageAcrossPulse
             //new MakingIntegratedVoltageMeasurements.MeasureVoltageAcrossPulse.MeasureVoltageAcrossPulse().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
