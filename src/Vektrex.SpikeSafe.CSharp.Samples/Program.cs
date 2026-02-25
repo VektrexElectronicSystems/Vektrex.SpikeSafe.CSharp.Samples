@@ -104,8 +104,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             // Uncomment line below to run ApplicationSpecificExamples/MakingTransientDualInterfaceMeasurement
             //new ApplicationSpecificExamples.MakingTransientDualInterfaceMeasurement.MakingTransientDualInterfaceMeasurementExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
-            // Uncomment line below to run ApplicationSpecificExamples/MeasuringDcStaircaseVoltages            
-            //new ApplicationSpecificExamples.MeasuringDcStaircaseVoltages.MeasuringDcStaircaseVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            // Uncomment line below to run ApplicationSpecificExamples/MeasuringHardwareBasedDcStaircaseIvSweep
+            //new ApplicationSpecificExamples.MeasuringHardwareBasedDcStaircaseIvSweep.MeasuringDcStaircaseIVSweep().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run ApplicationSpecificExamples/MeasuringSoftwareBasedDcStaircaseVoltages            
+            //new ApplicationSpecificExamples.MeasuringSoftwareBasedDcStaircaseVoltages.MeasuringDcStaircaseVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/MeasuringWavelengthSpectrum            
             //new ApplicationSpecificExamples.MeasuringWavelengthSpectrum.WavelengthSpectrumExample().Run(spikeSafeIpAddress, spikeSafePortNumber);

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Reflection;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
-namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringDcStaircaseVoltages
+namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringSoftwareBasedDcStaircaseVoltages
 {
     public class MeasuringDcStaircaseVoltages
     {
@@ -92,7 +92,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // start Digitizer software triggered measurements
-                tcpSocket.SendScpiCommand("VOLT:INIT:SENDMSG");
+                tcpSocket.SendScpiCommand("VOLT:INIT:SEND");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // start DC staircase current supply and voltage measurement per step
