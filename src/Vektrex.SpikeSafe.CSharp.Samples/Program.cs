@@ -32,6 +32,12 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             // Uncomment line below to run Gettingstarted/DischargeChannel
             //new GettingStarted.DischargeChannel.DischargeChannel().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
+            // Uncomment line below to run GettingStarted/ScpiLogging/LogAllTcpSocketScpi
+            //new GettingStarted.ScpiLogging.LogAllTcpSocketScpi().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            
+            // Uncomment line below to run GettingStarted/ScpiLogging/LogSpecificTcpSocketScpi
+            //new GettingStarted.ScpiLogging.LogSpecificTcpSocketScpi().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunBias
             //new RunSpikeSafeOperatingModes.RunBias.RunBias().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
