@@ -426,9 +426,6 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 rightAxis.Label.Text = "Digitizer Voltage (V)";
                 plt.Title($"2 ms Staircase L-I-V ({startCurrentAmps}A to {stopCurrentAmps}A)");
 
-                // optional: enable grid on primary axis
-                //leftAxis.MajorGrid.Enable = true;
-
                 // save figure
                 plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "staircase_sweep_liv.png"), 800, 600);
 
