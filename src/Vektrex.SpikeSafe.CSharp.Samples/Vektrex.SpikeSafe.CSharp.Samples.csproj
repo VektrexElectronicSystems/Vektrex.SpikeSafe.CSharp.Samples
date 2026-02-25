@@ -6,8 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ScottPlot" Version="5.0.55" />
-    <PackageReference Include="NLog" Version="5.3.4" />
-    <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.5.28" />
+    <PackageReference Include="NLog" Version="6.0.7" />
+    <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.5.29" />
     <None Include="nlog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
