@@ -46,7 +46,7 @@ When running a DC staircase using this sequence, one can expect to see the follo
 
 Once all 10 steps are measured, a graph will appear like below:
 
-![](dc_staircase_graph.png)
+![](staircase_sweep_liv.png)
 
 **DC Staircase Current Output**
 

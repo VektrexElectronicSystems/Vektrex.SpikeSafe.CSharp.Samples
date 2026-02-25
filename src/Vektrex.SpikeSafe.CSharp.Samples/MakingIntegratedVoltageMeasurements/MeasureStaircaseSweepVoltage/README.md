@@ -34,15 +34,18 @@ Note the use of the New Data query while the SpikeSafe is operating. While the D
 This sequence assumes the user has basic knowledge of SpikeSafe Staircase Sweep operation. To find more information on the basics of SpikeSafe DC current output, see [Run Staircase Sweep](../../RunSpikeSafeOperatingModes/RunStaircaseSweep).
 
 ## Expected Results
-The SpikeSafe current output will look exactly as it does in the "Run Staircase Sweep" example. The Digitizer voltage measurements will be returned as a string in byte format with comma-separated voltage measurements in scientific notation. See the graphs below, which show an I-V curve using the above settings outputting to a 10Ω resistor, and to a 3.5A, 25V LED. 
-
-**10Ω Resistor Sweep**
-
-![](staircase_sweep_voltages_resistor.png)
+The SpikeSafe current output will look exactly as it does in the "Run Staircase Sweep" example. The Digitizer voltage measurements will be returned as a string in byte format with comma-separated voltage measurements in scientific notation. See the graphs below, which show an I-V curve using the above settings outputting to a 3.5A 25V LED. 
 
 **LED Sweep**
 
 ![](staircase_sweep_voltages_LED.png)
+
 NOTE: for the LED sweep, the following settings needed to be modified to accomodate the DUT:
 - **Compliance Voltage:** 30V
 - **Digtizer Voltage Range:** 100V
+
+**DC Staircase Current Output**
+
+This image was acquired by measuring output current using a TCPA300 Current Probe into a MDO3024 Mixed Domain Oscilloscope
+
+![](dc_staircase_output.png)

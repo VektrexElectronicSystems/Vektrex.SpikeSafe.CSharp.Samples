@@ -210,12 +210,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 var plt = new ScottPlot.Plot();
                 List<double> voltageReadings = new List<double>();
                 List<double> currentSteps = new List<double>();
-                double startCurrentMilliamps = 20;
-                double stepSizeMilliamps = 1.82;  // 1.82mA = Step Size = (StopCurrent - StartCurrent)/(StepCount - 1)
+                double sweepStepSizeAmps = (stopCurrentAmps - startCurrentAmps) / (currentStepCount - 1);
                 foreach (DigitizerData dd in digitizerData)
                 {
                     voltageReadings.Add(dd.VoltageReading);
-                    currentSteps.Add(startCurrentMilliamps + stepSizeMilliamps * (dd.SampleNumber - 1));
+                    currentSteps.Add(startCurrentAmps + sweepStepSizeAmps * (dd.SampleNumber - 1));
                 }
 
                 // plot the pulse shape using the fetched voltage readings
@@ -223,8 +222,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 scatter.Color = Colors.Blue;
                 scatter.LineWidth = 1;
                 plt.YLabel("Voltage (V)");
-                plt.XLabel("Set Current (mA)");
-                plt.Title("Digitizer Voltage Readings - Staircase Sweep (20mA to 200mA)");
+                plt.XLabel("Set Current (A)");
+                plt.Title($"Digitizer Voltage Readings - Staircase Sweep ({startCurrentAmps}A to {stopCurrentAmps}A)");
                 plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"staircase_sweep_voltages.png"), 800, 600);
 
                 _log.Info("MeasureStaircaseSweepVoltage.Run() completed.\n");
