@@ -7,7 +7,7 @@
 using System;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
-namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedSweep
+namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunSinglePulse
 {
     public class RunSinglePulseMode
     {
