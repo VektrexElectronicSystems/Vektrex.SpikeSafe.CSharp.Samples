@@ -136,27 +136,30 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 TcpSocket tcpSocket = new TcpSocket();
                 tcpSocket.Connect(ipAddress, portNumber);
 
-                // reset to default state and check for all events,    
-                tcpSocket.SendScpiCommand("*RST"); 
-                tcpSocket.SendScpiCommand("VOLT:ABOR");               
+                // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
+                // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
+                tcpSocket.SendScpiCommand("*RST");
                 ReadAllEvents.LogAllEvents(tcpSocket);
+
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set up SpikeSafe Channel 1 for Pulsed Sweep output. To find more explanation, see InstrumentExamples/RunPulsedSweep
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STAR {0}", (livStartCurrentMilliamps) / 1000));
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STOP {0}", (livStopCurrentMilliamps) / 1000));
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR:STEP {0}", livSweepStepCount));   
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:VOLT {0}", complianceVoltageVolts));   
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:TON {0}", pulseOnTimeSeconds));
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:TOFF {0}", pulseOffTimeSeconds)); 
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STAR {Precision.GetPreciseCurrentCommandArgument(livStartCurrentMilliamps / 1000)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STOP {Precision.GetPreciseCurrentCommandArgument(livStopCurrentMilliamps / 1000)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STEP {livSweepStepCount}");
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(pulseOnTimeSeconds)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(pulseOffTimeSeconds)}");
 
                 // Check for any errors with SpikeSafe initialization commands
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set up SpikeSafe Digitizer to measure Pulsed Sweep output. To find more explanation, see MakingIntegratedVoltageMeasurements/MeasurePulsedSweepVoltage
                 tcpSocket.SendScpiCommand("VOLT:RANG 100");
-                tcpSocket.SendScpiCommand(string.Format("VOLT:APER {0}", pulseOnTimeSeconds * 600000)); // we want to measure 60% of the pulse
-                tcpSocket.SendScpiCommand(string.Format("VOLT:TRIG:DEL {0}", pulseOnTimeSeconds * 200000)); // we want to skip the first 20% of the pulse
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(pulseOnTimeSeconds * 600000)}"); // we want to measure 60% of the pulse
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(pulseOnTimeSeconds * 200000)}"); // we want to skip the first 20% of the pulse
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
                 tcpSocket.SendScpiCommand(string.Format("VOLT:TRIG:COUN {0}", livSweepStepCount));
@@ -175,7 +178,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 tcpSocket.SendScpiCommand("VOLT:INIT");
 
                 // Wait until SpikeSafe Channel 1 is ready for a trigger command
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // Output pulsed sweep for Channel 1
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
@@ -208,6 +211,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
 
                 // turn off SpikeSafe Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltageVolts,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();    

@@ -31,18 +31,23 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
                 tcpSocket.Connect(ipAddress, portNumber);
 
                 // reset to default state and configure settings to run in Continuous Dynamic mode
-                tcpSocket.SendScpiCommand("*RST");                  
+                tcpSocket.SendScpiCommand("*RST");
+
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDDYNAMIC");
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");   
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");   
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
 
                 // initially setting the On and Off Time to their default values using the standard commands 
                 // Although not recommended, it is possible to use On Time, Off Time, Pulse Width, Period, and Duty Cycle commands in the same test session
                 // If On or Off Time is specified using these standard commands, the Pulse Hold will be ignored
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.001");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.009");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.001)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.009)}");
 
                 // Check for any errors with initializing commands
                 ReadAllEvents.LogAllEvents(tcpSocket);
@@ -51,7 +56,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until the channel is fully ramped
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // check for all events and measure readings on Channel 1 once per second for 5 seconds,
                 // it is best practice to do this to ensure Channel 1 is on and does not have any errors
@@ -69,8 +74,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // set Channel 1's Pulse Width to 8ms. Since Period is being held, the Period will remain at 10ms
                 double pulseWidthSeconds = 0.008;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:WIDT {0}", pulseWidthSeconds));
-                logAndPrint(string.Format("Set Pulse Width to {0}s", pulseWidthSeconds));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:WIDT {Precision.GetPreciseTimeCommandArgument(pulseWidthSeconds)}");
+                logAndPrint($"Set Pulse Width to {pulseWidthSeconds}s");
 
                 // verify that the expected updates are made to the pulse settings
                 verifyCurrentPulseSettings(tcpSocket);
@@ -80,7 +85,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // set Channel 1's Duty Cycle to 50%. Since Period is being held, the Period will remain at 10ms
                 double dutyCycle = 50;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:DCYC {Precision.GetPreciseDutyCycleCommandArgument(dutyCycle)}");
                 logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
@@ -92,7 +97,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
                 // set Channel 1's Duty Cycle to 0%. Using this alternate command set, the Duty Cycle is able to be set to 0% and 100%
                 // Duty Cycle of 0% corresponds to an always-off output, similar to a disabled channel
                 dutyCycle = 0;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:DCYC {Precision.GetPreciseDutyCycleCommandArgument(dutyCycle)}");
                 logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
@@ -104,7 +109,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
                 // set Channel 1's Duty Cycle to 100%. Using this alternate command set, the Duty Cycle is able to be set to 0% and 100%
                 // Duty Cycle of 100% corresponds to an always-on output, similar to a DC mode
                 dutyCycle = 100;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:DCYC {Precision.GetPreciseDutyCycleCommandArgument(dutyCycle)}");
                 logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
@@ -119,8 +124,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // set Channel 1's Pulse Period to 20ms. Since Pulse Width is being held, the Pulse Width will remain at 10ms
                 double pulsePeriodSeconds = 0.02;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:PER {0}", pulsePeriodSeconds));
-                logAndPrint(string.Format("Set Pulse Period to {0}s", pulsePeriodSeconds));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:PER {Precision.GetPreciseTimeCommandArgument(pulsePeriodSeconds)}");
+                logAndPrint($"Set Pulse Period to {pulsePeriodSeconds}s");
 
                 // verify that the expected updates are made to the pulse settings
                 verifyCurrentPulseSettings(tcpSocket);
@@ -130,7 +135,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // set Channel 1's Duty Cycle to 25%. Since Pulse Width is being held, the Pulse Width will remain at 10ms
                 dutyCycle = 25;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:DCYC {0}", dutyCycle));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:DCYC {Precision.GetPreciseDutyCycleCommandArgument(dutyCycle)}");
                 logAndPrint(string.Format("Set Duty Cycle to {0}%", dutyCycle));
 
                 // verify that the expected updates are made to the pulse settings
@@ -145,8 +150,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // set Channel 1's Pulse Period to 200ms. Since Duty Cycle is being held, the Duty Cycle will remain at 25%
                 pulsePeriodSeconds = 0.2;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:PER {0}", pulsePeriodSeconds));
-                logAndPrint(string.Format("Set Pulse Period to {0}s", pulsePeriodSeconds));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:PER {Precision.GetPreciseTimeCommandArgument(pulsePeriodSeconds)}");
+                logAndPrint($"Set Pulse Period to {pulsePeriodSeconds}s");
 
                 // verify that the expected updates are made to the pulse settings
                 verifyCurrentPulseSettings(tcpSocket);
@@ -156,8 +161,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // set Channel 1's Pulse Width to 1ms. Since Duty Cycle is being held, the Duty Cycle will remain at 25%
                 pulseWidthSeconds = 0.001;
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:WIDT {0}", pulseWidthSeconds));
-                logAndPrint(string.Format("Set Pulse Width to {0}s", pulseWidthSeconds));
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:WIDT {Precision.GetPreciseTimeCommandArgument(pulseWidthSeconds)}");
+                logAndPrint($"Set Pulse Width to {pulseWidthSeconds}s");
 
                 // verify that the expected updates are made to the pulse settings
                 verifyCurrentPulseSettings(tcpSocket);
@@ -167,6 +172,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();   

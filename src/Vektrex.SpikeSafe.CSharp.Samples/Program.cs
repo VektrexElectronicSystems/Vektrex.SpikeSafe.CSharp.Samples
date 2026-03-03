@@ -1,33 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Text;
-using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages;
-using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadAllEventsSample;
-using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadIdn;
-using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.ReadMemoryTableData;
-using Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.TcpSocketSample;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBias;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunBiasPulsed;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunDc;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulatedDc;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPulse;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedSweep;
-using Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunSinglePulse;
-using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasurePulsedSweepVoltage;
-using Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureVoltageAcrossPulse;
-using Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForceSenseSwitching;
-using Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ConnectDisconnectSwitching;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPulseCountUsingSoftwareTiming;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjMeasurements;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTransientDualInterfaceMeasurement;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringDcStaircaseVoltages;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringWavelengthSpectrum;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuning;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLivSweeps;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigitizerOutputTrigger;
-using Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPulseHolds;
-
 namespace Vektrex.SpikeSafe.CSharp.Samples
 {
     class Program
@@ -42,100 +15,121 @@ namespace Vektrex.SpikeSafe.CSharp.Samples
             _log.Info("Vektrex.SpikeSafe.CSharp.Samples - Version {0}", Assembly.GetEntryAssembly().GetName().Version.ToString(3));
 
             // Uncomment line below to run GettingStarted/TcpSocketSample
-            //new TcpSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new GettingStarted.TcpSocketSample.TcpSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
             
             // Uncomment line below to run GettingStarted/ReadIdn
-            //new ReadIdnExpanded().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new GettingStarted.ReadIdn.ReadIdnExpanded().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run GettingStarted/ReadSpikeSafeInfo
+            //new GettingStarted.ReadIdn.ReadSpikeSafeInfo().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run GettingStarted/ReadAllEvents
-            //new ReadAllEventsSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new GettingStarted.ReadAllEventsSample.ReadAllEventsSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run GettingStarted/ReadMemoryTableData
-            //new ReadMemoryTableData().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new GettingStarted.ReadMemoryTableData.ReadMemoryTableData().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run Gettingstarted/DischargeChannel
+            //new GettingStarted.DischargeChannel.DischargeChannel().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run GettingStarted/ScpiLogging/LogAllTcpSocketScpi
+            //new GettingStarted.ScpiLogging.LogAllTcpSocketScpi().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            
+            // Uncomment line below to run GettingStarted/ScpiLogging/LogSpecificTcpSocketScpi
+            //new GettingStarted.ScpiLogging.LogSpecificTcpSocketScpi().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunBias
-            //new RunBias().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunBias.RunBias().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunBiasPulsed/RunBiasPulsedDynamicMode
-            //new RunBiasPulsedDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunBiasPulsed.RunBiasPulsedDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunBiasPulsed/RunBiasPulsedMode
-            //new RunBiasPulsedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunBiasPulsed.RunBiasPulsedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunDc/RunDcDynamicMode
-            //new RunDcDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunDc.RunDcDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunDc/RunDcMode
-            //new RunDcMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunDc.RunDcMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunModulatedDc
-            //new RunModulatedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunModulatedDc.RunModulatedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
             
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunMultiPulse
-            //new RunMultiPulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunMultiPulse.RunMultiPulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunPulsed/RunPulsedDynamicMode
-            //new RunPulsedDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunPulsed.RunPulsedDynamicMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunPulsed/RunPulsedMode
-            //new RunPulsedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunPulsed.RunPulsedMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunPulsedSweep/RunBiasPulsedSweepMode
-            //new RunBiasPulsedSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunPulsedSweep.RunBiasPulsedSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunPulsedSweep/RunPulsedSweepMode
-            //new RunPulsedSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunPulsedSweep.RunPulsedSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunSinglePulse/RunBiasSinglePulseMode
-            //new RunBiasSinglePulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunSinglePulse.RunBiasSinglePulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run RunSpikeSafeOperatingModes/RunSinglePulse/RunSinglePulseMode
-            //new RunSinglePulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new RunSpikeSafeOperatingModes.RunSinglePulse.RunSinglePulseMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run RunSpikeSafeOperatingModes/RunStaircaseSweep/RunStaircaseSweepMode.cs
+            //new RunSpikeSafeOperatingModes.RunStaircaseSweep.RunStaircaseSweepMode().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureAllPulsedVoltages
-            //new MeasureAllPulsedVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new MakingIntegratedVoltageMeasurements.MeasureAllPulsedVoltages.MeasureAllPulsedVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasurePulsedSweepVoltage
-            //new MeasurePulsedSweepVoltage().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new MakingIntegratedVoltageMeasurements.MeasurePulsedSweepVoltage.MeasurePulsedSweepVoltage().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureStaircaseSweepVoltage
+            //new MakingIntegratedVoltageMeasurements.MeasureStaircaseSweepVoltage.MeasureStaircaseSweepVoltage().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run MakingIntegratedVoltageMeasurements/MeasureVoltageAcrossPulse
-            //new MeasureVoltageAcrossPulse().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new MakingIntegratedVoltageMeasurements.MeasureVoltageAcrossPulse.MeasureVoltageAcrossPulse().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run UsingForceSenseSelectorSwitch/ABForceSenseSwitching
-            //new ForceSenseSwitchSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new UsingForceSenseSelectorSwitch.ABForceSenseSwitching.ForceSenseSwitchSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run UsingForceSenseSelectorSwitch/ConnectDisconnectSwitching
-            //new ConnectDisconnectSwitchSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new UsingForceSenseSelectorSwitch.ConnectDisconnectSwitching.ConnectDisconnectSwitchSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/ControllingThermalPlatformTemperature            
-            //new ControllingThermalPlatformTemperature().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.ControllingThermalPlatformTemperature.ControllingThermalPlatformTemperature().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/FixedPulseCountUsingSoftwareTiming            
-            //new FixedPulseCountUsingSoftwareTimingExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.FixedPulseCountUsingSoftwareTiming.FixedPulseCountUsingSoftwareTimingExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/MakingTjMeasurements            
-            //new TjMeasurement().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.MakingTjMeasurements.TjMeasurement().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/MakingTransientDualInterfaceMeasurement
-            //new MakingTransientDualInterfaceMeasurementExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.MakingTransientDualInterfaceMeasurement.MakingTransientDualInterfaceMeasurementExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
-            // Uncomment line below to run ApplicationSpecificExamples/MeasuringDcStaircaseVoltages            
-            //new MeasuringDcStaircaseVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            // Uncomment line below to run ApplicationSpecificExamples/MeasuringHardwareBasedDcStaircaseIvSweep
+            //new ApplicationSpecificExamples.MeasuringHardwareBasedDcStaircaseIvSweep.MeasuringDcStaircaseIVSweep().Run(spikeSafeIpAddress, spikeSafePortNumber);
+
+            // Uncomment line below to run ApplicationSpecificExamples/MeasuringSoftwareBasedDcStaircaseVoltages            
+            //new ApplicationSpecificExamples.MeasuringSoftwareBasedDcStaircaseVoltages.MeasuringDcStaircaseVoltages().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/MeasuringWavelengthSpectrum            
-            //new WavelengthSpectrumExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.MeasuringWavelengthSpectrum.WavelengthSpectrumExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/PulseTuning            
-            //new PulseTuningExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.PulseTuning.PulseTuningExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/RunningLivSweeps            
-            //new LIVSweepExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.RunningLivSweeps.LIVSweepExample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/PulseTuning            
-            //new DigitizerOutputTriggerSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.UsingDigitizerOutputTrigger.DigitizerOutputTriggerSample().Run(spikeSafeIpAddress, spikeSafePortNumber);
 
             // Uncomment line below to run ApplicationSpecificExamples/UsingPulseHolds            
-            //new UsingPulseHolds().Run(spikeSafeIpAddress, spikeSafePortNumber);
+            //new ApplicationSpecificExamples.UsingPulseHolds.UsingPulseHolds().Run(spikeSafeIpAddress, spikeSafePortNumber);
         }
     }
 }

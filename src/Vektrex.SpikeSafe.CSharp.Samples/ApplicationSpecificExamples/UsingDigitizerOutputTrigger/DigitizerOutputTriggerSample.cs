@@ -30,20 +30,21 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 TcpSocket tcpSocket = new TcpSocket();
                 tcpSocket.Connect(ipAddress, portNumber);
 
-                // reset to default state and check for all events,
-                // it is best practice to check for errors after sending each command      
-                tcpSocket.SendScpiCommand("*RST");                  
+                // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
+                // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
+                tcpSocket.SendScpiCommand("*RST");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
-                // abort digitizer in order get it into a known state. This is good practice when connecting to a SpikeSafe PSMU
-                tcpSocket.SendScpiCommand("VOLT:ABOR");
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set up Channel 1 for Multi Pulse output. To find more explanation, see RunSpikeSafeOperationModes/RunMultiPulse
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MULTIPULSE");
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");   
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 1");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(1)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(1)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:COUN 3");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
@@ -54,15 +55,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 tcpSocket.SendScpiCommand("OUTP1:TRIG:SOUR EXT");  
 
                 // set Channel 1's Input Trigger Delay to 10µs (the minimum value). The SpikeSafe will output current 10µs after receiving the input trigger signal
-                tcpSocket.SendScpiCommand("OUTP1:TRIG:DEL 10");  
+                tcpSocket.SendScpiCommand($"OUTP1:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(10)}");
 
                 // set Channel 1's Input Trigger Polarity to rising. This should match the expected polarity of the trigger signal
                 tcpSocket.SendScpiCommand("OUTP1:TRIG:POL RISING");   
 
                 // set typical Digitizer settings to match SpikeSafe settings. For more explanation, see MakingIntegratedVoltageMeasurements
                 tcpSocket.SendScpiCommand("VOLT:RANG 10");
-                tcpSocket.SendScpiCommand("VOLT:APER 400000");
-                tcpSocket.SendScpiCommand("VOLT:TRIG:DEL 200000");
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(400000)}");
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(200000)}");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:COUN 6"); // two 3-pulse Multi Pulse sequences will output
@@ -81,7 +82,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready to pulse
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // output the Digitizer hardware output trigger. 10µs after this signal is outputted, the Multi Pulse sequence will start
                 tcpSocket.SendScpiCommand("VOLT:OUTP:TRIG");
@@ -116,6 +117,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // prepare digitizer voltage data to plot
                 var plt = new ScottPlot.Plot();

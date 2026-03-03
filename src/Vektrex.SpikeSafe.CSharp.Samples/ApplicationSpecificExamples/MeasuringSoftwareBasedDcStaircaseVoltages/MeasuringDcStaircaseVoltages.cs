@@ -12,7 +12,7 @@ using System.Linq;
 using System.Reflection;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
-namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringDcStaircaseVoltages
+namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MeasuringSoftwareBasedDcStaircaseVoltages
 {
     public class MeasuringDcStaircaseVoltages
     {
@@ -36,17 +36,21 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 TcpSocket tcpSocket = new TcpSocket();
                 tcpSocket.Connect(ipAddress, portNumber);
 
-                // reset to default state and check for all events,
-                // it is best practice to check for errors after sending each command      
-                tcpSocket.SendScpiCommand("*RST");                  
+                // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
+                // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
+                tcpSocket.SendScpiCommand("*RST");
                 ReadAllEvents.LogAllEvents(tcpSocket);
+
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set Channel 1's mode to DC Dynamic mode and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DCDYNAMIC");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's voltage to 10 and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 10");
+                double complianceVoltage = 10;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's Auto Range to On and check for all events
@@ -54,7 +58,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's current to start current and check for all events
-                tcpSocket.SendScpiCommand(string.Format("SOUR1:CURR {0}", startCurrentAmps));
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(startCurrentAmps)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's Ramp mode to Fast and check for all events
@@ -62,17 +66,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // start the Channel 1
-                tcpSocket.SendScpiCommand("OUTP1 ON");
+                tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until Channel 1 is ready
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
-                
-                // set Digitizer to abort any measurements
-                tcpSocket.SendScpiCommand("VOLT:ABOR");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // set Digitizer Aperture to 10us and check for all events
-                tcpSocket.SendScpiCommand("VOLT:APER 10");
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(10)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Digitizer Trigger Count to step count and check for all events
@@ -92,7 +92,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // start Digitizer software triggered measurements
-                tcpSocket.SendScpiCommand("VOLT:INIT:SENDMSG");
+                tcpSocket.SendScpiCommand("VOLT:INIT:SEND");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // start DC staircase current supply and voltage measurement per step
@@ -117,6 +117,16 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 // Fetch Data and check for all events
                 List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
                 ReadAllEvents.LogAllEvents(tcpSocket);
+
+                // stop the Channel 1
+                tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from PSMU    
                 tcpSocket.Disconnect();  

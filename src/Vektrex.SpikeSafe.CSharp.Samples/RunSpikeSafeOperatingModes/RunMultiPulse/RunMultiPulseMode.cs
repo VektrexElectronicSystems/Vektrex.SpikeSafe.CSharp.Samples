@@ -31,18 +31,22 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPu
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set Channel 1's pulse mode to Multi Pulse
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MULTIPULSE");
 
                 // set Channel 1's current to 100 mA
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1"); 
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
 
                 // set Channel 1's voltage to 20 V 
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");   
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set Channel 1's Pulse On Time and Pulse Off Time to 1s each
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 1");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(1)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(1)}");
 
                 // set Channel 1's Pulse Count to 3. Every trigger will output 3 pulses
                 tcpSocket.SendScpiCommand("SOUR1:PULS:COUN 3");
@@ -59,7 +63,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPu
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // Wait until channel is ready for a trigger command
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // Output 1ms pulse for Channel 1
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
@@ -84,7 +88,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPu
                 }
 
                 // After the pulsing has ended, set Channel 1's current to 200 mA while the channel is enabled
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.2"); 
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.2)}");
 
                 // Output 1ms pulse for Channel 1. Multiple pulses can be outputted while the channel is enabled
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
@@ -110,6 +114,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunMultiPu
 
                 // turn off all Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();    

@@ -24,9 +24,12 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
         private const int GREASE = 1;
         private const int NO_GREASE = 2;
 
+        private double _complianceVoltage;
+
         public void Run(string ipAddress, int portNumber)
         {
             TcpSocket tcpSocket = new TcpSocket();
+            SpikeSafeInfo spikeSafeInfo = null;
 
             // start of main program
             try
@@ -55,7 +58,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                     // connect
                     tcpSocket.Connect(ipAddress, portNumber);
                     LogAndPrintToConsole(string.Format("Connected to {0}", ipAddress));
-		
+
+                    // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
+                    // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
+                    tcpSocket.SendScpiCommand("*RST");
+                    ReadAllEvents.LogAllEvents(tcpSocket);
+
+                    // Parse SpikeSafe information for later use
+                    spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                     // SpikeSafe set up
                     SpikeSafeSetup(tcpSocket, samplingMode);
 		
@@ -117,6 +128,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                 {
                     // stop channel
                     tcpSocket.SendScpiCommand("OUTP1 0");
+
+                    // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                    Discharge.WaitForSpikeSafeChannelDischarge(
+                        spikeSafeSocket: tcpSocket,
+                        spikeSafeInfo: spikeSafeInfo,
+                        complianceVoltage: _complianceVoltage,
+                        channelNumber: 1);
 
                     // disconnect
                     tcpSocket.Disconnect();
@@ -184,35 +202,35 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
 
         private void SpikeSafeSetup(TcpSocket tcpSocket, int sampleMode)
         {
-            tcpSocket.SendScpiCommand("VOLT:ABOR");
             // Set digitizer range to 10V
             tcpSocket.SendScpiCommand("VOLT:RANG 10");
             // Set digitizer sampling mode
             if(FAST_LOG_MODE == sampleMode)
             {
-                tcpSocket.SendScpiCommand("VOLT:SAMPMODE FASTLOG");
+                tcpSocket.SendScpiCommand("VOLT:SAMP:MODE FASTLOG");
             }
             else if(MEDIUM_LOG_MODE == sampleMode)
             {
-                tcpSocket.SendScpiCommand("VOLT:SAMPMODE MEDIUMLOG");
+                tcpSocket.SendScpiCommand("VOLT:SAMP:MODE MEDIUMLOG");
             }
             else if(SLOW_LOG_MODE == sampleMode)
             {
-                tcpSocket.SendScpiCommand("VOLT:SAMPMODE SLOWLOG");
+                tcpSocket.SendScpiCommand("VOLT:SAMP:MODE SLOWLOG");
             }
             // set digitizer trigger source to HARDWARE
             tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
             // set digitizer trigger delay to 50us
-            tcpSocket.SendScpiCommand("VOLT:TRIG:DEL 50");
+            tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(50)}");
             // SMU setting
             // Set DC Dynamic mode
             tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DCDYNAMIC");
             // set MCV to 25V
-            tcpSocket.SendScpiCommand("SOUR1:VOLT 25");
+            _complianceVoltage = 25;
+            tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(_complianceVoltage)}");
             // set auto range
             tcpSocket.SendScpiCommand("SOUR1:CURR:RANG:AUTO 1");
             // set currenty to 0.35A
-            tcpSocket.SendScpiCommand("SOUR1:CURR 0.35");
+            tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.35)}");
             // set Ramp mode to Fast
             tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
             // request SpikeSafe events and read data
@@ -220,9 +238,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
             // the trigger signal come from the voltage start up
             tcpSocket.SendScpiCommand("VOLT:INIT");
             // Start the channel
-            tcpSocket.SendScpiCommand("OUTP1 ON");
+            tcpSocket.SendScpiCommand("OUTP1 1");
             // wait for channel ready
-            ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY);
+            ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY);
         }
 
         private void CreateMultiplePlots(int samplingMode)

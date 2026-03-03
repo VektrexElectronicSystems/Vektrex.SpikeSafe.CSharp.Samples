@@ -32,7 +32,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
                 tcpSocket.Connect(ipAddress, portNumber);
 
                 // reset to default state    
-                tcpSocket.SendScpiCommand("*RST");                  
+                tcpSocket.SendScpiCommand("*RST");
+
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // check that the Force Sense Selector Switch is available for this SpikeSafe. We need the switch to run this sequence
                 // If switch related SCPI is sent and there is no switch configured, it will result in error "386, Output Switch is not installed"
@@ -47,10 +50,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
 
                 // set Channel 1's settings to operate in Multi-Pulse mode
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP MULTIPULSE");
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1"); 
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");   
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 1");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 1");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(1)}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(1)}");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:COUN 3");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
@@ -62,7 +66,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // Wait until channel is ready for a trigger command
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // Output 1ms pulse for Channel 1
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
@@ -120,6 +124,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
                 }
                 // turn off all Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();    

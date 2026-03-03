@@ -6,9 +6,11 @@ These samples are primarily intended for first-time users of Vektrex products. T
 For first-time users, Vektrex recommends running the samples in the order shown below:
 
 1. [TCP Sample](TcpSocketSample) - a more in depth example that connects to the SpikeSafe using a TCP socket. An *IDN? query is sent with more verbose C# commands
-2. [Read *IDN?](ReadIdn) - Uses the SCPI Standard "*IDN?" query and following information queries to obtain the model of your SpikeSafe
-3. [Read All Events](ReadAllEvents) - Reads all events from the SpikeSafe event queue 
-4. [Read Memory Table Data](ReadMemoryTableData) - Reads the SpikeSafe status and obtains current operational information from the SpikeSafe
+1. [Read *IDN?](ReadIdn) - Uses the SCPI Standard "*IDN?" query and following information queries to obtain the model of your SpikeSafe
+1. [Read All Events](ReadAllEventsSample) - Reads all events from the SpikeSafe event queue 
+1. [Read Memory Table Data](ReadMemoryTableData) - Reads the SpikeSafe status and obtains current operational information from the SpikeSafe
+1. [Discharge Channel](DischargeChannel) - Shows how to properly shut down the SpikeSafe channel and wait for the load voltage to discharge before taking further action
+1. [SCPI Logging](ScpiLogging) - Shows how to log SpikeSafe SCPI messages sent over the TCP socket to a file
 
 ## Usage
 To run these samples, an IDE such as [Visual Studio Code](https://code.visualstudio.com/) is required. The [Vektrex.SpikeSafe.CSharp.Lib](https://www.nuget.org/packages/Vektrex.SpikeSafe.CSharp.Lib/) package will need to be installed using the command `Install-Package Vektrex.SpikeSafe.CSharp.Lib`. Vektrex recommends always having the latest version of Vektrex.SpikeSafe.CSharp.Lib when running these sequences; the current version is 1.1.1.

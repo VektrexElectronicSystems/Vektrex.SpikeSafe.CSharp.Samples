@@ -1,5 +1,5 @@
 // Goal: 
-// Connect to a SpikeSafe and run a Pulsed Sweep into a 10Ω resistor. Take voltage measurements from the pulsed output using the SpikeSafe PSMU's integrated Digitizer
+// Connect to a SpikeSafe and run a Staircase Sweep into a 10Ω resistor. Take voltage measurements from the staircase output using the SpikeSafe PSMU's integrated Digitizer
 // 
 // Expectation: 
 // Channel 1 will be driven with 100mA with a forward voltage of ~1V during this time
@@ -13,9 +13,9 @@ using System.Linq;
 using System.Reflection;
 using Vektrex.SpikeSafe.CSharp.Lib;
 
-namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasurePulsedSweepVoltage
+namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.MeasureStaircaseSweepVoltage
 {
-    public class MeasurePulsedSweepVoltage
+    public class MeasureStaircaseSweepVoltage
     {
         private static NLog.Logger _log = NLog.LogManager.GetCurrentClassLogger();
 
@@ -24,7 +24,19 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
             // start of main program
             try
             {
-                _log.Info("MeasurePulsedSweepVoltage.Run() started.");
+                double startCurrentAmps = 0.02;
+                double stopCurrentAmps = 0.2;
+                int currentStepCount = 10;
+                double complianceVoltageVolts = 20;
+                int stepOnTimeMilliseconds = 1;
+
+                double digitizerVoltageRangeVolts = 10;
+                int digitizerApertureMicroseconds = 514;
+                int digitizerHardwareTriggerDelayMicroseconds = 150;
+                int digitizerHardwareTriggerCount = currentStepCount;
+                int digitizerReadingCount = 1;
+
+                _log.Info("MeasureStaircaseSweepVoltage.Run() started.");
     
                 // instantiate new TcpSocket to connect to SpikeSafe
                 TcpSocket tcpSocket = new TcpSocket();
@@ -38,28 +50,48 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
-                // set up Channel 1 for pulsed sweep output. To find more explanation, see InstrumentExamples/RunSpikeSafeOperatingModes/RunPulsed
-                tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
-                tcpSocket.SendScpiCommand($"SOUR1:CURR:STAR {Precision.GetPreciseCurrentCommandArgument(0.02)}");
-                tcpSocket.SendScpiCommand($"SOUR1:CURR:STOP {Precision.GetPreciseCurrentCommandArgument(0.2)}");
-                tcpSocket.SendScpiCommand("SOUR1:CURR:STEP 100");
-                double complianceVoltage = 20;
-                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.0001)}");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.0099)}");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
-                tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
+                // set Channel 1's pulse mode to Staircase Sweep and check for all events
+                tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP STAIRCASESWEEP");
+
+                // set Channel 1's Staircase Sweep parameters to match the test expectation
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STAR {Precision.GetPreciseCurrentCommandArgument(startCurrentAmps)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STOP {Precision.GetPreciseCurrentCommandArgument(stopCurrentAmps)}");
+                tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STEP {currentStepCount}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:STA:SWE:TON {stepOnTimeMilliseconds}");
+
+                // set Channel 1's voltage
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");
+
+                // set Channel 1's compensation settings to High/Fast
+                // For higher power loads or shorter pulses, these settings may have to be adjusted to obtain ideal pulse shape
+                (SpikeSafeEnums.LoadImpedance loadImpedance, SpikeSafeEnums.RiseTime riseTime) = Compensation.GetOptimumCompensation(
+                    spikesafeModelMaxCurrentAmps: spikeSafeInfo.MaximumSetCurrent,
+                    setCurrentAmps: stopCurrentAmps,
+                    pulseOnTimeSeconds: stepOnTimeMilliseconds / 1000.0);
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:CCOM {(int)loadImpedance}");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:RCOM {(int)riseTime}");
+
+                // set Channel 1's Ramp mode to Fast
+                tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
+
+                // set Channel 1's External Source Trigger Out to Always
+                tcpSocket.SendScpiCommand("SOUR1:PULS:TRIG ALWAYS");
+
+                // set Channel 1's External Source Trigger Out to Positive
+
+                tcpSocket.SendScpiCommand("OUTP1:TRIG:SLOP POS");
+
+                // set Channel 1's trigger source to Internal (so that the SpikeSafe triggers the Staircase Sweep when the OUTP:TRIG command is sent)
+                tcpSocket.SendScpiCommand("OUTP1:TRIG:SOUR INT");
 
                 // set Digitizer voltage range to 10V since we expect to measure voltages significantly less than 10V
-                tcpSocket.SendScpiCommand("VOLT:RANG 10");
+                tcpSocket.SendScpiCommand($"VOLT:RANG {digitizerVoltageRangeVolts}");
 
                 // set Digitizer aperture. Aperture specifies the measurement time, and we want to measure a majority of the pulse's constant current output
-                int apertureMicroseconds = 60;
-                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(apertureMicroseconds)}");
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(digitizerApertureMicroseconds)}");
 
                 // set Digitizer trigger delay. We want to give sufficient delay to omit any overshoot the current pulse may have
-                int hardwareTriggerDelayMicroseconds = 20;
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(hardwareTriggerDelayMicroseconds)}");
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(digitizerHardwareTriggerDelayMicroseconds)}");
 
                 // set Digitizer trigger source to hardware. When set to a hardware trigger, the digitizer waits for a trigger signal from the SpikeSafe to start a measurement
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
@@ -68,15 +100,16 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
 
                 // set Digitizer trigger count. We want to take one voltage reading for every step in the pulsed sweep
-                int hardwareTriggerCount = 100;
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {hardwareTriggerCount}");
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {digitizerHardwareTriggerCount}");
 
                 // set Digitizer reading count. This is the amount of readings that will be taken when the Digitizer receives its specified trigger signal
-                int readingCount = 1;
-                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {readingCount}");
+                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {digitizerReadingCount}");
 
                 // check all SpikeSafe event since all settings have been sent
                 ReadAllEvents.LogAllEvents(tcpSocket);
+
+                // start Digitizer measurements. We want the digitizer waiting for triggers before starting the pulsed sweep
+                tcpSocket.SendScpiCommand("VOLT:INIT");
 
                 // turn on Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 1");
@@ -84,18 +117,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // wait until Channel 1 is fully ramped so we can send a trigger command for a pulsed sweep
                 ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
-                // start Digitizer measurements. We want the digitizer waiting for triggers before starting the pulsed sweep
-                tcpSocket.SendScpiCommand("VOLT:INIT");
-
                 // trigger Channel 1 to start the pulsed sweep output
                 tcpSocket.SendScpiCommand("OUTP1:TRIG");
 
                 // Get estimated completion time for Digitizer measurements to occur. Estimating completion time minimizes digitizer polling during DigitizerDataFetch.
                 double estimatedCompleteTimeSeconds = DigitizerDataFetch.GetNewVoltageDataEstimatedCompleteTime(
-                    apertureMicroseconds: apertureMicroseconds,
-                    readingCount: readingCount,
-                    hardwareTriggerCount: hardwareTriggerCount,
-                    hardwareTriggerDelayMicroseconds: hardwareTriggerDelayMicroseconds);
+                    apertureMicroseconds: digitizerApertureMicroseconds,
+                    readingCount: digitizerReadingCount,
+                    hardwareTriggerCount: digitizerHardwareTriggerCount,
+                    hardwareTriggerDelayMicroseconds: digitizerHardwareTriggerDelayMicroseconds);
 
                 // fetch voltage data from Digitizer containing sample number and voltage reading
                 List<DigitizerData> digitizerData = null;
@@ -170,7 +200,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 Discharge.WaitForSpikeSafeChannelDischarge(
                     spikeSafeSocket: tcpSocket, 
                     spikeSafeInfo: spikeSafeInfo,
-                    complianceVoltage: complianceVoltage,
+                    complianceVoltage: complianceVoltageVolts,
                     channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
@@ -180,12 +210,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 var plt = new ScottPlot.Plot();
                 List<double> voltageReadings = new List<double>();
                 List<double> currentSteps = new List<double>();
-                double startCurrentMilliamps = 20;
-                double stepSizeMilliamps = 1.82;  // 1.82mA = Step Size = (StopCurrent - StartCurrent)/(StepCount - 1)
+                double sweepStepSizeAmps = (stopCurrentAmps - startCurrentAmps) / (currentStepCount - 1);
                 foreach (DigitizerData dd in digitizerData)
                 {
                     voltageReadings.Add(dd.VoltageReading);
-                    currentSteps.Add(startCurrentMilliamps + stepSizeMilliamps * (dd.SampleNumber - 1));
+                    currentSteps.Add(startCurrentAmps + sweepStepSizeAmps * (dd.SampleNumber - 1));
                 }
 
                 // plot the pulse shape using the fetched voltage readings
@@ -193,11 +222,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 scatter.Color = Colors.Blue;
                 scatter.LineWidth = 1;
                 plt.YLabel("Voltage (V)");
-                plt.XLabel("Set Current (mA)");
-                plt.Title("Digitizer Voltage Readings - Pulsed Sweep (20mA to 200mA)");
-                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"pulsed_sweep_voltages.png"), 800, 600);
+                plt.XLabel("Set Current (A)");
+                plt.Title($"Digitizer Voltage Readings - Staircase Sweep ({startCurrentAmps}A to {stopCurrentAmps}A)");
+                plt.SavePng(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"staircase_sweep_voltages.png"), 800, 600);
 
-                _log.Info("MeasurePulsedSweepVoltage.Run() completed.\n");
+                _log.Info("MeasureStaircaseSweepVoltage.Run() completed.\n");
             }
             catch(SpikeSafeException e)
             {

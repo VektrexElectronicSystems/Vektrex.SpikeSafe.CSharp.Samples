@@ -35,6 +35,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // check that the Force Sense Selector Switch is available for this SpikeSafe. We need the switch to run this sequence
                 // If switch related SCPI is sent and there is no switch configured, it will result in error "386, Output Switch is not installed"
                 tcpSocket.SendScpiCommand("OUTP1:CONN:AVAIL?");
@@ -49,8 +52,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 // set Channel 1 settings to operate in DC mode
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DC");    
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");        
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");       
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // log all SpikeSafe event after settings are adjusted  
                 ReadAllEvents.LogAllEvents(tcpSocket); 
@@ -71,6 +75,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 // When operating in DC mode, the channel must be turned off before adjusting the switch state
                 tcpSocket.SendScpiCommand("OUTP1 0");               
                 ReadAllEvents.LogAllEvents(tcpSocket);
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // set the Force Sense Selector Switch state to Auxiliary (B) so that the Auxiliary Source will be routed to the DUT and the SpikeSafe will be disconnected
                 tcpSocket.SendScpiCommand("OUTP1:CONN AUX");
@@ -98,6 +109,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 // turn off Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 0");               
                 ReadAllEvents.LogAllEvents(tcpSocket);
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();                 

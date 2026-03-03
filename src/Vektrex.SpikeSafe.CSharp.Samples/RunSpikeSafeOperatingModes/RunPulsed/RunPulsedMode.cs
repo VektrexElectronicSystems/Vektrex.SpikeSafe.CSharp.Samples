@@ -29,17 +29,20 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set Channel 1's pulse mode to Pulsed and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSED");
                 ReadAllEvents.LogAllEvents(tcpSocket); 
 
                 // set Channel 1's Pulse On Time to 1ms and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.001");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.001)}");
                 ReadAllEvents.LogAllEvents(tcpSocket); 
 
                 // set Channel 1's Pulse Off Time to 9ms and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TOFF 0.009");
-                ReadAllEvents.LogAllEvents(tcpSocket); 
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.009)}");
+                ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's safety threshold for over current protection to 50% and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
@@ -53,18 +56,19 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's current to 100 mA and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");   
-                ReadAllEvents.LogAllEvents(tcpSocket);  
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
+                ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // set Channel 1's voltage to 20 V and check for all events
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
                 // turn on Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 1");
 
                 // wait until the channel is fully ramped
-                ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+                ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
                 // check for all events and measure readings on Channel 1 once per second for 10 seconds,
                 // it is best practice to do this to ensure Channel 1 is on and does not have any errors
@@ -78,6 +82,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");
+
+                // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+                Discharge.WaitForSpikeSafeChannelDischarge(
+                    spikeSafeSocket: tcpSocket,
+                    spikeSafeInfo: spikeSafeInfo,
+                    complianceVoltage: complianceVoltage,
+                    channelNumber: 1);
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();    

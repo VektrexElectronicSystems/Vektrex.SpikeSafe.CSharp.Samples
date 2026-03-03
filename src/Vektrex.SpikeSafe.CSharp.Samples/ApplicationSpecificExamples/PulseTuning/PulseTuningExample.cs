@@ -34,17 +34,21 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
                 tcpSocket.SendScpiCommand("*RST");                  
                 ReadAllEvents.LogAllEvents(tcpSocket);
 
+                // Parse SpikeSafe information for later use
+                SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
+
                 // set channel 1's pulse mode to Single Pulse
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP SINGLEPULSE");
 
                 // set channel 1's current to 100 mA
-                tcpSocket.SendScpiCommand("SOUR1:CURR 0.1");     
+                tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
 
                 // set channel 1's voltage to 20 V 
-                tcpSocket.SendScpiCommand("SOUR1:VOLT 20");   
+                double complianceVoltage = 20;
+                tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // set channel 1's pulse width to 100µs. Of the pulse time settings, only Pulse On Time and Pulse Width [+Offset] are relevant in Single Pulse mode
-                tcpSocket.SendScpiCommand("SOUR1:PULS:TON 0.0001");
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.0001)}");
 
                 // set channel 1's output ramp to fast so that tests can be run in succession
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
@@ -55,25 +59,25 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
                 // run each combination of Pulse Tuning settings to determine the settings that output the best pulse shape
                 // per Vektrex recommendation, Load Impedance is tuned prior to Rise Time
                 // once a pattern has been established, it may be useful to comment out ineffective or redundant test cases
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.VERY_LOW, RiseTime.VERY_SLOW);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.LOW, RiseTime.VERY_SLOW);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.MEDIUM, RiseTime.VERY_SLOW);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.HIGH, RiseTime.VERY_SLOW);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.VERY_LOW, RiseTime.VERY_SLOW);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.LOW, RiseTime.VERY_SLOW);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.MEDIUM, RiseTime.VERY_SLOW);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.HIGH, RiseTime.VERY_SLOW);    
 
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.VERY_LOW, RiseTime.SLOW);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.LOW, RiseTime.SLOW);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.MEDIUM, RiseTime.SLOW);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.HIGH, RiseTime.SLOW);   
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.VERY_LOW, RiseTime.SLOW);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.LOW, RiseTime.SLOW);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.MEDIUM, RiseTime.SLOW);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.HIGH, RiseTime.SLOW);   
 
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.VERY_LOW, RiseTime.MEDIUM);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.LOW, RiseTime.MEDIUM);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.MEDIUM, RiseTime.MEDIUM);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.HIGH, RiseTime.MEDIUM);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.VERY_LOW, RiseTime.MEDIUM);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.LOW, RiseTime.MEDIUM);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.MEDIUM, RiseTime.MEDIUM);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.HIGH, RiseTime.MEDIUM);    
 
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.VERY_LOW, RiseTime.FAST);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.LOW, RiseTime.FAST);   
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.MEDIUM, RiseTime.FAST);    
-                RunSinglePulseTuningTest(tcpSocket, LoadImpedance.HIGH, RiseTime.FAST);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.VERY_LOW, RiseTime.FAST);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.LOW, RiseTime.FAST);   
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.MEDIUM, RiseTime.FAST);    
+                RunSinglePulseTuningTest(tcpSocket, spikeSafeInfo, complianceVoltage, LoadImpedance.HIGH, RiseTime.FAST);    
 
                 // disconnect from SpikeSafe                      
                 tcpSocket.Disconnect();    
@@ -97,7 +101,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
         }
          
         ////// defining the action to take per test session
-        private void RunSinglePulseTuningTest(TcpSocket tcpSocket, LoadImpedance loadImpedance, RiseTime riseTime)
+        private void RunSinglePulseTuningTest(TcpSocket tcpSocket, SpikeSafeInfo spikeSafeInfo, double complianceVoltage, LoadImpedance loadImpedance, RiseTime riseTime)
         {
             _log.Info("Running single pulse tuning test iteration with {0} and {1}", loadImpedance, riseTime);
 
@@ -112,7 +116,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
             tcpSocket.SendScpiCommand("OUTP1 1");
 
             // Wait until channels are ready for a trigger command
-            ReadAllEvents.ReadUntilEvent(tcpSocket, (int)SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
+            ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
 
             // Output 1ms pulse for all channels
             tcpSocket.SendScpiCommand("OUTP1:TRIG");
@@ -129,6 +133,13 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
             Console.ReadLine();
 
             tcpSocket.SendScpiCommand("OUTP1 0");
+
+            // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
+            Discharge.WaitForSpikeSafeChannelDischarge(
+                spikeSafeSocket: tcpSocket,
+                spikeSafeInfo: spikeSafeInfo,
+                complianceVoltage: complianceVoltage,
+                channelNumber: 1);
 
             // wait one second to account for any electrical transients before starting the next session
             Threading.Wait(1);

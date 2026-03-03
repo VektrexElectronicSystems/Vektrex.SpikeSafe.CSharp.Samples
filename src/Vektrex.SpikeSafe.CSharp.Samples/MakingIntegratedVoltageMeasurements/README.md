@@ -5,6 +5,7 @@ These folders contain examples to make voltage measurements using the SpikeSafe 
 ## Directory
 - [Measure All Pulsed Voltages](MeasureAllPulsedVoltages)
 - [Measure Pulsed Sweep Voltage](MeasurePulsedSweepVoltage)
+- [Measure Staircase Sweep Voltage](MeasureStaircaseSweepVoltage)
 - [Measure Voltage Across Pulse](MeasureVoltageAcrossPulse)
 
 ## Usage
