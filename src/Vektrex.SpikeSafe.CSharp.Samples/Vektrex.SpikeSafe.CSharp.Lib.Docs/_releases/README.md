@@ -1,8 +1,14 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
-## v1.5.29
-2/12/26
+## v1.5.31
+3/2/26
 
+- Breaking Changes
+    - PulseWidthCorrection.GetOptimumPulseWidthCorrection()
+        - Added required parameters:
+            - SpikeSafeInfo spikeSafeInfo. An object containing the SpikeSafe information.
+        - Removed required parameters:
+            - float spikeSafeModelMaxCurrentAmps. Maximum current of the SpikeSafe model.
 - Added
     - DigitizerData.TimeSinceStartSeconds
     - DigitizerDataFetch.FetchVoltageDataSamplingModeLinear()
@@ -15,11 +21,18 @@
         - Added optional parameter bool? enableLogging. Overrides spikeSafeSocket.EnableLogging attribute (default to null will use spikeSafeSocket.EnableLogging value)
     - ReadAllEvents.ReadUntilEvent()
         - Added parameter code as type SpikeSafeEvent enum
-        - Added optional parameter timeout. Maximum time in seconds to wait for the desired event before raising an exception (default to None will wait indefinitely)
+        - Added optional parameter float timeout. Maximum time in seconds to wait for the desired event before raising an exception (default to None will wait indefinitely)
     - ScpiFormatter class
+    - SpikeSafeEvents
+        - Added new events:
+            - CURRENT_RAMP_RATE_RESTORED = 126
+            - STAIRCASE_SWEEP_IS_COMPLETED = 127
+            - STAIRCASE_SWEEP_SHUTDOWN_DUE_TO_ERROR = 128
+            - INVALID_STAIRCASE_SWEEP_ON_TIME = 602
+            - INVALID_STAIRCASE_SWEEP_STEP_COUNT = 603
+    - SpikeSafeInfoParser.CompareRevVersion()
     - SpikeSafeInfoParser.Parse()
         - optional parameter bool? enableLogging. Overrides spikeSafeSocket.EnableLogging attribute (default to null will use spikeSafeSocket.EnableLogging value)
-    - SpikeSafeInfoParser.CompareRevVersion()
 - Fixed
     - DigitizerDataFetch.WaitForNewVoltageData()
         - Calculation now returns the correct time, which before returned a time larger by a factor of 10.
