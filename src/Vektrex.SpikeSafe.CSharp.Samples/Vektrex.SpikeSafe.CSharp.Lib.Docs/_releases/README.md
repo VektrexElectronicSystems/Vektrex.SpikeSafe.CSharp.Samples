@@ -1,6 +1,6 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
-## v1.5.31
+## v1.5.32
 3/2/26
 
 - Breaking Changes
