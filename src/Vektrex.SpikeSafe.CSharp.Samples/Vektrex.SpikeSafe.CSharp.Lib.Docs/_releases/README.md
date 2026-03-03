@@ -36,6 +36,8 @@
 - Fixed
     - DigitizerDataFetch.WaitForNewVoltageData()
         - Calculation now returns the correct time, which before returned a time larger by a factor of 10.
+- Dependency Updates:
+    - NLog 6.0.7
 
 ## v1.5.11
 1/26/26
