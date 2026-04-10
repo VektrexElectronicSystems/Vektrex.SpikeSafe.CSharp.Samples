@@ -1,5 +1,13 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
+## v1.6.2
+4/8/26
+
+- Updated
+    - Discharge.WaitForSpikeSafeChannelDischarge()
+        - Function assesses Discharge Complete query response before checking if elapsed time has surpassed the model's maximum expected discharge time.
+        - Error message when the elapsed time has surpassed the model's maximum expected discharge time now includes the expected times for both the compliance voltage and model's maximum compliance voltage.
+
 ## v1.5.32
 3/2/26
 
@@ -36,6 +44,8 @@
 - Fixed
     - DigitizerDataFetch.WaitForNewVoltageData()
         - Calculation now returns the correct time, which before returned a time larger by a factor of 10.
+- Dependency Updates:
+    - NLog 6.0.7
 
 ## v1.5.11
 1/26/26
