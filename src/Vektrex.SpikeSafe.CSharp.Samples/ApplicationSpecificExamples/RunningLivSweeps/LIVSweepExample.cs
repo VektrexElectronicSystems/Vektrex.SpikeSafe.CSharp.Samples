@@ -139,7 +139,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
                 // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
                 tcpSocket.SendScpiCommand("*RST");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -154,7 +154,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(pulseOffTimeSeconds)}");
 
                 // Check for any errors with SpikeSafe initialization commands
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set up SpikeSafe Digitizer to measure Pulsed Sweep output. To find more explanation, see MakingIntegratedVoltageMeasurements/MeasurePulsedSweepVoltage
                 tcpSocket.SendScpiCommand("VOLT:RANG 100");
@@ -166,7 +166,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 tcpSocket.SendScpiCommand("VOLT:READ:COUN 1");
 
                 // Check for any errors with Digitizer initialization commands
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
 
                 ////// LIV Sweep Operation
@@ -200,7 +200,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                     CheckCASError(deviceId);
 
                     // Check for any SpikeSafe errors while outputting the Pulsed Sweep
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                 }
 
                 // wait for the Digitizer measurements to complete. We need to wait for the data acquisition to complete before fetching the data

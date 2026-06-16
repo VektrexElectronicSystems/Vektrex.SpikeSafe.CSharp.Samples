@@ -27,42 +27,42 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 // reset to default state and check for all events,
                 // it is best practice to check for errors after sending each command      
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set Channel 1's pulse mode to Pulsed and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSED");
-                ReadAllEvents.LogAllEvents(tcpSocket); 
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true); 
 
                 // set Channel 1's Pulse On Time to 1ms and check for all events
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.001)}");
-                ReadAllEvents.LogAllEvents(tcpSocket); 
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true); 
 
                 // set Channel 1's Pulse Off Time to 9ms and check for all events
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.009)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's safety threshold for over current protection to 50% and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");    
-                ReadAllEvents.LogAllEvents(tcpSocket); 
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true); 
 
                 // set Channel 1's compensation settings to their default values and check for all events
                 // For higher power loads or shorter pulses, these settings may have to be adjusted to obtain ideal pulse shape
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's current to 100 mA and check for all events
                 tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's voltage to 20 V and check for all events
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // turn on Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 1");
@@ -75,7 +75,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 DateTime timeEnd = DateTime.Now.AddSeconds(10);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }

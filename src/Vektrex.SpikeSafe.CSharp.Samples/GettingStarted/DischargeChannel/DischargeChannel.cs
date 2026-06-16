@@ -25,31 +25,31 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
 
                 // reset to default state and check for all events
                 tcpSocket.SendScpiCommand("*RST");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // parse the SpikeSafe information
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set Channel 1's pulse mode to DC and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP DC");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's safety threshold for over current protection to 50% and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's current to 100 mA and check for all events
                 tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's voltage to 20 V and check for all events
                 double complianceVoltage = 20.0;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // start test #1 by turning on Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 1");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // wait until the channel is fully ramped to target current
                 ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
@@ -58,14 +58,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 DateTime timeEnd = DateTime.UtcNow.AddSeconds(5);
                 while (DateTime.UtcNow < timeEnd)
                 {
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }
 
                 // turn off Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 0", enableLogging: true);
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // wait until the channel is fully discharged before starting test #2
                 _log.Info("Waiting for Channel 1 to fully discharge after test #1...");
@@ -78,7 +78,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
 
                 // start test #2 by turning on Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 1", enableLogging: true);
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // wait until the channel is fully ramped to target current
                 ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
@@ -87,14 +87,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.GettingStarted.DischargeChannel
                 timeEnd = DateTime.UtcNow.AddSeconds(5);
                 while (DateTime.UtcNow < timeEnd)
                 {
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }
 
                 // turn off Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 0", enableLogging: true);
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // wait until the channel is fully discharged before disconnecting the load
                 _log.Info("Waiting for Channel 1 to fully discharge after test #2...");

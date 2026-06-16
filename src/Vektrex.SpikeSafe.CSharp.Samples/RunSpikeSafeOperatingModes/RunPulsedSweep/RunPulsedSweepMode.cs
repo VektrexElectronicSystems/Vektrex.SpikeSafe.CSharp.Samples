@@ -27,7 +27,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 // reset to default state and check for all events,
                 // it is best practice to check for errors after sending each command      
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -57,7 +57,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsedS
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 1");   
 
                 // Check for any errors with initializing commands
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // turn on Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 1");

@@ -133,7 +133,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
 
                 // reset SpikeSafe to default state and check for all events    
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -143,11 +143,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(1)}");
                 tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(setCurrentAmps)}");        
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");         
-                ReadAllEvents.LogAllEvents(tcpSocket); 
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true); 
 
                 // turn on SpikeSafe Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 1");               
-                ReadAllEvents.LogAllEvents(tcpSocket);                            
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);                            
 
                 // wait until the channel is fully ramped and output a single pulse
                 ReadAllEvents.ReadUntilEvent(tcpSocket, SpikeSafeEvents.CHANNEL_READY); // event 100 is "Channel Ready"
@@ -178,7 +178,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
 
                 // turn off SpikeSafe Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 0");               
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
                 Discharge.WaitForSpikeSafeChannelDischarge(

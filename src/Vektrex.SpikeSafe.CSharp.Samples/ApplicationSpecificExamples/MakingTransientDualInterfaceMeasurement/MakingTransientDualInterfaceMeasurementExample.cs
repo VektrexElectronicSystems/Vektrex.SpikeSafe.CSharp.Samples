@@ -62,7 +62,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                     // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
                     // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
                     tcpSocket.SendScpiCommand("*RST");
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                     // Parse SpikeSafe information for later use
                     spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);

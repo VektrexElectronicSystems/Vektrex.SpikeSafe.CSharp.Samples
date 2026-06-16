@@ -33,7 +33,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
                 // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
                 tcpSocket.SendScpiCommand("*RST");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -73,7 +73,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 tcpSocket.SendScpiCommand("VOLT:OUTP:TRIG:EDGE RISING");  
 
                 // check all SpikeSafe event since all settings have been sent
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // initialize the digitizer. Measurements will be taken once a current pulse is outputted
                 tcpSocket.SendScpiCommand("VOLT:INIT");
