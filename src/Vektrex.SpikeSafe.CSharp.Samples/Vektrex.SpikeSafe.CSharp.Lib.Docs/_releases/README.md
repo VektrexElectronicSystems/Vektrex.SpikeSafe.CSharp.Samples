@@ -1,5 +1,19 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
+## v1.7.7
+6/16/26
+- Added
+    - SpikeSafeEvents
+        - Added new events:
+            - INVALID_CURRENT_RAMP_RATE_SETTINGS = 604
+            - BIAS_CURRENT_SETTING_IS_ONLY_ALLOWED_IN_BIAS_MODE_ON_CHANNEL_1 = 605
+- Fixed
+    - SpikeSafeInfoParser.Parse()
+        - Works when there are no Digitizers available
+- Improved
+    - TcpSocket.Connect()
+        - Disabled Nagle's algorithm to improve SCPI round trip timing
+
 ## v1.6.2
 4/8/26
 
