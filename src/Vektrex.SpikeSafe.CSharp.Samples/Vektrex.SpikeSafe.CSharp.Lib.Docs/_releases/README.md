@@ -1,8 +1,10 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
-## v1.7.7
-6/16/26
+## v1.7.8
+6/17/26
 - Added
+    - Compensation.GetCustomCompensation()
+        - New function that returns the custom compensation for a given set current, device type, and custom compensation table, and optionally a given pulse on time. The custom compensation table may be defined using a list of CustomCompensationEntry objects.
     - SpikeSafeEvents
         - Added new events:
             - INVALID_CURRENT_RAMP_RATE_SETTINGS = 604
