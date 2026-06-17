@@ -2,13 +2,16 @@
 
 ## v1.7.8
 6/17/26
+- Deprecated
+    - `ReadAll.LogAllEvents()`
+        - Use `ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true)` instead
 - Added
-    - Compensation.GetCustomCompensation()
-        - New function that returns the custom compensation for a given set current, device type, and custom compensation table, and optionally a given pulse on time. The custom compensation table may be defined using a list of CustomCompensationEntry objects.
-    - SpikeSafeEvents
+    - `Compensation.GetCustomCompensation()`
+        - New function that returns the custom compensation for a given set current, device type, and custom compensation table, and optionally a given pulse on time. The custom compensation table may be defined using a list of `CustomCompensationEntry` objects.
+    - `SpikeSafeEvents`
         - Added new events:
-            - INVALID_CURRENT_RAMP_RATE_SETTINGS = 604
-            - BIAS_CURRENT_SETTING_IS_ONLY_ALLOWED_IN_BIAS_MODE_ON_CHANNEL_1 = 605
+            - `INVALID_CURRENT_RAMP_RATE_SETTINGS = 604`
+            - `BIAS_CURRENT_SETTING_IS_ONLY_ALLOWED_IN_BIAS_MODE_ON_CHANNEL_1 = 605`
 - Fixed
     - SpikeSafeInfoParser.Parse()
         - Works when there are no Digitizers available
