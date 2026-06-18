@@ -1,7 +1,7 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
-## v1.7.9
-6/17/26
+## v1.7.10
+6/18/26
 - Deprecated
     - `ReadAll.LogAllEvents()`
         - Use `ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true)` instead
