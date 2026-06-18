@@ -106,9 +106,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                     DigitizerDataFetch.WaitForNewVoltageData(
                         spikeSafeSocket: tcpSocket,
                         waitTime: estimatedCompleteTimeSeconds,
-                        enableLogging: null,
-                        timeout: 10,
-                        digitizerNumber: null);
+                        timeout: 10);
 
                     // fetch complete data
                     digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
@@ -130,9 +128,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                         DigitizerDataFetch.WaitForNewVoltageData(
                             spikeSafeSocket: tcpSocket,
                             waitTime: 0.01,
-                            enableLogging: null,
-                            timeout: 10,
-                            digitizerNumber: null);
+                            timeout: 10);
 
                         // fetch whatever data is available
                         digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);

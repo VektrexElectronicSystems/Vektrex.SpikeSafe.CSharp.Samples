@@ -71,11 +71,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                     SpikeSafeSetup(tcpSocket, samplingMode);
 		
                     // Digitizer wait for new data ready
-                    DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);                
-		
+                    DigitizerDataFetch.WaitForNewVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
+
                     // fetch data
                     List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
-		
+
                     // store voltage into file
                     WriteDigitizerVoltageToFile(greaseInput, digitizerData);
 		

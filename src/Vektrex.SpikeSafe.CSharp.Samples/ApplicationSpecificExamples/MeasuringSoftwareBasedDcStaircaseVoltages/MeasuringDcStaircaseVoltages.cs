@@ -112,7 +112,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                 
                 // wait for the Digitizer measurements to complete. We need to wait for the data acquisition to complete before fetching the data
-                DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);
+                DigitizerDataFetch.WaitForNewVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                 // Fetch Data and check for all events
                 List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
