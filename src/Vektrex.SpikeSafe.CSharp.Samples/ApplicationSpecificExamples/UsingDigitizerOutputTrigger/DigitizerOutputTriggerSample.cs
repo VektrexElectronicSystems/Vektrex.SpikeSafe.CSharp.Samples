@@ -112,8 +112,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);
 
                 // fetch the Digitizer voltage readings using VOLT:FETC? query
-                List<DigitizerData> digitizerData = new List<DigitizerData>();
-                digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
+                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");

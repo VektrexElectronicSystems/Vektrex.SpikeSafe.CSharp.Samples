@@ -207,7 +207,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);
 
                 // fetch the SpikeSafe Digitizer voltage readings
-                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
+                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                 // turn off SpikeSafe Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");

@@ -115,7 +115,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);
 
                 // Fetch Data and check for all events
-                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
+                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // stop the Channel 1

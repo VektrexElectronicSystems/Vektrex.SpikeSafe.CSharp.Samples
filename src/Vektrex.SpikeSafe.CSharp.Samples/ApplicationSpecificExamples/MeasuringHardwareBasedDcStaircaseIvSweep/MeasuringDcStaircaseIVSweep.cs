@@ -247,10 +247,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                         digitizerNumber: null);
 
                     // fetch complete data
-                    digitizerData = DigitizerDataFetch.FetchVoltageData(
-                        spikeSafeSocket: tcpSocket,
-                        enableLogging: null,
-                        digitizerNumber: null);
+                    digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                     _log.Info("Complete VOLT:FETC? Response returned with {0} readings", digitizerData.Count);
                 }
@@ -274,10 +271,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                             digitizerNumber: null);
 
                         // fetch whatever data is available
-                        digitizerData = DigitizerDataFetch.FetchVoltageData(
-                            spikeSafeSocket: tcpSocket,
-                            enableLogging: null,
-                            digitizerNumber: null);
+                        digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                         _log.Info("Partial VOLT:FETC? Response after error returned with {0} readings", digitizerData.Count);
 

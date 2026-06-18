@@ -74,7 +74,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTra
                     DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);                
 		
                     // fetch data
-                    List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
+                    List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 		
                     // store voltage into file
                     WriteDigitizerVoltageToFile(greaseInput, digitizerData);
