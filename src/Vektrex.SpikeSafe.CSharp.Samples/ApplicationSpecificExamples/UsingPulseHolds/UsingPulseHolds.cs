@@ -221,7 +221,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
             string pulsePeriod = spikeSafeSocket.ReadData();
             logAndPrint(string.Format("Updated Pulse Period: {0}s", pulsePeriod));
 
-            ReadAllEvents.LogAllEvents(spikeSafeSocket);
+            ReadAllEvents.ReadAllEventData(spikeSafeSocket);
 
             // space out the log and terminal output for clarity
             logAndPrint(string.Empty);
