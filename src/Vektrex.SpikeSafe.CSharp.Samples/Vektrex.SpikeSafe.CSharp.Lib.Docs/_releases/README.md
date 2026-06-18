@@ -1,5 +1,26 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
+## v1.7.10
+6/18/26
+- Deprecated
+    - `ReadAll.LogAllEvents()`
+        - Use `ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true)` instead
+- Added
+    - `Compensation.GetCustomCompensation()`
+        - New function that returns the custom compensation for a given set current, device type, and custom compensation table, and optionally a given pulse on time. The custom compensation table may be defined using a list of `CustomCompensationEntry` objects.
+     - `DigitizerDataFetch.GetNewVoltageDataEstimatedCompleteTime()`
+        - Added optional parameter `double? pulsePeriodSeconds = null`. Pulse period in seconds. If not provided, the Digitizer minimum retrigger time of 600us is used for multiple hardware triggers.
+    - `SpikeSafeEvents`
+        - Added new events:
+            - `INVALID_CURRENT_RAMP_RATE_SETTINGS = 604`
+            - `BIAS_CURRENT_SETTING_IS_ONLY_ALLOWED_IN_BIAS_MODE_ON_CHANNEL_1 = 605`
+- Fixed
+    - `SpikeSafeInfoParser.Parse()`
+        - Works when there are no Digitizers available
+- Improved
+    - `TcpSocket.Connect()`
+        - Disabled Nagle's algorithm to improve SCPI round trip timing
+
 ## v1.6.2
 4/8/26
 

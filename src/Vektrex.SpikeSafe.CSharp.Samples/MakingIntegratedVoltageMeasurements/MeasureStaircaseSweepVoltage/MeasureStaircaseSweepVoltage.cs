@@ -45,7 +45,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
                 // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -106,7 +106,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand($"VOLT:READ:COUN {digitizerReadingCount}");
 
                 // check all SpikeSafe event since all settings have been sent
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // start Digitizer measurements. We want the digitizer waiting for triggers before starting the pulsed sweep
                 tcpSocket.SendScpiCommand("VOLT:INIT");
@@ -136,15 +136,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                     DigitizerDataFetch.WaitForNewVoltageData(
                         spikeSafeSocket: tcpSocket,
                         waitTime: estimatedCompleteTimeSeconds,
-                        enableLogging: null,
-                        timeout: 10,
-                        digitizerNumber: null);
+                        timeout: 10);
 
                     // fetch complete data
-                    digitizerData = DigitizerDataFetch.FetchVoltageData(
-                        spikeSafeSocket: tcpSocket, 
-                        enableLogging: null, 
-                        digitizerNumber: null);
+                    digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                     _log.Info("Complete VOLT:FETC? Response returned with {0} readings", digitizerData.Count);
                 }
@@ -163,20 +158,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                         DigitizerDataFetch.WaitForNewVoltageData(
                             spikeSafeSocket: tcpSocket,
                             waitTime: 0.01,
-                            enableLogging: null,
-                            timeout: 10,
-                            digitizerNumber: null);
+                            timeout: 10);
 
                         // fetch whatever data is available
-                        digitizerData = DigitizerDataFetch.FetchVoltageData(
-                            spikeSafeSocket: tcpSocket,
-                            enableLogging: null,
-                            digitizerNumber: null);
+                        digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                         _log.Info("Partial VOLT:FETC? Response after error returned with {0} readings", digitizerData.Count);
 
                         // check if partial measurements were a result of a SpikeSafe error
-                        ReadAllEvents.LogAllEvents(tcpSocket);
+                        ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     }
                     catch (TimeoutException e)
                     {

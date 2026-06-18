@@ -27,7 +27,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 // reset to default state and check for all events,
                 // it is best practice to check for errors after sending each command      
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -47,7 +47,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 tcpSocket.SendScpiCommand("SOUR1:SEQ 1(1@20,1@40,1@60,1@80,1@100)"); 
 
                 // Log all events since all settings are sent
-                ReadAllEvents.LogAllEvents(tcpSocket); 
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true); 
 
                 // turn on Channel 1
                 tcpSocket.SendScpiCommand("OUTP1 1");                                         
@@ -91,7 +91,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunModulat
                 DateTime timeEnd = DateTime.Now.AddSeconds(10);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }                                   

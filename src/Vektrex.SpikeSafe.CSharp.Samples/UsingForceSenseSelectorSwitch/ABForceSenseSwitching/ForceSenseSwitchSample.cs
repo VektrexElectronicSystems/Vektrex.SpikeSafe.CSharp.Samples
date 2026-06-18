@@ -33,7 +33,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
 
                 // reset to default state
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -57,7 +57,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
 
                 // log all SpikeSafe event after settings are adjusted  
-                ReadAllEvents.LogAllEvents(tcpSocket); 
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true); 
 
                 // turn on Channel 1
                 tcpSocket.SendScpiCommand("OUTP1 1");                                        
@@ -66,7 +66,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 DateTime timeEnd = DateTime.Now.AddSeconds(10);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }                            
@@ -74,7 +74,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 // turn off Channel 1 and check for all events
                 // When operating in DC mode, the channel must be turned off before adjusting the switch state
                 tcpSocket.SendScpiCommand("OUTP1 0");               
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
                 Discharge.WaitForSpikeSafeChannelDischarge(
@@ -101,14 +101,14 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.ABForce
                 timeEnd = DateTime.Now.AddSeconds(10);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }                   
                 
                 // turn off Channel 1 and check for all events
                 tcpSocket.SendScpiCommand("OUTP1 0");               
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // wait for Channel 1 to fully discharge to ensure safe conditions before re-starting channel or disconnecting the load
                 Discharge.WaitForSpikeSafeChannelDischarge(

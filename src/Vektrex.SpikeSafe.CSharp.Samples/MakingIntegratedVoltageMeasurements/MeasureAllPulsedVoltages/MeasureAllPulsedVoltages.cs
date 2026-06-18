@@ -33,15 +33,17 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // reset to default state and check for all events, this will automatically abort digitizer in order get it into a known state
                 // This is good practice when connecting to a SpikeSafe PSMU, and is best practice to check for errors after sending each command        
                 tcpSocket.SendScpiCommand("*RST");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set up Channel 1 for pulsed output. To find more explanation, see InstrumentExamples/RunPulsed
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSED");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.001)}");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.009)}");
+                double pulseOnTimeSeconds = 0.001;
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(pulseOnTimeSeconds)}");
+                double pulseOffTimeSeconds = 0.009;
+                tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(pulseOffTimeSeconds)}");
                 tcpSocket.SendScpiCommand("SOUR1:CURR:PROT 50");                   
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 4");
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");
@@ -54,10 +56,12 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("VOLT:RANG 10");
 
                 // set Digitizer aperture for 600µs. Aperture specifies the measurement time, and we want to measure a majority of the pulse's constant current output
-                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(600)}");
+                int apertureMicroseconds = 600;
+                tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(apertureMicroseconds)}");
 
-                // set Digitizer trigger delay to 200µs. We want to give sufficient delay to omit any overshoot the current pulse may have
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(0)}");
+                // set Digitizer trigger delay to 0µs. We want to give sufficient delay to omit any overshoot the current pulse may have
+                int triggerDelayMicroseconds = 0;
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:DEL {Precision.GetPreciseTimeMicrosecondsCommandArgument(triggerDelayMicroseconds)}");
 
                 // set Digitizer trigger source to hardware. When set to a hardware trigger, the digitizer waits for a trigger signal from the SpikeSafe to start a measurement
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
@@ -66,13 +70,15 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
 
                 // set Digitizer trigger count to 525, the maximum value. 525 rising edges of current pulses will correspond to 525 voltage readings
-                tcpSocket.SendScpiCommand("VOLT:TRIG:COUN 525");
+                int hardwareTriggerCount = 525;
+                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {hardwareTriggerCount}");
 
                 // set Digitizer reading count to 1. This is the amount of readings that will be taken when the Digitizer receives its specified trigger signal
-                tcpSocket.SendScpiCommand("VOLT:READ:COUN 1");
+                int readingCount = 1;
+                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {readingCount}");
 
                 // check all SpikeSafe event since all settings have been sent
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // turn on Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 1");
@@ -84,10 +90,19 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("VOLT:INIT");
 
                 // wait for the Digitizer measurements to complete. We need to wait for the data acquisition to complete before fetching the data
-                DigitizerDataFetch.WaitForNewVoltageData(tcpSocket, 0.5);
+                double estimatedCompleteTimeSeconds = DigitizerDataFetch.GetNewVoltageDataEstimatedCompleteTime(
+                    apertureMicroseconds,
+                    readingCount,
+                    hardwareTriggerCount,
+                    triggerDelayMicroseconds,
+                    pulsePeriodSeconds: pulseOnTimeSeconds + pulseOffTimeSeconds);
+                DigitizerDataFetch.WaitForNewVoltageData(
+                    spikeSafeSocket: tcpSocket,
+                    waitTime: estimatedCompleteTimeSeconds,
+                    timeout: 10);
 
                 // fetch the Digitizer voltage readings
-                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(tcpSocket);
+                List<DigitizerData> digitizerData = DigitizerDataFetch.FetchVoltageData(spikeSafeSocket: tcpSocket, digitizerNumber: null);
 
                 // turn off Channel 1 after routine is complete
                 tcpSocket.SendScpiCommand("OUTP1 0");

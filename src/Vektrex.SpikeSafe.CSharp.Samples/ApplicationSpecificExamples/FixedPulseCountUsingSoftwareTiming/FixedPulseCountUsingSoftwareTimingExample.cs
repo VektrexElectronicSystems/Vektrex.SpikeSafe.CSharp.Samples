@@ -29,59 +29,59 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.FixedPuls
                 // reset to default state and check for all events,
                 // it is best practice to check for errors after sending each command      
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
 
                 // set Channel 1's mode to DC Dynamic and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDDYNAMIC");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Trigger Output to Positive and check for all events
                 tcpSocket.SendScpiCommand("OUTP1:TRIG:SLOP POS");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Trigger Output Always and check for all events
                 tcpSocket.SendScpiCommand("SOUR0:PULS:TRIG ALWAYS");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Pulse On Time to 1us and check for all events
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.000001)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Pulse Off Time 9us and check for all events
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.000009)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Pulse Width adjustment to disabled and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:PULS:AADJ 0");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's current to 100mA and check for all events
                 tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.1)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's voltage to 20V and check for all events
                 double complianceVoltage = 20;
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltage)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Auto Range to On and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:CURR:RANG:AUTO 1");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Load Impedance to High and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:PULS:CCOM 1");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Rise Time to Fast and check for all events
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 1");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Channel 1's Ramp mode to Fast and check for all events
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Start the channel
                 tcpSocket.SendScpiCommand("OUTP1 1");

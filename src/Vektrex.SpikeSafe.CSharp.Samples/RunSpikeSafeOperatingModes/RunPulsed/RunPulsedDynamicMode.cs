@@ -29,7 +29,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 // reset to default state and check for all events,
                 // it is best practice to check for errors after sending each command      
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -56,7 +56,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
 
                 // Check for any errors with initializing commands
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // turn on Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 1");
@@ -69,20 +69,20 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 DateTime timeEnd = DateTime.Now.AddSeconds(10);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }  
 
                 // set Channel 1's current to 200 mA dynamically while channel is operating. Check events and measure readings
                 tcpSocket.SendScpiCommand($"SOUR1:CURR {Precision.GetPreciseCurrentCommandArgument(0.2)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                 MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                 Threading.Wait(1);
 
                 // set Channel 1's Pulse On Time to 100µs dynamically while channel is operating. Check events and measure readings
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(0.0001)}");
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                 MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                 Threading.Wait(1);
 
@@ -93,7 +93,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunPulsed
                 timeEnd = DateTime.Now.AddSeconds(5);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }

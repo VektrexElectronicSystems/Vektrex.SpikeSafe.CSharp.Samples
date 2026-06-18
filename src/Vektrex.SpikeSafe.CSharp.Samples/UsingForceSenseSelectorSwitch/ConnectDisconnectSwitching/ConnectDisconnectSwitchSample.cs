@@ -60,7 +60,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
                 tcpSocket.SendScpiCommand("SOUR1:PULS:RCOM 4");   
 
                 // Check for any errors with initializing commands
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // turn on Channel 1
                 tcpSocket.SendScpiCommand("OUTP1 1");
@@ -76,7 +76,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
                 DateTime timeEnd = DateTime.Now.AddSeconds(2);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }          
@@ -109,7 +109,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.UsingForceSenseSelectorSwitch.Connect
                 timeEnd = DateTime.Now.AddSeconds(2);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }

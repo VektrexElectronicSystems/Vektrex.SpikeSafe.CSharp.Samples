@@ -50,7 +50,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(0.009)}");
 
                 // Check for any errors with initializing commands
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // turn on Channel 1 
                 tcpSocket.SendScpiCommand("OUTP1 1");
@@ -63,7 +63,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
                 DateTime timeEnd = DateTime.Now.AddSeconds(5);
                 while (DateTime.Now <= timeEnd)
                 {                       
-                    ReadAllEvents.LogAllEvents(tcpSocket);
+                    ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
                     MemoryTableReadData.LogMemoryTableRead(tcpSocket);
                     Threading.Wait(1);
                 }
@@ -221,7 +221,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingPuls
             string pulsePeriod = spikeSafeSocket.ReadData();
             logAndPrint(string.Format("Updated Pulse Period: {0}s", pulsePeriod));
 
-            ReadAllEvents.LogAllEvents(spikeSafeSocket);
+            ReadAllEvents.ReadAllEventData(spikeSafeSocket);
 
             // space out the log and terminal output for clarity
             logAndPrint(string.Empty);

@@ -32,7 +32,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
                 // reset to default state and check for all events,
                 // it is best practice to check for errors after sending each command      
                 tcpSocket.SendScpiCommand("*RST");                  
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // Parse SpikeSafe information for later use
                 SpikeSafeInfo spikeSafeInfo = SpikeSafeInfoParser.Parse(tcpSocket, enableLogging: null);
@@ -54,7 +54,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
 
                 // Check for any errors with initializing commands
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // run each combination of Pulse Tuning settings to determine the settings that output the best pulse shape
                 // per Vektrex recommendation, Load Impedance is tuned prior to Rise Time
@@ -110,7 +110,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
             tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:RCOM {0}", (int)riseTime)); 
 
             // Check for any errors with initializing commands
-            ReadAllEvents.LogAllEvents(tcpSocket);
+            ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
             // turn on all channels
             tcpSocket.SendScpiCommand("OUTP1 1");
@@ -126,7 +126,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
             {                       
                 tcpSocket.SendScpiCommand("SOUR1:PULS:END?");
                 isPulseComplete = tcpSocket.ReadData();
-                ReadAllEvents.LogAllEvents(tcpSocket);
+                ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
             }
 
             Console.WriteLine("Observe the current pulse shape using an oscilloscope or DMM, and note the current compensation settings.\n\nPress \"Enter\" to move to the next combination of Pulse Tuning settings.\n\nLoad Impedance: {0}\nRise Time: {1}", loadImpedance, riseTime);
