@@ -69,11 +69,11 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
 
                 // set Digitizer trigger count. We want to take one voltage reading for every step in the pulsed sweep
                 int hardwareTriggerCount = 100;
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {hardwareTriggerCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:TRIG:COUN {hardwareTriggerCount}"));
 
                 // set Digitizer reading count. This is the amount of readings that will be taken when the Digitizer receives its specified trigger signal
                 int readingCount = 1;
-                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {readingCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:READ:COUN {readingCount}"));
 
                 // check all SpikeSafe event since all settings have been sent
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);

@@ -5,6 +5,7 @@
 // A single 100µs pulse will be outputted sixteen separate times, demonstrating each combination of pulse tuning settings
 
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -106,8 +107,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.PulseTuni
             _log.Info("Running single pulse tuning test iteration with {0} and {1}", loadImpedance, riseTime);
 
             // set the load impedance and rise time according to the input parameters
-            tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:CCOM {0}", (int)loadImpedance));
-            tcpSocket.SendScpiCommand(string.Format("SOUR1:PULS:RCOM {0}", (int)riseTime)); 
+            tcpSocket.SendScpiCommand(string.Format(CultureInfo.InvariantCulture, "SOUR1:PULS:CCOM {0}", (int)loadImpedance));
+            tcpSocket.SendScpiCommand(string.Format(CultureInfo.InvariantCulture, "SOUR1:PULS:RCOM {0}", (int)riseTime));
 
             // Check for any errors with initializing commands
             ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);

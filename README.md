@@ -79,3 +79,6 @@ Feature requests and bug reports can be submitted to [the Vektrex website's supp
 ## License
 
 Vektrex.SpikeSafe.CSharp.Samples is licensed under the MIT license, which allows for non-commercial and commercial use.
+## Culture handling
+
+Instrument commands and numeric instrument responses use `CultureInfo.InvariantCulture`. Use the library's `Precision` helpers for SCPI numeric arguments. Methods ending in `FormattedString()` use the computer's current culture for display; do not use their results in SCPI commands or invariant data files. Interactive numeric input uses the current culture.

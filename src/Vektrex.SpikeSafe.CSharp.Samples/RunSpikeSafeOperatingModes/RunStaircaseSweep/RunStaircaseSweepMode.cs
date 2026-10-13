@@ -42,8 +42,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunStairca
                 // set Channel 1's Staircase Sweep parameters to match the test expectation
                 tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STAR {Precision.GetPreciseCurrentCommandArgument(startCurrentAmps)}");
                 tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STOP {Precision.GetPreciseCurrentCommandArgument(stopCurrentAmps)}");
-                tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STEP {currentStepCount}");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:STA:SWE:TON {stepOnTimeMilliseconds}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:CURR:STA:SWE:STEP {currentStepCount}"));
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:PULS:STA:SWE:TON {stepOnTimeMilliseconds}"));
 
                 // set Channel 1's voltage
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");
@@ -54,8 +54,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.RunSpikeSafeOperatingModes.RunStairca
                     spikesafeModelMaxCurrentAmps: spikeSafeInfo.MaximumSetCurrent,
                     setCurrentAmps: stopCurrentAmps,
                     pulseOnTimeSeconds: stepOnTimeMilliseconds / 1000.0);
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:CCOM {(int)loadImpedance}");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:RCOM {(int)riseTime}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:PULS:CCOM {(int)loadImpedance}"));
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:PULS:RCOM {(int)riseTime}"));
 
                 // set Channel 1's Ramp mode to Fast
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");

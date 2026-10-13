@@ -110,9 +110,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.MakingTjM
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE FALLING");
                 int hardwareTriggerCount = 1;
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {hardwareTriggerCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:TRIG:COUN {hardwareTriggerCount}"));
                 int readingCount = 500;
-                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {readingCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:READ:COUN {readingCount}"));
 
                 // check all SpikeSafe event since all settings have been sent
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
