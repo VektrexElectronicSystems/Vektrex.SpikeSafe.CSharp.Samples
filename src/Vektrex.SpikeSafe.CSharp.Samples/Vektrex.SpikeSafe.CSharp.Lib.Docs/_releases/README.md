@@ -1,5 +1,45 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
+## v1.8.6
+10/14/26
+
+- Added
+    - `SpikeSafeInfo.MinimumPulseWidthSupportingPulseWidthAdjustment`
+        - `SpikeSafeInfoParser.Parse()` sets the minimum supported pulse width to 5us for Ethernet Processor version 3.0.18.1 or later, and 10us for older firmware. The property value is in seconds.
+    - `SpikeSafeEvents`
+        - Added new events:
+            - `WAITING_FOR_CONFIGURATION = 111`
+            - `CONFIGURATION_COMPLETED = 112`
+            - `CONFIGURATION_CLEARED = 113`
+            - `ERROR_CONFIGURING_AT_LEAST_ONE_DSP = 319`
+            - `INVALID_GAIN_VALUE = 333`
+            - `INVALID_OFFSET_VALUE = 334`
+            - `INVALID_CHANNEL_CONFIGURATION = 335`
+            - `INVALID_MODE_CONFIGURATION = 338`
+            - `INVALID_CALIBRATION_MODE_ARGUMENT = 349`
+            - `INVALID_MAC_ADDRESS = 390`
+            - `INVALID_FLOAT_VALUE_FORMAT = 393`
+            - `INVALID_PULSE_WIDTH_CORRECTION_ARGUMENT = 394`
+            - `DIGITIZER_INTERNAL_COMMUNICATION_ERROR = 400`
+            - `DIGITIZER_INVALID_CAL_SETTINGS = 408`
+            - `DIGITIZER_MISSING_CAL_PARAMETER = 417`
+            - `CURRENT_RAMP_RATE_SETTING_ONLY_ALLOW_IN_PULSED_MODE_AND_FAST_RAMP_RATE = 601`
+            - `INVALID_PULSE_TIME_WITH_PULSE_CORRECTION_VALUE = 606`
+- Fixed
+    - Numeric parsing now uses `CultureInfo.InvariantCulture` for channel, temperature, event, memory table, custom Digitizer sequence, and Digitizer card list data, ensuring consistent interpretation across regional settings.
+- Improved
+    - Library-generated SCPI commands, logs, and exception messages use invariant formatting for consistent behavior across regional settings.
+- Updated
+    - `ChannelData.CurrentReadingAmpsFormattedString()`
+    - `ChannelData.VoltageReadingVoltsFormattedString()`
+    - `DigitizerData.VoltageReadingVoltsFormattedString()`
+        - These display methods now use `CultureInfo.CurrentCulture`, including the local decimal separator. Applications requiring invariant output should format the numeric reading with `CultureInfo.InvariantCulture` explicitly.
+- Obsoleted
+    - `SpikeSafeEvents.MULTIPLE_PULSE_BURST_MODE_SET_EXTERNAL_SOURCE_TRIGGER_OUT_FORCED_TO_ALWAYS_AND_MULTIPLE_PULSE_TRIGGER_OUT_FORCED_TO_ONE = 122`
+        - Marked obsolete starting with Ethernet Processor version 3.0.18.3.
+- Dependency Updates:
+    - NLog 6.2.1
+
 ## v1.7.10
 6/18/26
 - Deprecated
