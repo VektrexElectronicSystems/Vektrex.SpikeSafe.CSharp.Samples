@@ -61,8 +61,24 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## FAQ
 
+I'm developing an application using C/C++, how do I get started?<br />
+For C++ on Windows, use C++/CLI to reference the managed `Vektrex.SpikeSafe.CSharp.Lib.dll` assembly. See Microsoft's [#using directive (C++/CLI)](https://learn.microsoft.com/en-us/cpp/preprocessor/hash-using-directive-cpp). Native C/C++ applications require an interoperability wrapper to call this .NET library.
+
+I'm developing an application using LabVIEW, how do I get started?<br />
+Use LabVIEW's .NET Constructor Node to load `Vektrex.SpikeSafe.CSharp.Lib.dll`, then use Property Nodes and Invoke Nodes to access its properties and methods. See NI's [guidance on calling .NET assemblies in LabVIEW](https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z0000019OF2SAM). Ensure the library's dependencies, including `NLog.dll`, are available to LabVIEW.
+
+I'm developing an application using MATLAB, how do I get started?<br />
+See [Get Started with Microsoft .NET](https://www.mathworks.com/help/matlab/get-started-with-microsoft-net.html) for MATLAB's .NET support requirements. On Windows, use [NET.addAssembly](https://www.mathworks.com/help/matlab/ref/net.addassembly.html) to load `Vektrex.SpikeSafe.CSharp.Lib.dll` and call the library's classes and methods from MATLAB. This library targets .NET Framework, so use MATLAB's .NET Framework environment.
+
 I'm developing an application using NI-VISA, what is the recommended practice for handling termination characters?<br />
 See [Termination Characters in NI-VISA](https://www.ni.com/en-us/support/documentation/supplemental/06/termination-characters-in-ni-visa.html)
+
+Why does my sample's performance vary between machines?<br />
+Host-side timing depends on system clock resolution, operating system scheduling, and communication overhead. The library's `Threading.Wait()` polls `DateTime.Now` in a busy loop and is not a precise hardware timer. If your application uses `System.Threading.Thread.Sleep()`, see Microsoft's [Thread.Sleep remarks](https://learn.microsoft.com/en-us/dotnet/api/system.threading.thread.sleep?view=netframework-4.8#remarks) for clock resolution and scheduling considerations.
+
+How does C# handle culture?<br />
+C#/.NET uses `CultureInfo.CurrentCulture` for many default numeric parsing and formatting operations. In these samples, the following rules keep instrument communication consistent across regional settings:
+Instrument commands and numeric instrument responses use `CultureInfo.InvariantCulture`. Use the library's `Precision` helpers for SCPI numeric arguments. Methods ending in `FormattedString()` use the computer's current culture for display; do not use their results in SCPI commands or invariant data files. Interactive numeric input uses the current culture.
 
 ## Support/Feedback
 
@@ -79,6 +95,3 @@ Feature requests and bug reports can be submitted to [the Vektrex website's supp
 ## License
 
 Vektrex.SpikeSafe.CSharp.Samples is licensed under the MIT license, which allows for non-commercial and commercial use.
-## Culture handling
-
-Instrument commands and numeric instrument responses use `CultureInfo.InvariantCulture`. Use the library's `Precision` helpers for SCPI numeric arguments. Methods ending in `FormattedString()` use the computer's current culture for display; do not use their results in SCPI commands or invariant data files. Interactive numeric input uses the current culture.
