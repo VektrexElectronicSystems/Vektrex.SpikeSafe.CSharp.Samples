@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net48</TargetFramework>
@@ -6,8 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ScottPlot" Version="5.0.55" />
-    <PackageReference Include="NLog" Version="6.0.7" />
-    <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.7.10" />
+    <PackageReference Include="NLog" Version="6.2.1" />
+    <PackageReference Include="Vektrex.SpikeSafe.CSharp.Lib" Version="1.8.6" />
     <None Include="nlog.config" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
