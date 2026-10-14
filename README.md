@@ -14,8 +14,15 @@ Use these code samples to start learning how to communicate with your SpikeSafe 
 
 ## Usage
 
-### IDE
-To run these samples an IDE such as [Visual Studio Code](https://code.visualstudio.com/) is required, see [Working With C#](https://code.visualstudio.com/docs/languages/csharp) to simply setup your IDE with C#. After your IDE is setup, continue to install the remaining .NET packages below.
+### IDEs
+
+#### Visual Studio Code
+
+To run these samples in a lightweight editor, use the free [Visual Studio Code](https://code.visualstudio.com/). See [Working with C#](https://code.visualstudio.com/docs/languages/csharp) to set up C# support. These samples target .NET Framework 4.8 on Windows; follow the [C# Dev Kit FAQ](https://code.visualstudio.com/docs/csharp/cs-dev-kit-faq) for using the C# extension with .NET Framework projects. After setting up your editor, install the .NET Framework Developer Pack and packages below.
+
+#### Visual Studio Community
+
+To run these samples in an IDE with integrated solution management, debugging, and NuGet package tools, use [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/). See [Overview for C# developers](https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/visual-studio-ide) to get started, and select the **.NET desktop development** workload in the Visual Studio Installer. Open the samples solution, then install the .NET Framework Developer Pack and packages below as needed.
 
 ### Installing .NET Framework 4.8 Developer Pack
 The [.NET Framework 4.8 Developer Pack](https://dotnet.microsoft.com/download/dotnet-framework/net48) need to be installed.
