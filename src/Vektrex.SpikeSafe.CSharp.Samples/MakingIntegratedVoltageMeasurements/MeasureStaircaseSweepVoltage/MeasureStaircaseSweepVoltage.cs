@@ -56,8 +56,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 // set Channel 1's Staircase Sweep parameters to match the test expectation
                 tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STAR {Precision.GetPreciseCurrentCommandArgument(startCurrentAmps)}");
                 tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STOP {Precision.GetPreciseCurrentCommandArgument(stopCurrentAmps)}");
-                tcpSocket.SendScpiCommand($"SOUR1:CURR:STA:SWE:STEP {currentStepCount}");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:STA:SWE:TON {stepOnTimeMilliseconds}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:CURR:STA:SWE:STEP {currentStepCount}"));
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:PULS:STA:SWE:TON {stepOnTimeMilliseconds}"));
 
                 // set Channel 1's voltage
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");
@@ -68,8 +68,8 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                     spikesafeModelMaxCurrentAmps: spikeSafeInfo.MaximumSetCurrent,
                     setCurrentAmps: stopCurrentAmps,
                     pulseOnTimeSeconds: stepOnTimeMilliseconds / 1000.0);
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:CCOM {(int)loadImpedance}");
-                tcpSocket.SendScpiCommand($"SOUR1:PULS:RCOM {(int)riseTime}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:PULS:CCOM {(int)loadImpedance}"));
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:PULS:RCOM {(int)riseTime}"));
 
                 // set Channel 1's Ramp mode to Fast
                 tcpSocket.SendScpiCommand("OUTP1:RAMP FAST");
@@ -85,7 +85,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("OUTP1:TRIG:SOUR INT");
 
                 // set Digitizer voltage range to 10V since we expect to measure voltages significantly less than 10V
-                tcpSocket.SendScpiCommand($"VOLT:RANG {digitizerVoltageRangeVolts}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:RANG {digitizerVoltageRangeVolts}"));
 
                 // set Digitizer aperture. Aperture specifies the measurement time, and we want to measure a majority of the pulse's constant current output
                 tcpSocket.SendScpiCommand($"VOLT:APER {Precision.GetPreciseTimeMicrosecondsCommandArgument(digitizerApertureMicroseconds)}");
@@ -100,10 +100,10 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.MakingIntegratedVoltageMeasurements.M
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
 
                 // set Digitizer trigger count. We want to take one voltage reading for every step in the pulsed sweep
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {digitizerHardwareTriggerCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:TRIG:COUN {digitizerHardwareTriggerCount}"));
 
                 // set Digitizer reading count. This is the amount of readings that will be taken when the Digitizer receives its specified trigger signal
-                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {digitizerReadingCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:READ:COUN {digitizerReadingCount}"));
 
                 // check all SpikeSafe event since all settings have been sent
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);

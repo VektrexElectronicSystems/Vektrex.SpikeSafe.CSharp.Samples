@@ -71,9 +71,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.UsingDigi
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
                 int hardwareTriggerCount = 6;
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {hardwareTriggerCount}"); // two 3-pulse Multi Pulse sequences will output
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:TRIG:COUN {hardwareTriggerCount}")); // two 3-pulse Multi Pulse sequences will output
                 int readingCount = 1;
-                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {readingCount}"); 
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:READ:COUN {readingCount}"));
 
                 // set the Digitizer Hardware Trigger polarity to rising
                 tcpSocket.SendScpiCommand("VOLT:OUTP:TRIG:EDGE RISING");  

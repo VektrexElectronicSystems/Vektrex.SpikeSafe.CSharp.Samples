@@ -148,7 +148,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 tcpSocket.SendScpiCommand("SOUR1:FUNC:SHAP PULSEDSWEEP");
                 tcpSocket.SendScpiCommand($"SOUR1:CURR:STAR {Precision.GetPreciseCurrentCommandArgument(livStartCurrentMilliamps / 1000)}");
                 tcpSocket.SendScpiCommand($"SOUR1:CURR:STOP {Precision.GetPreciseCurrentCommandArgument(livStopCurrentMilliamps / 1000)}");
-                tcpSocket.SendScpiCommand($"SOUR1:CURR:STEP {livSweepStepCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"SOUR1:CURR:STEP {livSweepStepCount}"));
                 tcpSocket.SendScpiCommand($"SOUR1:VOLT {Precision.GetPreciseComplianceVoltageCommandArgument(complianceVoltageVolts)}");
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TON {Precision.GetPreciseTimeCommandArgument(pulseOnTimeSeconds)}");
                 tcpSocket.SendScpiCommand($"SOUR1:PULS:TOFF {Precision.GetPreciseTimeCommandArgument(pulseOffTimeSeconds)}");
@@ -165,9 +165,9 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.RunningLi
                 tcpSocket.SendScpiCommand("VOLT:TRIG:SOUR HARDWARE");
                 tcpSocket.SendScpiCommand("VOLT:TRIG:EDGE RISING");
                 int hardwareTriggerCount = (int)livSweepStepCount; // we want one hardware trigger per step in the sweep
-                tcpSocket.SendScpiCommand($"VOLT:TRIG:COUN {hardwareTriggerCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:TRIG:COUN {hardwareTriggerCount}"));
                 int readingCount = 1;
-                tcpSocket.SendScpiCommand($"VOLT:READ:COUN {readingCount}");
+                tcpSocket.SendScpiCommand(FormattableString.Invariant($"VOLT:READ:COUN {readingCount}"));
 
                 // Check for any errors with Digitizer initialization commands
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);

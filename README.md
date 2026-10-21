@@ -14,8 +14,15 @@ Use these code samples to start learning how to communicate with your SpikeSafe 
 
 ## Usage
 
-### IDE
-To run these samples an IDE such as [Visual Studio Code](https://code.visualstudio.com/) is required, see [Working With C#](https://code.visualstudio.com/docs/languages/csharp) to simply setup your IDE with C#. After your IDE is setup, continue to install the remaining .NET packages below.
+### IDEs
+
+#### Visual Studio Code
+
+To run these samples in a lightweight editor, use the free [Visual Studio Code](https://code.visualstudio.com/). See [Working with C#](https://code.visualstudio.com/docs/languages/csharp) to set up C# support. These samples target .NET Framework 4.8 on Windows; follow the [C# Dev Kit FAQ](https://code.visualstudio.com/docs/csharp/cs-dev-kit-faq) for using the C# extension with .NET Framework projects. After setting up your editor, install the .NET Framework Developer Pack and packages below.
+
+#### Visual Studio Community
+
+To run these samples in an IDE with integrated solution management, debugging, and NuGet package tools, use [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/). See [Overview for C# developers](https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/visual-studio-ide) to get started, and select the **.NET desktop development** workload in the Visual Studio Installer. Open the samples solution, then install the .NET Framework Developer Pack and packages below as needed.
 
 ### Installing .NET Framework 4.8 Developer Pack
 The [.NET Framework 4.8 Developer Pack](https://dotnet.microsoft.com/download/dotnet-framework/net48) need to be installed.
@@ -28,10 +35,10 @@ The [Vektrex.SpikeSafe.CSharp.Lib](https://www.nuget.org/packages/Vektrex.SpikeS
 Once the Vektrex.SpikeSafe.CSharp.Lib package is installed, each sample can be run independently by commenting out its respectively 'Run()' line in Program.cs. When a sample is run verify the expected outputs are obtained, as specified by the file's markdown description.
 
 #### Installing NLog
-All samples will log messages and may log data to a log text file and require [NLog](https://www.nuget.org/packages/NLog/) (version 4.7.10 or greater). Use the NuGet command `Install-Package NLog` to install the latest version of Nlog.
+All samples will log messages and may log data to a log text file and require [NLog](https://www.nuget.org/packages/NLog/) (version 6.2.1 or greater). Use the NuGet command `Install-Package NLog` to install the latest version of Nlog.
 
 #### Installing ScottPlot
-Some samples involve graphing measurement results. To properly graph results, the [ScottPlot](https://swharden.com/scottplot/) library is required (version 4.1.6 or greater). Use the NuGet command `Install-Package ScottPlot` to install the latest version of ScottPlot. Once the ScottPlot library is installed, each sample that involves graphing can be run from Program.cs.
+Some samples involve graphing measurement results. To properly graph results, the [ScottPlot](https://swharden.com/scottplot/) library is required (version 5.1.59 or greater). Use the NuGet command `Install-Package ScottPlot` to install the latest version of ScottPlot. Once the ScottPlot library is installed, each sample that involves graphing can be run from Program.cs.
 
 ### General Usage
 For most examples, you may need to modify the specified IP address within a Program.cs to match the IP address that is physically set on your SpikeSafe's DIP switch. In each sample, the default IP address of 10.0.0.220 is set in the line `string spikeSafeIpAddress = "10.0.0.220";`.
@@ -61,8 +68,24 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## FAQ
 
+I'm developing an application using C/C++, how do I get started?<br />
+For C++ on Windows, use C++/CLI to reference the managed `Vektrex.SpikeSafe.CSharp.Lib.dll` assembly. See Microsoft's [#using directive (C++/CLI)](https://learn.microsoft.com/en-us/cpp/preprocessor/hash-using-directive-cpp). Native C/C++ applications require an interoperability wrapper to call this .NET library.
+
+I'm developing an application using LabVIEW, how do I get started?<br />
+Use LabVIEW's .NET Constructor Node to load `Vektrex.SpikeSafe.CSharp.Lib.dll`, then use Property Nodes and Invoke Nodes to access its properties and methods. See NI's [guidance on calling .NET assemblies in LabVIEW](https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z0000019OF2SAM). Ensure the library's dependencies, including `NLog.dll`, are available to LabVIEW.
+
+I'm developing an application using MATLAB, how do I get started?<br />
+See [Get Started with Microsoft .NET](https://www.mathworks.com/help/matlab/get-started-with-microsoft-net.html) for MATLAB's .NET support requirements. On Windows, use [NET.addAssembly](https://www.mathworks.com/help/matlab/ref/net.addassembly.html) to load `Vektrex.SpikeSafe.CSharp.Lib.dll` and call the library's classes and methods from MATLAB. This library targets .NET Framework, so use MATLAB's .NET Framework environment.
+
 I'm developing an application using NI-VISA, what is the recommended practice for handling termination characters?<br />
 See [Termination Characters in NI-VISA](https://www.ni.com/en-us/support/documentation/supplemental/06/termination-characters-in-ni-visa.html)
+
+Why does my sample's performance vary between machines?<br />
+Host-side timing depends on system clock resolution, operating system scheduling, and communication overhead. The library's `Threading.Wait()` polls `DateTime.Now` in a busy loop and is not a precise hardware timer. If your application uses `System.Threading.Thread.Sleep()`, see Microsoft's [Thread.Sleep remarks](https://learn.microsoft.com/en-us/dotnet/api/system.threading.thread.sleep?view=netframework-4.8#remarks) for clock resolution and scheduling considerations.
+
+How does C# handle culture?<br />
+C#/.NET uses `CultureInfo.CurrentCulture` for many default numeric parsing and formatting operations. In these samples, the following rules keep instrument communication consistent across regional settings:
+Instrument commands and numeric instrument responses use `CultureInfo.InvariantCulture`. Use the library's `Precision` helpers for SCPI numeric arguments. Methods ending in `FormattedString()` use the computer's current culture for display; do not use their results in SCPI commands or invariant data files. Interactive numeric input uses the current culture.
 
 ## Support/Feedback
 

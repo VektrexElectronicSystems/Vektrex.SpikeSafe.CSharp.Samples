@@ -2,6 +2,7 @@
 // Use TEC to ramp up to 50°C, stabilize, and run for 10 minutes; then ramp down to 25°C, stabilize, and run for 10 minutes.
 
 using System;
+using System.Globalization;
 
 namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.ControllingThermalPlatformTemperature
 {
@@ -48,7 +49,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Controlli
                 ////////// Target temperature 1
 
                 // Set set temperature to setTemperatureOne
-                tecController.WriteCommand(string.Format("TEC:T {0}", setTemperatureOne));
+                tecController.WriteCommand(string.Format(CultureInfo.InvariantCulture, "TEC:T {0}", setTemperatureOne));
 
                 // Set controller output to on
                 tecController.WriteCommand("TEC:OUT 1");
@@ -57,7 +58,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Controlli
                 while (true)
                 {
                     tecController.WriteCommand("TEC:COND?");
-                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData());
+                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData(), CultureInfo.InvariantCulture);
                     if (isKthBitSet(tecOutOfTolerance, 9) == true)
                         break;
                 }
@@ -67,7 +68,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Controlli
                 while (true)
                 {
                     tecController.WriteCommand("TEC:COND?");
-                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData());
+                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData(), CultureInfo.InvariantCulture);
                     if ((isKthBitSet(tecOutOfTolerance, 9) == true) && 
                         ((DateTime.Now - tecStabilityStartTime - TimeSpan.FromSeconds(30)).TotalSeconds >= setTemperatureOneStabilityMinutes * 60))
                             break;
@@ -76,7 +77,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Controlli
                 }
 
                 // Set set temperature to setTemperatureTwo
-                tecController.WriteCommand(string.Format("TEC:T {0}", setTemperatureTwo));
+                tecController.WriteCommand(string.Format(CultureInfo.InvariantCulture, "TEC:T {0}", setTemperatureTwo));
 
                 ////////// Target temperature 2
 
@@ -84,7 +85,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Controlli
                 while (true)
                 {
                     tecController.WriteCommand("TEC:COND?");
-                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData());
+                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData(), CultureInfo.InvariantCulture);
                     if (isKthBitSet(tecOutOfTolerance, 9) == true)
                         break;
                 }
@@ -94,7 +95,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Controlli
                 while (true)
                 {
                     tecController.WriteCommand("TEC:COND?");
-                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData());
+                    byte tecOutOfTolerance = Byte.Parse(tecController.ReadData(), CultureInfo.InvariantCulture);
                     if ((isKthBitSet(tecOutOfTolerance, 9) == true) && 
                         ((DateTime.Now - tecStabilityStartTime - TimeSpan.FromSeconds(30)).TotalSeconds >= setTemperatureTwoStabilityMinutes * 60))
                             break;

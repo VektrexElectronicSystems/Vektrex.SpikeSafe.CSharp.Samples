@@ -5,6 +5,7 @@
 
 using ScottPlot;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -76,7 +77,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Digitizer Trigger Count to step count and check for all events
-                tcpSocket.SendScpiCommand(string.Format("VOLT:TRIG:COUN {0}", stepCount));
+                tcpSocket.SendScpiCommand(string.Format(CultureInfo.InvariantCulture, "VOLT:TRIG:COUN {0}", stepCount));
                 ReadAllEvents.ReadAllEventData(tcpSocket, enableLogging: true);
 
                 // set Digitizer Read Count to 1 and check for all events
@@ -102,7 +103,7 @@ namespace Vektrex.SpikeSafe.CSharp.Samples.ApplicationSpecificExamples.Measuring
                 {
                     // step up Channel 1 current to next step
                     setCurrent = Math.Round(setCurrent + currentIncrementDouble, 3);
-                    string cmdStr = "SOUR1:TRIG " + setCurrent.ToString();
+                    string cmdStr = "SOUR1:TRIG " + setCurrent.ToString(CultureInfo.InvariantCulture);
                     // send Set Current command for next step
                     tcpSocket.SendScpiCommand(cmdStr);
                     currentIncrementDouble = stepSizeAmps;
