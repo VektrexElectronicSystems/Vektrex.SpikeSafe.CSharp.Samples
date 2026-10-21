@@ -1,7 +1,7 @@
 # Vektrex.SpikeSafe.CSharp.Lib Releases
 
-## v1.8.6
-10/14/26
+## v1.8.7
+10/21/26
 
 - Added
     - `SpikeSafeInfo.MinimumPulseWidthSupportingPulseWidthAdjustment`
