@@ -38,7 +38,7 @@ Once the Vektrex.SpikeSafe.CSharp.Lib package is installed, each sample can be r
 All samples will log messages and may log data to a log text file and require [NLog](https://www.nuget.org/packages/NLog/) (version 6.2.1 or greater). Use the NuGet command `Install-Package NLog` to install the latest version of Nlog.
 
 #### Installing ScottPlot
-Some samples involve graphing measurement results. To properly graph results, the [ScottPlot](https://swharden.com/scottplot/) library is required (version 4.1.6 or greater). Use the NuGet command `Install-Package ScottPlot` to install the latest version of ScottPlot. Once the ScottPlot library is installed, each sample that involves graphing can be run from Program.cs.
+Some samples involve graphing measurement results. To properly graph results, the [ScottPlot](https://swharden.com/scottplot/) library is required (version 5.1.59 or greater). Use the NuGet command `Install-Package ScottPlot` to install the latest version of ScottPlot. Once the ScottPlot library is installed, each sample that involves graphing can be run from Program.cs.
 
 ### General Usage
 For most examples, you may need to modify the specified IP address within a Program.cs to match the IP address that is physically set on your SpikeSafe's DIP switch. In each sample, the default IP address of 10.0.0.220 is set in the line `string spikeSafeIpAddress = "10.0.0.220";`.
