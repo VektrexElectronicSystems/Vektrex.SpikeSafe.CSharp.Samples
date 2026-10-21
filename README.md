@@ -35,7 +35,7 @@ The [Vektrex.SpikeSafe.CSharp.Lib](https://www.nuget.org/packages/Vektrex.SpikeS
 Once the Vektrex.SpikeSafe.CSharp.Lib package is installed, each sample can be run independently by commenting out its respectively 'Run()' line in Program.cs. When a sample is run verify the expected outputs are obtained, as specified by the file's markdown description.
 
 #### Installing NLog
-All samples will log messages and may log data to a log text file and require [NLog](https://www.nuget.org/packages/NLog/) (version 4.7.10 or greater). Use the NuGet command `Install-Package NLog` to install the latest version of Nlog.
+All samples will log messages and may log data to a log text file and require [NLog](https://www.nuget.org/packages/NLog/) (version 6.2.1 or greater). Use the NuGet command `Install-Package NLog` to install the latest version of Nlog.
 
 #### Installing ScottPlot
 Some samples involve graphing measurement results. To properly graph results, the [ScottPlot](https://swharden.com/scottplot/) library is required (version 4.1.6 or greater). Use the NuGet command `Install-Package ScottPlot` to install the latest version of ScottPlot. Once the ScottPlot library is installed, each sample that involves graphing can be run from Program.cs.
